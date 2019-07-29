@@ -1,0 +1,46 @@
+<launch>
+    
+    <arg name="robotname" default="p1" />
+    <arg name="planname" default="stop" />
+    <arg name="use_gui" default="false" />
+
+    <include file="$(find custom_worlds)/launch/tiago_navigation.launch"></include>
+    <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
+
+    <!-- Args for the pointcloud action server -->
+    <arg name="sensor"                     default="/xtion/depth_registered/points"  />
+    <arg name="passthrough_z_axis"          default="z"                               />
+    <arg name="passthrough_z_min"           default="0.4"                             />
+    <arg name="passthrough_z_max"           default="2"                             />
+    <arg name="downsampling_size"         default="0.01"                            />
+    <arg name="show_rviz"                 default="true"                            />
+
+    <node name="tableStatus" pkg="table_status" type="tableStatus_server" output="screen">
+        <remap from="sensor"                     to="$(arg sensor)"     />
+        <param name="passthrough_z_axis"          type="string" value="$(arg passthrough_z_axis)"  />
+        <param name="passthrough_z_min"           type="double" value="$(arg passthrough_z_min)"   />
+        <param name="passthrough_z_max"           type="double" value="$(arg passthrough_z_max)"   />
+        <param name="downsampling_size"         type="double" value="$(arg downsampling_size)" />
+    </node>
+
+    <!-- Loads the motions defined in motions.yaml in the parameter server -->
+    <node pkg="lasr_sciroc_p1" type="load_motions.py" name="loader" args="" output="screen" />
+
+    <node pkg="object_detection_yolo_opencv4" type="count_objects_server.py" name="count_objects" args="" output="screen" />
+
+    <group ns="$(arg robotname)">
+        <param name="robot_name" value="$(arg robotname)" />
+        <param name="tf_prefix" value="$(arg robotname)" />
+
+        <node pkg="pnp_ros" type="pnp_node" name="pnp" args="" output="screen">
+            <param name="plan_folder" value="$(find lasr_sciroc_p1)/plans/" />
+            <param name="current_plan" value="$(arg planname)" />
+            <param name="use_java_connection" value="$(arg use_gui)" />
+        </node>
+
+	    <node pkg="lasr_pnp_bridge" type="lasr_pnp_bridge_node" name="lasr_pnp_bridge" args="" output="screen" />
+
+	    <node pkg="lasr_sciroc_p1" type="lasr_sciroc_p1" name="P1Server" args="" output="screen" /> 
+    </group>
+
+</launch>
