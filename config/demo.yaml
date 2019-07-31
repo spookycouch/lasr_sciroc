@@ -1,0 +1,16 @@
+locations:
+  - id: first table
+    count: True
+    pose:
+      position: { x: 1.378, y: -8.900, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.699, w: 0.715 }
+  - id: second table
+    count: True
+    pose:
+      position: { x: -0.927, y: -9.813, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.702, w: 0.712 }
+  - id: home
+    count: False
+    pose:
+      position: { x: 4.989, y: -8.569, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 1.000, w: 0 }
