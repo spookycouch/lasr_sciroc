@@ -1,0 +1,9 @@
+#!/usr/bin/python
+
+import rospy
+from lasr_sciroc_p1 import DemoServer
+
+if __name__== '__main__':
+    rospy.init_node('DemoServer')
+    DemoServer(rospy.get_name())
+    rospy.spin()

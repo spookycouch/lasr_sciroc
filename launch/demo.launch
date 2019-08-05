@@ -4,11 +4,8 @@
     <arg name="planname" default="stop" />
     <arg name="use_gui" default="false" />
 
-    <include file="$(find custom_worlds)/launch/tiago_navigation.launch"></include>
-    <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
-
-    <!-- Load the longroom tables and motions data into the parameter server -->
-    <rosparam command="load" file="$(find lasr_sciroc_p1)/config/longroom.yaml" />
+    <!-- Load the demo and motions data into the parameter server, not in use currently -->
+    <rosparam command="load" file="$(find lasr_sciroc_p1)/config/demo.yaml" />
     <rosparam command="load" file="$(find lasr_sciroc_p1)/config/motions.yaml" />
 
     <!-- Args for the pointcloud action server -->
@@ -27,6 +24,8 @@
         <param name="downsampling_size"         type="double" value="$(arg downsampling_size)" />
     </node>
 
+    <node pkg="head_manager" type="do_action" name="head_manager_disable" args="disable"/>
+
     <node pkg="object_detection_yolo_opencv4" type="count_objects_server.py" name="count_objects" args="" output="screen" />
 
     <group ns="$(arg robotname)">
@@ -41,7 +40,7 @@
 
 	    <node pkg="lasr_pnp_bridge" type="lasr_pnp_bridge_node" name="lasr_pnp_bridge" args="" output="screen" />
 
-	    <node pkg="lasr_sciroc_p1" type="lasr_sciroc_p1" name="P1Server" args="" output="screen" /> 
+	    <node pkg="lasr_sciroc_p1" type="lasr_demo" name="DemoServer" args="" output="screen" /> 
     </group>
 
 </launch>
