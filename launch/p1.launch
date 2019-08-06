@@ -8,7 +8,8 @@
     <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
 
     <!-- Load the longroom tables and motions data into the parameter server -->
-    <rosparam command="load" file="$(find lasr_sciroc_p1)/config/longroom.yaml" />
+    <!-- <rosparam command="load" file="$(find lasr_sciroc_p1)/config/longroom.yaml" /> -->
+    <rosparam command="load" file="$(find lasr_sciroc_p1)/config/locations.yaml" />
     <rosparam command="load" file="$(find lasr_sciroc_p1)/config/motions.yaml" />
 
     <!-- Args for the pointcloud action server -->
