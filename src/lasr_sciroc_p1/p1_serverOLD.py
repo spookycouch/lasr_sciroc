@@ -72,19 +72,17 @@ class P1Server(object):
 
     def initialise(self):
         # initialise PNP variables
-        rospy.set_param('/HAL9000/current_table', 0)
-        rospy.set_param('/HAL9000/current_pose', 0)
+        self._result.set_variables = [lpb_msg.VariableValue('tableIndex', '0'), lpb_msg.VariableValue('poseIndex', '0')]
 
     def gotoHome(self):
         rospy.loginfo('Going to home')
-        home = rospy.get_param('/Home')
 
         self.move_base_client.wait_for_server(rospy.Duration(15.0))
 
         goal = MoveBaseGoal()
         goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = Pose(position = Point(**home['loc']['position']),
-            orientation = Quaternion(**home['loc']['orientation']))
+        goal.target_pose.pose = Pose(position = Point(**self.tables['Home']['loc']['position']),
+            orientation = Quaternion(**self.tables['Home']['loc']['orientation']))
 
         rospy.loginfo('Sending goal location ...')
         self.move_base_client.send_goal(goal) #waits forever
@@ -93,24 +91,22 @@ class P1Server(object):
         else:
             rospy.logwarn("Couldn't reach the goal!")
 
-    def goto(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
-        pose_index = rospy.get_param('/HAL9000/current_pose')
+    def goto(self, table_index, pose_index):
         # TODO: move to individual action file
-        rospy.loginfo('Going to: %s' % self.tables_order[table_index])
+        rospy.loginfo('Going to: %s' % self.tables_order[int(table_index)])
 
         self.move_base_client.wait_for_server(rospy.Duration(15.0))
 
         # For now
-        if pose_index == 0:
+        if int(pose_index) == 0:
             pose = 'far_pose'
         else:
             pose = 'close_pose'
 
         goal = MoveBaseGoal()
         goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = Pose(position = Point(**self.tables['table' + str(table_index)]['loc'][pose_index][pose]['position']),
-            orientation = Quaternion(**self.tables['table' + str(table_index)]['loc'][pose_index][pose]['orientation']))
+        goal.target_pose.pose = Pose(position = Point(**self.tables['table' + table_index]['loc'][int(pose_index)][pose]['position']),
+            orientation = Quaternion(**self.tables['table' + table_index]['loc'][int(pose_index)][pose]['orientation']))
 
         rospy.loginfo('Sending goal location ...')
         self.move_base_client.send_goal(goal) #waits forever
@@ -120,12 +116,11 @@ class P1Server(object):
             rospy.logwarn("Couldn't reach the goal!")
 
         # If we moved close to the table means we have already taken the picture
-        if pose_index == 1:
+        if pose_index == '1':
            self._result.condition_event = ['pictureDone']
-           rospy.set_param('/HAL9000/current_pose', 0)
+           self._result.set_variables = [lpb_msg.VariableValue('poseIndex', str(0))]
 
-    def countPeople(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
+    def countPeople(self, table_index):
         # TODO: move to individual action file
         # Take a picture of the table from afar
         # Wait for recognition action server to come up and send goal
@@ -147,18 +142,17 @@ class P1Server(object):
 
         # Update the number of people in the parameter server
         rospy.loginfo('Updating the number of people found at table %s' % self.tables_order[int(table_index)])
-        rospy.set_param('/tables/table' + str(table_index) + '/person_count', self.countPeople_result.person)
+        rospy.set_param('/tables/table' + table_index + '/person_count', self.countPeople_result.person)
         rospy.loginfo('Updated the person counter successfully')
 
         # Switch to the pose closer to the table
         rospy.loginfo('Switching to the second pose')
-        rospy.set_param('/HAL9000/current_pose', 1)
+        self._result.set_variables = [lpb_msg.VariableValue('poseIndex', str(1))]
 
     # Sleeps are required to avoid Tiago's busy status from body motions controllers
-    def identifyStatus(self):
+    def identifyStatus(self, table_index):
         # TODO: move to individual action file
-        table_index = rospy.get_param('/HAL9000/current_table')
-        rospy.loginfo('Identifying the status of: %s' % self.tables_order[table_index])
+        rospy.loginfo('Identifying the status of: %s' % self.tables_order[int(table_index)])
 
         # Step 1: Look down to see the table
         # Wait for the play motion server to come up and send goal
@@ -202,7 +196,7 @@ class P1Server(object):
 
         # Print the table status 
         status_result = self.table_status_client.get_result()
-        rospy.loginfo('PclCheck result of %s is %s' % (self.tables_order[table_index], status_result.status))
+        rospy.loginfo('PclCheck result of %s is %s' % (self.tables_order[int(table_index)], status_result.status))
 
         # Step 4: Get head and torso back to default
         pose_goal.motion_name = "back_to_default"
@@ -228,38 +222,33 @@ class P1Server(object):
             clean = True
 
         if foundPerson and foundConsumable:
-            result = 'Already served'
+            result = 'Status of {0} is Already served'.format(self.tables_order[int(table_index)])
         elif foundPerson and (not foundConsumable):
-            result = 'Needs serving'
+            result = 'Status of {0} is Needs serving'.format(self.tables_order[int(table_index)])
         elif not foundPerson:
             if clean:
-                result = 'Clean'
+                result = 'Status of {0} is Clean'.format(self.tables_order[int(table_index)])
             else:
-                result = 'Dirty'
+                result = 'Status of {0} is Dirty'.format(self.tables_order[int(table_index)])
         
         # Update the status of the table in the parameter server
-        rospy.loginfo('Updating the table status of table %s' % self.tables_order[table_index])
-        rospy.set_param('/tables/table' + str(table_index) + '/status', result)
+        rospy.loginfo('Updating the table status of table %s' % self.tables_order[int(table_index)])
+        rospy.set_param('/tables/table' + table_index + '/status', result)
         rospy.loginfo('Updated the table status successfully')
 
         rospy.loginfo(result)
-        #tts_goal.rawtext.text = 'Status of {0} is {1}'.format(self.tables_order[int(table_index)], result)
+        #tts_goal.rawtext.text = result
         #self.tts_pub.publish(tts_goal)
         rospy.sleep(1)
 
-    def count(self):
+    def count(self, table_index):
         # TODO: move to individual action file
-        rospy.loginfo('Counting all the tables')
+        rospy.loginfo('Counting: %s' % self.tables_order[int(table_index)])
 
-        # if any table status is unknown, set it to the robot's current table
-        tables = rospy.get_param('/tables')
-        for table in tables:
-            if (tables[table])['status'] == 'unknown':
-                rospy.set_param('/HAL9000/current_table', tables[table]['id'])
-                return
-
-        # if all tables have been identified, counting is done
-        self._result.condition_event = ['doneCounting']
+        if int(table_index) == len(self.tables_order) - 1:
+            self._result.condition_event = ['doneCounting']
+        else:
+            self._result.set_variables = [lpb_msg.VariableValue('tableIndex', str(int(table_index) + 1))]
 
         
 
