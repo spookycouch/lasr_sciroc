@@ -25,8 +25,8 @@ tables:
           position: { x: 9.38863755014, y: 0.202148583446, z: 0.0 }
           orientation: { x: 0.0, y: 0.0, z: 0.655514163585, w: 0.7551828794 }
 
-  Home:
-    count: False
-    loc:
-      position: { x: 0, y: 0, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: 0, w: 1 }
+Home:
+  count: False
+  loc:
+    position: { x: 0, y: 0, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0, w: 1 }
