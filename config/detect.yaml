@@ -1,0 +1,28 @@
+locations:
+  - id: table
+    count: True
+    pose:
+      position: { x: 4.03689603572, y: -0.0012202191844, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.932685328774, w: 0.360691110911 }
+  - id: waitingArea
+    count: False
+    pose:
+      position: { x: 5.37525378807, y: -2.76729462994, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.999590316484, w: 0.0286216559798 }
+  - id: waitingAreaBad
+    count: False
+    pose:
+      position: { x: 5.37525378807, y: -2.76729462994, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.988390608623, w: 0.151934212034 }
+  - id: waitingAreaReallyBad
+    count: False
+    pose:
+      position: { x: 5.52879773281, y: -2.83424174541, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.993845548886, w: 0.110774658474 }
+  - id: home
+    count: False
+    pose:
+      position: { x: -0.00443750857866, y: -0.00268046736137, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.00184685090943, w: 0.999998294569 }
+
+

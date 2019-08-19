@@ -1,0 +1,9 @@
+#!/usr/bin/python
+
+import rospy
+from lasr_sciroc_p1 import detection_server
+
+if __name__== '__main__':
+    rospy.init_node('DetectionServer')
+    DetectionServer(rospy.get_name())
+    rospy.spin()
