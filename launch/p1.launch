@@ -4,13 +4,13 @@
     <arg name="planname" default="stop" />
     <arg name="use_gui" default="false" />
 
-    <include file="$(find custom_worlds)/launch/tiago_navigation.launch"></include>
+    <!-- <include file="$(find custom_worlds)/launch/tiago_navigation.launch"></include> -->
     <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
 
     <!-- Load the longroom tables and motions data into the parameter server -->
-    <!-- <rosparam command="load" file="$(find lasr_sciroc_p1)/config/longroom.yaml" /> -->
+    <rosparam command="load" file="$(find lasr_sciroc_p1)/config/longroom.yaml" />
     <rosparam command="load" file="$(find lasr_sciroc_p1)/config/HAL9000.yaml" />
-    <rosparam command="load" file="$(find lasr_sciroc_p1)/config/locations.yaml" />
+    <!-- <rosparam command="load" file="$(find lasr_sciroc_p1)/config/locations.yaml" /> -->
     <rosparam command="load" file="$(find lasr_sciroc_p1)/config/motions.yaml" />
 
     <!-- Args for the pointcloud action server -->

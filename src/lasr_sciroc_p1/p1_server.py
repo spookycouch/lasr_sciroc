@@ -35,7 +35,7 @@ class P1Server(object):
         self.play_motion_client = actionlib.SimpleActionClient('/play_motion', PlayMotionAction)
         self.object_recognition_client = actionlib.SimpleActionClient('/count_objects', count_objectsAction)
         self.table_status_client = actionlib.SimpleActionClient('/tableStatus', TableStatusAction)
-        #self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
+        self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
 
         # Bool variable and wake_word subscriber for voice plan activation
         self.running = False
@@ -44,13 +44,12 @@ class P1Server(object):
 
         # Get the Tables Dictionary from the parameter server
         self.tables = rospy.get_param("/tables")
-        self.tables_order = [self.tables[table]['id'] for table in self.tables if self.tables[table]['count']]
     
     def handle_wake_word_detected(self, data):
         wake_word = data.data
         if not self.running and wake_word == 'start the demo':
             self.running = True
-            self.plan_publisher.publish('demo_plan')
+            self.plan_publisher.publish('p1PlanNew')
   
     def execute_cb(self, goal):
         rospy.loginfo("----------ExternalServer start----------")
@@ -96,8 +95,9 @@ class P1Server(object):
     def goto(self):
         table_index = rospy.get_param('/HAL9000/current_table')
         pose_index = rospy.get_param('/HAL9000/current_pose')
+        print table_index
         # TODO: move to individual action file
-        rospy.loginfo('Going to: %s' % self.tables_order[table_index])
+        rospy.loginfo('Going to: %d with pose %d', table_index, pose_index)
 
         self.move_base_client.wait_for_server(rospy.Duration(15.0))
 
@@ -146,7 +146,7 @@ class P1Server(object):
         print('{0} persons'.format(self.countPeople_result.person))
 
         # Update the number of people in the parameter server
-        rospy.loginfo('Updating the number of people found at table %s' % self.tables_order[int(table_index)])
+        rospy.loginfo('Updating the number of people found at table %d' % table_index)
         rospy.set_param('/tables/table' + str(table_index) + '/person_count', self.countPeople_result.person)
         rospy.loginfo('Updated the person counter successfully')
 
@@ -158,7 +158,7 @@ class P1Server(object):
     def identifyStatus(self):
         # TODO: move to individual action file
         table_index = rospy.get_param('/HAL9000/current_table')
-        rospy.loginfo('Identifying the status of: %s' % self.tables_order[table_index])
+        rospy.loginfo('Identifying the status of: %d' % table_index)
 
         # Step 1: Look down to see the table
         # Wait for the play motion server to come up and send goal
@@ -202,7 +202,7 @@ class P1Server(object):
 
         # Print the table status 
         status_result = self.table_status_client.get_result()
-        rospy.loginfo('PclCheck result of %s is %s' % (self.tables_order[table_index], status_result.status))
+        rospy.loginfo('PclCheck result of %d is %s' % (table_index, status_result.status))
 
         # Step 4: Get head and torso back to default
         pose_goal.motion_name = "back_to_default"
@@ -212,8 +212,8 @@ class P1Server(object):
 
         # Step 4: Decide on table status and send tts goal to the sound server
         # Create a tts goal
-        #tts_goal = TtsGoal()
-        #tts_goal.rawtext.lang_id = 'en_GB'
+        tts_goal = TtsGoal()
+        tts_goal.rawtext.lang_id = 'en_GB'
         foundPerson = False
         foundConsumable = False
         clean = False
@@ -238,13 +238,13 @@ class P1Server(object):
                 result = 'Dirty'
         
         # Update the status of the table in the parameter server
-        rospy.loginfo('Updating the table status of table %s' % self.tables_order[table_index])
+        rospy.loginfo('Updating the table status of table %d', table_index)
         rospy.set_param('/tables/table' + str(table_index) + '/status', result)
         rospy.loginfo('Updated the table status successfully')
 
         rospy.loginfo(result)
-        #tts_goal.rawtext.text = 'Status of {0} is {1}'.format(self.tables_order[int(table_index)], result)
-        #self.tts_pub.publish(tts_goal)
+        tts_goal.rawtext.text = 'Status of {0} is {1}'.format(table_index, result)
+        self.speech_client.send_goal(tts_goal)
         rospy.sleep(1)
 
     def count(self):
@@ -252,14 +252,21 @@ class P1Server(object):
         rospy.loginfo('Counting all the tables')
 
         # if any table status is unknown, set it to the robot's current table
-        tables = rospy.get_param('/tables')
-        for table in tables:
-            if (tables[table])['status'] == 'unknown':
-                rospy.set_param('/HAL9000/current_table', tables[table]['id'])
-                return
+        self.tables = rospy.get_param("/tables")
+        unknown_exist = False
+        next_table = 999 #Init max_int maybe?
+        for table in self.tables:
+            if (self.tables[table])['status'] == 'unknown':
+                unknown_exist = True
+                if self.tables[table]['id'] < next_table:
+                    next_table = self.tables[table]['id']
 
-        # if all tables have been identified, counting is done
-        self._result.condition_event = ['doneCounting']
+        if unknown_exist:
+            rospy.set_param('/HAL9000/current_table', next_table)
+            print "\033[1;33m" + "The next table is " + str(next_table) + "\033[0m"
+        else:
+            # if all tables have been identified, counting is done
+            self._result.condition_event = ['doneCounting']
 
         
 
