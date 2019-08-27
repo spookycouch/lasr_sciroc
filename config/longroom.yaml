@@ -3,6 +3,7 @@ tables:
     id: 0
     person_count: -1
     status: "unknown"
+    order: []
     loc:
       - far_pose: 
           position: { x: 22.1162827565, y: 20.4308204055, z: 0.0 }
@@ -15,6 +16,7 @@ tables:
     id: 1
     person_count: -1
     status: "unknown"
+    order: []
     loc:
       - far_pose: 
           position: { x: 20.370884203, y: 18.7770893724, z: 0.0 }
@@ -27,6 +29,7 @@ tables:
     id: 2
     person_count: -1
     status: "unknown"
+    order: []
     loc:
       - far_pose: 
           position: { x: 18.4067505612, y: 16.742603369, z: 0.0 }
@@ -39,6 +42,7 @@ tables:
     id: 3
     person_count: -1
     status: "unknown"
+    order: []
     loc:
       - far_pose: 
           position: { x: 6.68054919015, y: 6.23598974223, z: 0.0 }
@@ -51,6 +55,7 @@ tables:
     id: 4
     person_count: -1
     status: "unknown"
+    order: []
     loc:
       - far_pose: 
           position: { x: 5.00019594478, y: 4.74756175974, z: 0.0 }
@@ -63,6 +68,7 @@ tables:
     id: 5
     person_count: -1
     status: "unknown"
+    order: []
     loc:
       - far_pose: 
           position: { x: 3.01125161888, y: 2.66693128866, z: 0.0 }
