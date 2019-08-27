@@ -1,13 +1,13 @@
 play_motion:
   motions:
     look_down:
-      joints: [torso_lift_joint, head_1_joint, head_2_joint]
+      joints: [head_1_joint, head_2_joint]
       points:
-      - positions: [0.3, 0.0, -0.5]
+      - positions: [0.0, -0.5]
         time_from_start: 2.0
     
     back_to_default:
-      joints: [torso_lift_joint, head_1_joint, head_2_joint]
+      joints: [head_1_joint, head_2_joint]
       points:
-      - positions: [0.15, 0.0, 0.0]
+      - positions: [0.0, 0.0]
         time_from_start: 2.0
