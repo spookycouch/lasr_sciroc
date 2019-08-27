@@ -13,13 +13,16 @@ from Table import Table
 # Actionlib messages
 import lasr_pnp_bridge.msg as lpb_msg
 from std_msgs.msg import String, Header
+from sensor_msgs.msg import Image, PointCloud2
 from actionlib_msgs.msg import GoalStatus
 from geometry_msgs.msg import Point, Quaternion, Pose
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from play_motion_msgs.msg import PlayMotionAction, PlayMotionGoal
-from object_detection_yolo_opencv4.msg import count_objectsAction, count_objectsGoal
-from table_status.msg import TableStatusAction, TableStatusGoal
+from lasr_img_depth_mask.msg import DepthMaskAction, DepthMaskGoal
+from lasr_object_detection_yolo.msg import yolo_detectionAction, yolo_detectionGoal
 from pal_interaction_msgs.msg import TtsGoal, TtsAction
+
+from collections import defaultdict
 
 class P1Server(object):
     _feedback = lpb_msg.BridgeFeedback()
@@ -33,8 +36,8 @@ class P1Server(object):
         # Initialising clients: move_base, playmotion, objectRecognition and table_status
         self.move_base_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
         self.play_motion_client = actionlib.SimpleActionClient('/play_motion', PlayMotionAction)
-        self.object_recognition_client = actionlib.SimpleActionClient('/count_objects', count_objectsAction)
-        self.table_status_client = actionlib.SimpleActionClient('/tableStatus', TableStatusAction)
+        self.depth_mask_client = actionlib.SimpleActionClient('/depth_mask', DepthMaskAction)
+        self.object_recognition_client = actionlib.SimpleActionClient('/yolo_detection', yolo_detectionAction)
         self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
 
         # Bool variable and wake_word subscriber for voice plan activation
@@ -124,35 +127,72 @@ class P1Server(object):
            self._result.condition_event = ['pictureDone']
            rospy.set_param('/HAL9000/current_pose', 0)
 
+    def talk(self, speech_in):
+        print('\033[1;36mTIAGO: ' + speech_in + '\033[0m')
+        tts_goal = TtsGoal()
+        tts_goal.rawtext.lang_id = 'en_GB'
+        tts_goal.rawtext.text = speech_in
+        self.speech_client.send_goal(tts_goal)
+
+
     def countPeople(self):
         table_index = rospy.get_param('/HAL9000/current_table')
         # TODO: move to individual action file
         # Take a picture of the table from afar
         # Wait for recognition action server to come up and send goal
+
+        # DEPTH MASK
+        self.depth_mask_client.wait_for_server(rospy.Duration(15.0))
+        mask_goal = DepthMaskGoal()
+        mask_goal.depth_points = rospy.wait_for_message('/xtion/depth_registered/points', PointCloud2)
+        mask_goal.filter_left = 1
+        mask_goal.filter_right = 1
+        mask_goal.filter_front = 3.5
+        # send goal and wait for result
+        self.depth_mask_client.send_goal(mask_goal)
+        rospy.loginfo('Depth mask goal sent')
+        rospy.loginfo('Waiting for the depth mask result...')
+        self.depth_mask_client.wait_for_result()
+        mask_result = self.depth_mask_client.get_result()
+
+        # COCO DETECTION
         self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
-        recognition_goal = count_objectsGoal()
-        recognition_goal.image_topic = "/xtion/rgb/image_raw"
+        # create goal
+        recognition_goal = yolo_detectionGoal()
+        recognition_goal.image_raw = mask_result.img_mask
+        recognition_goal.dataset = "coco"
         recognition_goal.confidence = 0.3
         recognition_goal.nms = 0.3
+        # send goal and wait for result
         self.object_recognition_client.send_goal(recognition_goal)
         rospy.loginfo('Recognition goal sent')
-
-        # Waits for the server to finish performing the action.
         rospy.loginfo('Waiting for the detection result...')
         self.object_recognition_client.wait_for_result()
+        count_objects_result = self.object_recognition_client.get_result()
 
-        # Prints out the result of executing the action
-        self.countPeople_result = self.object_recognition_client.get_result()
-        print('{0} persons'.format(self.countPeople_result.person))
+        # dictionary of results
+        object_count = defaultdict(int)
+        for detection in count_objects_result.detected_objects:
+            object_count[detection.name] += 1
+        person_count = object_count['person']
+        speech_out = 'I see ' + str(person_count) + ' person'
+        if not person_count == 1:
+            speech_out += 's'
+
+
+        # output result
+        self.talk(speech_out)
 
         # Update the number of people in the parameter server
         rospy.loginfo('Updating the number of people found at table %d' % table_index)
-        rospy.set_param('/tables/table' + str(table_index) + '/person_count', self.countPeople_result.person)
+        rospy.set_param('/tables/table' + str(table_index) + '/person_count', person_count)
         rospy.loginfo('Updated the person counter successfully')
 
         # Switch to the pose closer to the table
         rospy.loginfo('Switching to the second pose')
         rospy.set_param('/HAL9000/current_pose', 1)
+
+
 
     # Sleeps are required to avoid Tiago's busy status from body motions controllers
     def identifyStatus(self):
@@ -172,37 +212,32 @@ class P1Server(object):
 
         # Step 2: Take a picture of the table surface
         # Wait for recognition action server to come up and send goal
+        # COSTA DETECTION
         self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
-        recognition_goal = count_objectsGoal()
-        recognition_goal.image_topic = "/xtion/rgb/image_raw"
+        # create goal
+        recognition_goal = yolo_detectionGoal()
+        recognition_goal.image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
+        recognition_goal.dataset = "costa"
         recognition_goal.confidence = 0.3
         recognition_goal.nms = 0.3
+        # send goal and wait for result
         self.object_recognition_client.send_goal(recognition_goal)
         rospy.loginfo('Recognition goal sent')
-
-        # Waits for the server to finish performing the action.
         rospy.loginfo('Waiting for the detection result...')
         self.object_recognition_client.wait_for_result()
+        count_objects_result = self.object_recognition_client.get_result()
 
-        # Prints out the result of executing the action
-        surfaceObjects_result = self.object_recognition_client.get_result()
-        print('{0} cups {1} bowls'.format(surfaceObjects_result.cup, surfaceObjects_result.bowl))
-
-        # Step 3: Check the table surface for items
-        # Wait for the table status action server to come up and send goal
-        self.table_status_client.wait_for_server(rospy.Duration(15.0))
-        status_goal = TableStatusGoal()
-        status_goal.num_of_reads = 5
-        self.table_status_client.send_goal(status_goal)
-        rospy.loginfo('Check table status goal sent')
-
-        # Waits for the server to finish performing the action.
-        rospy.loginfo('Waiting for the status result...')
-        self.table_status_client.wait_for_result()
-
-        # Print the table status 
-        status_result = self.table_status_client.get_result()
-        rospy.loginfo('PclCheck result of %d is %s' % (table_index, status_result.status))
+        # dictionary of results
+        object_count = defaultdict(int)
+        for detection in count_objects_result.detected_objects:
+            object_count[detection.name] += 1
+        for costa_object in object_count:
+            speech_out = 'I see ' + str(object_count[costa_object]) + ' ' + str(costa_object)
+            if not object_count[costa_object] == 1:
+                speech_out += 's'
+            self.talk(speech_out)
+        if not len(object_count):
+            self.talk('no objects found')
 
         # Step 4: Get head and torso back to default
         pose_goal.motion_name = "back_to_default"
@@ -211,40 +246,26 @@ class P1Server(object):
         rospy.sleep(3)
 
         # Step 4: Decide on table status and send tts goal to the sound server
-        # Create a tts goal
-        tts_goal = TtsGoal()
-        tts_goal.rawtext.lang_id = 'en_GB'
-        foundPerson = False
-        foundConsumable = False
-        clean = False
+        foundPerson = rospy.get_param('/tables/table' + str(table_index) + '/person_count')
+        foundConsumable = len(object_count)
 
-        if self.countPeople_result.person > 0:
-            foundPerson = True
-
-        if surfaceObjects_result.cup or surfaceObjects_result.bowl > 0:
-            foundConsumable = True
-
-        if status_result.status == "clean":
-            clean = True
-
-        if foundPerson and foundConsumable:
-            result = 'Already served'
-        elif foundPerson and (not foundConsumable):
-            result = 'Needs serving'
-        elif not foundPerson:
-            if clean:
-                result = 'Clean'
+        if foundPerson:
+            if foundConsumable:
+                result = 'Already served'
             else:
+                result = 'Needs serving'
+        else:
+            if foundConsumable:
                 result = 'Dirty'
+            else:
+                result = 'Clean'
         
         # Update the status of the table in the parameter server
         rospy.loginfo('Updating the table status of table %d', table_index)
         rospy.set_param('/tables/table' + str(table_index) + '/status', result)
         rospy.loginfo('Updated the table status successfully')
-
-        rospy.loginfo(result)
-        tts_goal.rawtext.text = 'Status of {0} is {1}'.format(table_index, result)
-        self.speech_client.send_goal(tts_goal)
+        # output result
+        self.talk('Status of table {0} is {1}'.format(table_index, result))
         rospy.sleep(1)
 
     def count(self):
@@ -254,11 +275,12 @@ class P1Server(object):
         # if any table status is unknown, set it to the robot's current table
         self.tables = rospy.get_param("/tables")
         unknown_exist = False
-        next_table = 999 #Init max_int maybe?
         for table in self.tables:
             if (self.tables[table])['status'] == 'unknown':
-                unknown_exist = True
-                if self.tables[table]['id'] < next_table:
+                if not unknown_exist:
+                    unknown_exist = True
+                    next_table = self.tables[table]['id']
+                elif self.tables[table]['id'] < next_table:
                     next_table = self.tables[table]['id']
 
         if unknown_exist:

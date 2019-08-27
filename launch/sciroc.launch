@@ -15,6 +15,9 @@
 
     <!-- <node pkg="object_detection_yolo_opencv4" type="count_objects_server.py" name="count_objects" args="" output="screen" /> -->
 
+    <node pkg="lasr_object_detection_yolo" type="object_detection_server.py" name="yolo_detection" args="" output="screen" />
+    <node pkg="lasr_img_depth_mask" type="depth_mask_server.py" name="depth_mask" args="" output="screen" />
+
     <group ns="$(arg robotname)">
         <param name="robot_name" value="$(arg robotname)" />
         <param name="tf_prefix" value="$(arg robotname)" />
