@@ -113,13 +113,45 @@ class P2Server(object):
            self._result.condition_event = ['pictureDone']
            rospy.set_param('/HAL9000/current_pose', 0)
 
+    def count(self):
+        # TODO: move to individual action file
+        rospy.loginfo('Counting all the tables')
+
+        # if any table status is unknown, set it to the robot's current table
+        self.tables = rospy.get_param("/tables")
+        unknown_exist = False
+        for table in self.tables:
+            if (self.tables[table])['status'] == 'unknown':
+                if not unknown_exist:
+                    unknown_exist = True
+                    next_table = self.tables[table]['id']
+                elif self.tables[table]['id'] < next_table:
+                    next_table = self.tables[table]['id']
+
+        if unknown_exist:
+            rospy.set_param('/HAL9000/current_table', next_table)
+            print "\033[1;33m" + "The next table is " + str(next_table) + "\033[0m"
+        else:
+            # if all tables have been identified, counting is done
+            self._result.condition_event = ['doneCounting']
     
     def initialise_p2(self):
         # Get the ID of a table that needs serving
+        needServing_exist = False
         for table in self.tables:
             if (self.tables[table])['status'] == 'Needs serving':
-                rospy.set_param('/HAL9000/current_table', self.tables[table]['id'])
-                break
+                if not needServing_exist:
+                    needServing_exist = True
+                    next_table = self.tables[table]['id']
+                elif self.tables[table]['id'] < next_table:
+                    next_table = self.tables[table]['id']
+        
+        if needServing_exist:
+            rospy.set_param('/HAL9000/current_table', next_table)
+            print "\033[1;33m" + "The next table that needs serving is " + str(next_table) + "\033[0m"
+        else:
+            # if all tables have been served, counting is done
+            self._result.condition_event = ['doneServing']
 
         # Set the table pose to the close pose
         rospy.set_param('/HAL9000/current_pose', 1)
