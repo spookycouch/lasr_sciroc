@@ -231,12 +231,14 @@ class P1Server(object):
         object_count = defaultdict(int)
         for detection in count_objects_result.detected_objects:
             object_count[detection.name] += 1
-        for costa_object in object_count:
-            speech_out = 'I see ' + str(object_count[costa_object]) + ' ' + str(costa_object)
-            if not object_count[costa_object] == 1:
-                speech_out += 's'
-            self.talk(speech_out)
-        if not len(object_count):
+        if len(object_count):
+            self.talk('I see:')
+            for costa_object in object_count:
+                speech_out = str(object_count[costa_object]) + ' ' + str(costa_object)
+                if not object_count[costa_object] == 1:
+                    speech_out += 's'
+                self.talk(speech_out)
+        else:
             self.talk('no objects found')
 
         # Step 4: Get head and torso back to default
