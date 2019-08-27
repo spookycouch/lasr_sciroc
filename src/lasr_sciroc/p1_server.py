@@ -7,9 +7,6 @@ import rospy
 import actionlib
 import rosparam
 
-# Our table class
-from Table import Table
-
 # Actionlib messages
 import lasr_pnp_bridge.msg as lpb_msg
 from std_msgs.msg import String, Header
@@ -21,7 +18,6 @@ from play_motion_msgs.msg import PlayMotionAction, PlayMotionGoal
 from lasr_img_depth_mask.msg import DepthMaskAction, DepthMaskGoal
 from lasr_object_detection_yolo.msg import yolo_detectionAction, yolo_detectionGoal
 from pal_interaction_msgs.msg import TtsGoal, TtsAction
-
 from collections import defaultdict
 
 class P1Server(object):

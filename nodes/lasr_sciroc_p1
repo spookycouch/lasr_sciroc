@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import rospy
-from lasr_sciroc_p1 import P1Server
+from lasr_sciroc import P1Server
 
 if __name__== '__main__':
     rospy.init_node('P1Server')

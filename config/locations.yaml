@@ -3,7 +3,7 @@ tables:
     id: 0
     person_count: -1
     status: "unknown"
-    count: True
+    order: []
     loc:
       - far_pose:
           position: { x: 6.79765179408, y: -0.625241101834, z: 0.0 }
@@ -16,7 +16,7 @@ tables:
     id: 1
     person_count: -1
     status: "unknown"
-    count: True
+    order: []
     loc:
       - far_pose:
           position: { x: 9.34957322785, y: -0.217437855221, z: 0.0 }
@@ -25,8 +25,12 @@ tables:
           position: { x: 9.38863755014, y: 0.202148583446, z: 0.0 }
           orientation: { x: 0.0, y: 0.0, z: 0.655514163585, w: 0.7551828794 }
 
+Bar:
+  loc:
+    position: { x: 0.447394763282, y: 0.00754231950464, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.663126835597, w: 0.748507047336 }
+
 Home:
-  count: False
   loc:
     position: { x: 0, y: 0, z: 0.0 }
     orientation: { x: 0.0, y: 0.0, z: 0, w: 1 }

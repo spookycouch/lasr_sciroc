@@ -14,7 +14,7 @@ from actionlib_msgs.msg import GoalStatus
 from geometry_msgs.msg import Point, Quaternion, Pose
 from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
 from play_motion_msgs.msg import PlayMotionAction, PlayMotionGoal
-from object_detection_yolo_opencv4.msg import count_objectsAction, count_objectsGoal
+from lasr_object_detection_yolo.msg import yolo_detectionGoal, yolo_detectionAction
 from pal_interaction_msgs.msg import TtsGoal, TtsAction
 from sensor_msgs.msg import Image
 from collections import defaultdict
@@ -135,7 +135,7 @@ class P2Server(object):
             # if all tables have been identified, counting is done
             self._result.condition_event = ['doneCounting']
     
-    def initialise_p2(self):
+    def p2Initialise(self):
         # Get the ID of a table that needs serving
         needServing_exist = False
         for table in self.tables:
@@ -194,7 +194,7 @@ class P2Server(object):
         order = ['water', 'biscotti', 'berry smoothie']
         print('[INFO] Updating the order at table %d', table_index)
         print('[INFO] the order is ')
-        print(*order, sep = ", ")  
+        print(order)  
         rospy.set_param('/tables/table' + str(table_index) + '/order', order)
         rospy.loginfo('Updated the order of table %d successfully', table_index)
         rospy.sleep(5)
@@ -202,14 +202,14 @@ class P2Server(object):
     
     def gotoBar(self):
         rospy.loginfo('Going to bar')
-        home = rospy.get_param('/Home')
+        bar = rospy.get_param('/Bar')
 
         self.move_base_client.wait_for_server(rospy.Duration(15.0))
 
         goal = MoveBaseGoal()
         goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = Pose(position = Point(**home['loc']['position']),
-            orientation = Quaternion(**home['loc']['orientation']))
+        goal.target_pose.pose = Pose(position = Point(**bar['loc']['position']),
+            orientation = Quaternion(**bar['loc']['orientation']))
 
         rospy.loginfo('Sending goal location ...')
         self.move_base_client.send_goal(goal) #waits forever
@@ -230,7 +230,7 @@ class P2Server(object):
         # Fetch the order from the parameter server
         order = rospy.get_param('/tables/table' + str(table_index) + '/order')
         rospy.loginfo('The order fetched from the parameter server is ')
-        print(*order, sep = ", ")  
+        print(order)  
 
         # Fill the speech goal
         tts_goal.rawtext.text = 'The order of table {0} is {1}'.format(table_index, order)
@@ -244,7 +244,7 @@ class P2Server(object):
         # Fetch the order from the parameter server
         order = rospy.get_param('/tables/table' + str(table_index) + '/order')
         rospy.loginfo('The order fetched from the parameter server in checkOrderCorrectness is ')
-        print(*order, sep = ", ")  
+        print(order)  
 
         # Look down to see the items on the counter
         # Wait for the play motion server to come up and send goal
@@ -257,7 +257,7 @@ class P2Server(object):
         rospy.sleep(3)
 
         # Run the object detection client on the items
-        goal = lasr_object_detection_yolo.msg.yolo_detectionGoal()
+        goal = yolo_detectionGoal
         goal.image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
         goal.dataset = "costa"
         goal.confidence = 0.3

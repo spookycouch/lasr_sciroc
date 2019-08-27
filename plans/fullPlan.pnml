@@ -725,9 +725,9 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P2Server/initialise_p2.exec</value>
+        <value>extern_P2Server/p2Initialise.exec</value>
         <graphics>
-          <offset x="-75" y="-21" />
+          <offset x="-72" y="-21" />
         </graphics>
       </name>
       <initialMarking>
@@ -1523,9 +1523,9 @@
         <size width="8" height="48" />
       </graphics>
       <name>
-        <value>extern_P2Server/initialise_p2.start</value>
+        <value>extern_P2Server/p2Initialise.start</value>
         <graphics>
-          <offset x="-97" y="51" />
+          <offset x="-94" y="51" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -1543,9 +1543,9 @@
         <size width="8" height="48" />
       </graphics>
       <name>
-        <value>extern_P2Server/initialise_p2.end</value>
+        <value>extern_P2Server/p2Initialise.end</value>
         <graphics>
-          <offset x="-94" y="51" />
+          <offset x="-91" y="51" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
