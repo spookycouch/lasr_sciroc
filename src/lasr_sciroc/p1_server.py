@@ -20,6 +20,9 @@ from lasr_object_detection_yolo.msg import yolo_detectionAction, yolo_detectionG
 from pal_interaction_msgs.msg import TtsGoal, TtsAction
 from collections import defaultdict
 
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+
 class P1Server(object):
     _feedback = lpb_msg.BridgeFeedback()
     _result = lpb_msg.BridgeResult()
@@ -70,7 +73,7 @@ class P1Server(object):
 
     def initialise(self):
         # initialise PNP variables
-        rospy.set_param('/HAL9000/current_table', 0)
+        rospy.set_param('/HAL9000/current_table', 3)
         rospy.set_param('/HAL9000/current_pose', 0)
 
     def gotoHome(self):
@@ -152,6 +155,7 @@ class P1Server(object):
         mask_result = self.depth_mask_client.get_result()
 
         # COCO DETECTION
+        #TODO VIEW RESULTS BECAUSE INVISIBLE PERSON APPEARED
         self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
         # create goal
         recognition_goal = yolo_detectionGoal()
@@ -174,6 +178,12 @@ class P1Server(object):
         speech_out = 'I see ' + str(person_count) + ' person'
         if not person_count == 1:
             speech_out += 's'
+        
+        bridge = CvBridge()
+        frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+
+        cv2.imshow('image_masked', frame)
+        cv2.waitKey(0)
 
 
         # output result
@@ -228,12 +238,12 @@ class P1Server(object):
         for detection in count_objects_result.detected_objects:
             object_count[detection.name] += 1
         if len(object_count):
-            self.talk('I see:')
+            speech_out = 'I see '
             for costa_object in object_count:
-                speech_out = str(object_count[costa_object]) + ' ' + str(costa_object)
+                speech_out += ', ' + str(object_count[costa_object]) + ' ' + str(costa_object)
                 if not object_count[costa_object] == 1:
                     speech_out += 's'
-                self.talk(speech_out)
+            self.talk(speech_out)
         else:
             self.talk('no objects found')
 
@@ -272,8 +282,10 @@ class P1Server(object):
 
         # if any table status is unknown, set it to the robot's current table
         self.tables = rospy.get_param("/tables")
+        print(self.tables)
         unknown_exist = False
         for table in self.tables:
+            print(table)
             if (self.tables[table])['status'] == 'unknown':
                 if not unknown_exist:
                     unknown_exist = True

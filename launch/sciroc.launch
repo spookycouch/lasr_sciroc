@@ -8,14 +8,14 @@
     <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
 
     <!-- Load the longroom tables and motions data into the parameter server -->
-    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/longroom.yaml" /> -->
+    <rosparam command="load" file="$(find lasr_sciroc)/config/longroom.yaml" />
     <rosparam command="load" file="$(find lasr_sciroc)/config/HAL9000.yaml" />
-    <rosparam command="load" file="$(find lasr_sciroc)/config/locations.yaml" />
+    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/locations.yaml" /> -->
     <rosparam command="load" file="$(find lasr_sciroc)/config/motions.yaml" />
 
     <!-- Yolo object detection server and the depth mask servers-->
     <node pkg="lasr_object_detection_yolo" type="object_detection_server.py" name="yolo_detection" args="" output="screen" />
-    <node pkg="lasr_img_depth_mask" type="depth_mask_server.py" name="depth_mask" args="" output="screen" />
+    <node pkg="lasr_img_depth_mask" type="blur_mask_server.py" name="depth_mask" args="" output="screen" />
 
     <group ns="$(arg robotname)">
         <param name="robot_name" value="$(arg robotname)" />

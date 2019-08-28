@@ -177,76 +177,80 @@ class P2Server(object):
         rospy.loginfo('The order fetched from the parameter server in checkOrderCorrectness is ')
         print(order)  
 
-        # Look down to see the items on the counter
-        # Wait for the play motion server to come up and send goal
-        self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-        pose_goal = PlayMotionGoal()
-        pose_goal.motion_name = "look_down"
-        pose_goal.skip_planning = True
-        self.play_motion_client.send_goal(pose_goal)
-        rospy.loginfo('Looking down goal sent')
-        rospy.sleep(5)
+        while True:
+            rospy.sleep(4)
+            # Look down to see the items on the counter
+            # Wait for the play motion server to come up and send goal
+            self.play_motion_client.wait_for_server(rospy.Duration(15.0))
+            pose_goal = PlayMotionGoal()
+            pose_goal.motion_name = "look_down"
+            pose_goal.skip_planning = True
+            self.play_motion_client.send_goal(pose_goal)
+            rospy.loginfo('Looking down goal sent')
+            rospy.sleep(5)
 
-        # Run the object detection client on the items
-        goal = yolo_detectionGoal
-        goal.image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
-        goal.dataset = "costa"
-        goal.confidence = 0.3
-        goal.nms = 0.5
-        self.object_recognition_client.send_goal(goal)
-        rospy.loginfo('Object check goal sent')
-        self.object_recognition_client.wait_for_result()
-        result = self.object_recognition_client.get_result()
-        rospy.loginfo('Got the result back')
+            # Run the object detection client on the items
+            goal = yolo_detectionGoal
+            goal.image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
+            goal.dataset = "costa"
+            goal.confidence = 0.3
+            goal.nms = 0.5
+            self.object_recognition_client.send_goal(goal)
+            rospy.loginfo('Object check goal sent')
+            self.object_recognition_client.wait_for_result()
+            result = self.object_recognition_client.get_result()
+            rospy.loginfo('Got the result back')
 
-        order_count = defaultdict(int)
-        for item in order:
-            order_count[item] += 1
-        
-        object_count = defaultdict(int)
-        for detection in result.detected_objects:
-            object_count[detection.name] += 1
-        for count in object_count:
-            print('I see ' + str(object_count[count]) + ' of ' + str(count))
+            order_count = defaultdict(int)
+            for item in order:
+                order_count[item] += 1
+            
+            object_count = defaultdict(int)
+            for detection in result.detected_objects:
+                object_count[detection.name] += 1
+            for count in object_count:
+                print('I see ' + str(object_count[count]) + ' of ' + str(count))
 
-        # Look back up
-        # Wait for the play motion server to come up and send goal
-        self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-        pose_goal = PlayMotionGoal()
-        pose_goal.motion_name = "back_to_default"
-        pose_goal.skip_planning = True
-        self.play_motion_client.send_goal(pose_goal)
-        rospy.loginfo('Back to default goal sent')
-        rospy.sleep(5)
+            # Look back up
+            # Wait for the play motion server to come up and send goal
+            self.play_motion_client.wait_for_server(rospy.Duration(15.0))
+            pose_goal = PlayMotionGoal()
+            pose_goal.motion_name = "back_to_default"
+            pose_goal.skip_planning = True
+            self.play_motion_client.send_goal(pose_goal)
+            rospy.loginfo('Back to default goal sent')
+            rospy.sleep(5)
 
-        # Compare the result to the order and announce the missing item
-        missing_items = defaultdict(int)
-        excess_items = defaultdict(int)
-        for item in order_count:
-            if object_count[item] < order_count[item]:
-                missing_items[item] = order_count[item] - object_count[item]
-            elif object_count[item] > order_count[item]:
-                excess_items[item] = object_count[item] - order_count[item]
+            # Compare the result to the order and announce the missing item
+            missing_items = defaultdict(int)
+            excess_items = defaultdict(int)
+            for item in order_count:
+                if object_count[item] < order_count[item]:
+                    missing_items[item] = order_count[item] - object_count[item]
+                elif object_count[item] > order_count[item]:
+                    excess_items[item] = object_count[item] - order_count[item]
 
-        # Output incorrect items
-        if len(missing_items) or len(excess_items):
-            self.talk('The order is incorrect. Please correct the order and place the items on my back.') 
-            if len(missing_items):
-                self.talk('The missing items are:')
-                for item in missing_items:
-                    speech_out = str(missing_items[item]) + ' ' + str(item)
-                    if not missing_items[item] == 1:
-                        speech_out += 's'
-                    self.talk(speech_out)
-            # output excess items
-            if len(excess_items):
-                self.talk('The excess items are:')
-                for item in excess_items:
-                    speech_out = str(excess_items[item]) + ' ' + str(item)
-                    if not excess_items[item] == 1:
-                        speech_out += 's'
-                    self.talk(speech_out)
-        rospy.sleep(4)
+            # Output incorrect items
+            if len(missing_items) or len(excess_items):
+                speech_out = 'The order is incorrect. Please correct the order.'
+                if len(missing_items):
+                    speech_out += '. The missing items are '
+                    for item in missing_items:
+                        speech_out += ', ' + str(missing_items[item]) + ' ' + str(item)
+                        if not missing_items[item] == 1:
+                            speech_out += 's'
+                # output excess items
+                if len(excess_items):
+                    speech_out += '. The excess items are:'
+                    for item in excess_items:
+                        speech_out += ', ' +  str(excess_items[item]) + ' ' + str(item)
+                        if not excess_items[item] == 1:
+                            speech_out += 's'
+                self.talk(speech_out)
+            else:
+                self.talk('Order is correct, please place the items on my back.')
+                break
+            rospy.sleep(4)
 
     def talk(self, speech_in):
         print('\033[1;36mTIAGO: ' + speech_in + '\033[0m')
@@ -264,6 +268,7 @@ class P2Server(object):
         current_pose = rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped)
 
         # Change orientation to turn TIAGo 180 degrees
+        current_pose.pose.pose.orientation.z = -current_pose.pose.pose.orientation.z
         current_pose.pose.pose.orientation.w = -current_pose.pose.pose.orientation.w
         turn  = current_pose
 
