@@ -3,7 +3,7 @@ play_motion:
     look_down:
       joints: [head_1_joint, head_2_joint]
       points:
-      - positions: [0.0, -0.5]
+      - positions: [0.0, -0.3]
         time_from_start: 2.0
     
     back_to_default:
