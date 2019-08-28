@@ -146,7 +146,7 @@ class P1Server(object):
         # Wait for recognition action server to come up and send goal
 
         # DEPTH MASK
-        self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, maskCallback)
+        self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, maskCallback, queue_size=1)
         self.depth_mask_client.wait_for_server(rospy.Duration(15.0))
         mask_goal = DepthMaskGoal()
         mask_goal.depth_points = self.depth_points
