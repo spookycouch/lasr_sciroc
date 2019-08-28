@@ -134,6 +134,11 @@ class P1Server(object):
         self.speech_client.send_goal(tts_goal)
 
 
+    def maskCallback(self, data):
+        self.depth_points = data
+        self.depth_sub.unregister()
+        
+
     def countPeople(self):
         table_index = rospy.get_param('/HAL9000/current_table')
         # TODO: move to individual action file
@@ -141,9 +146,10 @@ class P1Server(object):
         # Wait for recognition action server to come up and send goal
 
         # DEPTH MASK
+        self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, maskCallback)
         self.depth_mask_client.wait_for_server(rospy.Duration(15.0))
         mask_goal = DepthMaskGoal()
-        mask_goal.depth_points = rospy.wait_for_message('/xtion/depth_registered/points', PointCloud2)
+        mask_goal.depth_points = self.depth_points
         mask_goal.filter_left = 1
         mask_goal.filter_right = 1
         mask_goal.filter_front = 3.5
