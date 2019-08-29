@@ -6,7 +6,8 @@ from os import path
 import rospy
 import actionlib
 import rosparam
-
+import rosnode
+import tf.transformations
 # Actionlib messages
 import lasr_pnp_bridge.msg as lpb_msg
 from std_msgs.msg import String, Header
@@ -18,7 +19,7 @@ from lasr_object_detection_yolo.msg import yolo_detectionGoal, yolo_detectionAct
 from pal_interaction_msgs.msg import TtsGoal, TtsAction
 from sensor_msgs.msg import Image
 from collections import defaultdict
-
+from math import pi as PI
 class P2Server(object):
     _feedback = lpb_msg.BridgeFeedback()
     _result = lpb_msg.BridgeResult()
@@ -178,7 +179,7 @@ class P2Server(object):
         print(order)  
 
         while True:
-            rospy.sleep(4)
+            rospy.sleep(5)
             # Look down to see the items on the counter
             # Wait for the play motion server to come up and send goal
             self.play_motion_client.wait_for_server(rospy.Duration(15.0))
@@ -227,7 +228,8 @@ class P2Server(object):
             for item in order_count:
                 if object_count[item] < order_count[item]:
                     missing_items[item] = order_count[item] - object_count[item]
-                elif object_count[item] > order_count[item]:
+            for item in object_count:
+                if object_count[item] > order_count[item]:
                     excess_items[item] = object_count[item] - order_count[item]
 
             # Output incorrect items
@@ -259,25 +261,40 @@ class P2Server(object):
         tts_goal.rawtext.text = speech_in
         self.speech_client.send_goal(tts_goal)
 
+    def shiftQuaternion(self, orientation, radians):
+        theEuler = tf.transformations.euler_from_quaternion([orientation.x, orientation.y, orientation.z, orientation.w])
+        if(theEuler[2] > 0):
+            newEuler = theEuler[0], theEuler[1], theEuler[2] - radians
+        else:
+            newEuler = theEuler[0], theEuler[1], theEuler[2] + radians
+        theFakeQuaternion = tf.transformations.quaternion_from_euler(newEuler[0], newEuler[1], newEuler[2])
+        theRealQuaternion = Quaternion(theFakeQuaternion[0], theFakeQuaternion[1], theFakeQuaternion[2], theFakeQuaternion[3])
+        return theRealQuaternion
     
     def waitConfirmation(self):
+        # RESTART MOVE BASE WITH LOWER YAW THRESHOLD
+        rospy.loginfo('killing move base server')
+        rospy.set_param("/move_base/PalLocalPlanner/yaw_goal_tolerance", 0.05)
+        rosnode.kill_nodes(['/move_base'])
+        if self.move_base_client.wait_for_server(rospy.Duration(10)):
+            rospy.loginfo('Move base server is back up')
+        else:
+            rospy.loginfo("Failed to connect to move base")
+        
         rospy.sleep(2)
         table_index = rospy.get_param('/HAL9000/current_table')
 
         # Get his current pose
-        current_pose = rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped)
-
-        # Change orientation to turn TIAGo 180 degrees
-        current_pose.pose.pose.orientation.z = -current_pose.pose.pose.orientation.z
-        current_pose.pose.pose.orientation.w = -current_pose.pose.pose.orientation.w
-        turn  = current_pose
+        current_pose = rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped).pose.pose
 
         # Send new pose
         self.move_base_client.wait_for_server(rospy.Duration(15.0))
 
         goal = MoveBaseGoal()
+
         goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = turn.pose.pose
+        # Change orientation to turn TIAGo 180 degrees
+        goal.target_pose.pose = Pose(position=current_pose.position, orientation=self.shiftQuaternion(current_pose.orientation, PI))
         rospy.loginfo('Sending goal location ...')
         self.move_base_client.send_goal(goal) #waits forever
         if self.move_base_client.wait_for_result():

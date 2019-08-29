@@ -73,8 +73,7 @@ class P1Server(object):
 
     def initialise(self):
         # initialise PNP variables
-        rospy.set_param('/HAL9000/current_table', 3)
-        rospy.set_param('/HAL9000/current_pose', 0)
+        pass
 
     def gotoHome(self):
         rospy.loginfo('Going to home')
@@ -133,21 +132,38 @@ class P1Server(object):
         tts_goal.rawtext.text = speech_in
         self.speech_client.send_goal(tts_goal)
 
-
+    # subscribes to topic until a recent depth cloud image (less than 2 seconds ago) is taken
     def maskCallback(self, data):
-        self.depth_points = data
-        self.depth_sub.unregister()
+        print('Time now: ' + str(rospy.Time.now().secs) + '. Time of pcl: ' + str(data.header.stamp.secs))
+        if((rospy.Time.now().secs - data.header.stamp.secs) < 2):
+            self.depth_points = data
+            self.depth_sub.unregister()
         
-
+    
     def countPeople(self):
         table_index = rospy.get_param('/HAL9000/current_table')
         # TODO: move to individual action file
         # Take a picture of the table from afar
         # Wait for recognition action server to come up and send goal
 
+        # Step 1: Raise torso up to have a better view of people
+        # Wait for the play motion server to come up and send goal
+        # self.play_motion_client.wait_for_server(rospy.Duration(15.0))
+        # pose_goal = PlayMotionGoal()
+        # pose_goal.motion_name = "count_people"
+        # pose_goal.skip_planning = True
+        # self.play_motion_client.send_goal(pose_goal)
+        # rospy.loginfo('Count people goal sent')
+        # rospy.sleep(3)
+
         # DEPTH MASK
-        self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, self.maskCallback, queue_size=1)
-        self.depth_mask_client.wait_for_server(rospy.Duration(15.0))
+        # create depth cloud subscriber, wait for depth_points to be updated
+        self.depth_points = None
+        self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, self.maskCallback)
+        while True:
+            if self.depth_points != None:
+                break
+        # create goal
         mask_goal = DepthMaskGoal()
         mask_goal.depth_points = self.depth_points
         mask_goal.filter_left = 1
@@ -185,11 +201,21 @@ class P1Server(object):
         if not person_count == 1:
             speech_out += 's'
         
-        bridge = CvBridge()
-        frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+        # view the image - debug
+        # bridge = CvBridge()
+        # frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+        # cv2.imshow('image_masked', frame)
+        # cv2.waitKey(0)
 
-        cv2.imshow('image_masked', frame)
-        cv2.waitKey(0)
+        # Step 1: Back to default
+        # Wait for the play motion server to come up and send goal
+        # self.play_motion_client.wait_for_server(rospy.Duration(15.0))
+        # pose_goal = PlayMotionGoal()
+        # pose_goal.motion_name = "back_to_default"
+        # pose_goal.skip_planning = True
+        # self.play_motion_client.send_goal(pose_goal)
+        # rospy.loginfo('Back to default goal sent')
+        # rospy.sleep(3)
 
 
         # output result
@@ -216,7 +242,7 @@ class P1Server(object):
         # Wait for the play motion server to come up and send goal
         self.play_motion_client.wait_for_server(rospy.Duration(15.0))
         pose_goal = PlayMotionGoal()
-        pose_goal.motion_name = "look_down"
+        pose_goal.motion_name = "check_table"
         pose_goal.skip_planning = True
         self.play_motion_client.send_goal(pose_goal)
         rospy.loginfo('Looking down goal sent')

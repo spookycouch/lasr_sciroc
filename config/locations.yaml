@@ -15,7 +15,7 @@ tables:
   table1:
     id: 1
     person_count: -1
-    status: "Needs serving"
+    status: "unknown"
     order: []
     loc:
       - far_pose:

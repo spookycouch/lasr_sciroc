@@ -5,9 +5,21 @@ play_motion:
       points:
       - positions: [0.0, -0.2]
         time_from_start: 2.0
+
+    check_table:
+      joints: [torso_lift_joint, head_1_joint, head_2_joint]
+      points:
+      - positions: [0.3, 0.0, -0.5]
+        time_from_start: 2.0
+
+    count_people:
+      joints: [torso_lift_joint]
+      points:
+      - positions: [0.3]
+        time_from_start: 2.0
     
     back_to_default:
-      joints: [head_1_joint, head_2_joint]
+      joints: [torso_lift_joint, head_1_joint, head_2_joint]
       points:
-      - positions: [0.0, 0.0]
+      - positions: [0.15, 0.0, 0.0]
         time_from_start: 2.0
