@@ -541,9 +541,9 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P2Server/waitConfirmation.exec</value>
+        <value>extern_P2Server/waitLoad.exec</value>
         <graphics>
-          <offset x="-83" y="32" />
+          <offset x="-59" y="32" />
         </graphics>
       </name>
       <initialMarking>
@@ -633,9 +633,9 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P2Server/waitConfirmation.exec</value>
+        <value>extern_P2Server/waitUnload.exec</value>
         <graphics>
-          <offset x="-83" y="32" />
+          <offset x="-66" y="32" />
         </graphics>
       </name>
       <initialMarking>
@@ -1297,9 +1297,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/waitConfirmation.start</value>
+        <value>extern_P2Server/waitLoad.start</value>
         <graphics>
-          <offset x="-82" y="11" />
+          <offset x="-57" y="11" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -1317,9 +1317,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/waitConfirmation.end</value>
+        <value>extern_P2Server/waitLoad.end</value>
         <graphics>
-          <offset x="-83" y="13" />
+          <offset x="-58" y="13" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -1377,9 +1377,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/waitConfirmation.start</value>
+        <value>extern_P2Server/waitUnload.start</value>
         <graphics>
-          <offset x="-94" y="11" />
+          <offset x="-76" y="11" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -1397,9 +1397,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/waitConfirmation.end</value>
+        <value>extern_P2Server/waitUnload.end</value>
         <graphics>
-          <offset x="-86" y="11" />
+          <offset x="-68" y="11" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">

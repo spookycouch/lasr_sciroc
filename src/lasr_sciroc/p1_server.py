@@ -1,186 +1,37 @@
 #!/usr/bin/python
 
-import yaml
-from os import path
-
 import rospy
-import actionlib
-import rosparam
-
-# Actionlib messages
-import lasr_pnp_bridge.msg as lpb_msg
-from std_msgs.msg import String, Header
-from sensor_msgs.msg import Image, PointCloud2
-from actionlib_msgs.msg import GoalStatus
-from geometry_msgs.msg import Point, Quaternion, Pose
-from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
-from play_motion_msgs.msg import PlayMotionAction, PlayMotionGoal
-from lasr_img_depth_mask.msg import DepthMaskAction, DepthMaskGoal
-from lasr_object_detection_yolo.msg import yolo_detectionAction, yolo_detectionGoal
-from pal_interaction_msgs.msg import TtsGoal, TtsAction
+import rosnode
+from SciRocServer import SciRocServer
+from sensor_msgs.msg import Image
 from collections import defaultdict
 
-import cv2
-from cv_bridge import CvBridge, CvBridgeError
-
-class P1Server(object):
-    _feedback = lpb_msg.BridgeFeedback()
-    _result = lpb_msg.BridgeResult()
-
+class P1Server(SciRocServer):
     def __init__(self, server_name):
-        # bridge server
-        self._bridge_server = actionlib.SimpleActionServer(server_name, lpb_msg.BridgeAction, execute_cb=self.execute_cb, auto_start=False)
-        self._bridge_server.start()
-
-        # Initialising clients: move_base, playmotion, objectRecognition and table_status
-        self.move_base_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
-        self.play_motion_client = actionlib.SimpleActionClient('/play_motion', PlayMotionAction)
-        self.depth_mask_client = actionlib.SimpleActionClient('/depth_mask', DepthMaskAction)
-        self.object_recognition_client = actionlib.SimpleActionClient('/yolo_detection', yolo_detectionAction)
-        self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
-
-        # Bool variable and wake_word subscriber for voice plan activation
-        self.running = False
-        rospy.Subscriber('/wake_word/wake_word_detected', String, self.handle_wake_word_detected)
-        self.plan_publisher = rospy.Publisher('/p1/planToExec', String, queue_size=1)
-
-        # Get the Tables Dictionary from the parameter server
-        self.tables = rospy.get_param("/tables")
-    
-    def handle_wake_word_detected(self, data):
-        wake_word = data.data
-        if not self.running and wake_word == 'start the demo':
-            self.running = True
-            self.plan_publisher.publish('p1PlanNew')
-  
-    def execute_cb(self, goal):
-        rospy.loginfo("----------ExternalServer start----------")
-
-        # log action and parameters
-        rospy.loginfo("action is: " + str(goal.action))
-        rospy.loginfo("params are: " + str(goal.params))
-
-        # reset result 
-        self._result = lpb_msg.BridgeResult()
-
-        # call the action
-        getattr(self, goal.action)(*goal.params)
-
-        self._bridge_server.set_succeeded(self._result)
-
-        # end callback
-        rospy.loginfo("----------ExternalServer end----------")
+        SciRocServer.__init__(self, server_name)
 
     def initialise(self):
-        # initialise PNP variables
-        pass
+        # Restart move basse with a lower yaw threshold for more accurate turning
+        rospy.loginfo('killing move base server')
+        rospy.set_param("/move_base/PalLocalPlanner/yaw_goal_tolerance", 0.05)
+        rosnode.kill_nodes(['/move_base'])
 
-    def gotoHome(self):
-        rospy.loginfo('Going to home')
-        home = rospy.get_param('/Home')
-
-        self.move_base_client.wait_for_server(rospy.Duration(15.0))
-
-        goal = MoveBaseGoal()
-        goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = Pose(position = Point(**home['loc']['position']),
-            orientation = Quaternion(**home['loc']['orientation']))
-
-        rospy.loginfo('Sending goal location ...')
-        self.move_base_client.send_goal(goal) #waits forever
-        if self.move_base_client.wait_for_result():
-            rospy.loginfo('Goal location achieved!')
+        if self.move_base_client.wait_for_server(rospy.Duration(10)):
+            rospy.loginfo('Move base server is back up')
         else:
-            rospy.logwarn("Couldn't reach the goal!")
-
-    def goto(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
-        # TODO: move to individual action file
-        rospy.loginfo('Going to: %d ', table_index)
-
-        self.move_base_client.wait_for_server(rospy.Duration(15.0))
-
-        goal = MoveBaseGoal()
-        goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = Pose(position = Point(**self.tables['table' + str(table_index)]['loc']['position']),
-            orientation = Quaternion(**self.tables['table' + str(table_index)]['loc']['orientation']))
-
-        rospy.loginfo('Sending goal location ...')
-        self.move_base_client.send_goal(goal) #waits forever
-        if self.move_base_client.wait_for_result():
-            rospy.loginfo('Goal location achieved!')
-        else:
-            rospy.logwarn("Couldn't reach the goal!")
-
-    def talk(self, speech_in):
-        print('\033[1;36mTIAGO: ' + speech_in + '\033[0m')
-        tts_goal = TtsGoal()
-        tts_goal.rawtext.lang_id = 'en_GB'
-        tts_goal.rawtext.text = speech_in
-        self.speech_client.send_goal(tts_goal)
-
-    # subscribes to topic until a recent depth cloud image (less than 2 seconds ago) is taken
-    def maskCallback(self, data):
-        print('Time now: ' + str(rospy.Time.now().secs) + '. Time of pcl: ' + str(data.header.stamp.secs))
-        if((rospy.Time.now().secs - data.header.stamp.secs) < 2):
-            self.depth_points = data
-            self.depth_sub.unregister()
+            rospy.loginfo("Failed to connect to move base")
         
     
     def countPeople(self):
         table_index = rospy.get_param('/HAL9000/current_table')
-        poses = ['count_people_left', 'count_people_right']
+        points = rospy.get_param('/tables/table' + str(table_index) + '/pointsLR')
         object_count = defaultdict(int)
 
-
-        # TODO: move to individual action file
-        # Take a picture of the table from afar
-        # Wait for recognition action server to come up and send goal
+        # Take a picture using the depth mask and feed it to the detection
         for i in range(2):
-            # LOOK LEFT/RIGHT
-            # Wait for the play motion server to come up and send goal
-            self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-            pose_goal = PlayMotionGoal()
-            pose_goal.motion_name = poses[i]
-            pose_goal.skip_planning = True
-            self.play_motion_client.send_goal(pose_goal)
-            rospy.loginfo('Play motion goal sent')
-            self.play_motion_client.wait_for_result()
-
-            # DEPTH MASK
-            # create depth cloud subscriber, wait for depth_points to be updated
-            self.depth_points = None
-            self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, self.maskCallback)
-            while True:
-                if self.depth_points != None:
-                    break
-            # create goal
-            mask_goal = DepthMaskGoal()
-            mask_goal.depth_points = self.depth_points
-            mask_goal.filter_left = 1
-            mask_goal.filter_right = 1
-            mask_goal.filter_front = 3.5
-            # send goal and wait for result
-            self.depth_mask_client.send_goal(mask_goal)
-            rospy.loginfo('Depth mask goal sent')
-            rospy.loginfo('Waiting for the depth mask result...')
-            self.depth_mask_client.wait_for_result()
-            mask_result = self.depth_mask_client.get_result()
-
-            # COCO DETECTION
-            self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
-            # create goal
-            recognition_goal = yolo_detectionGoal()
-            recognition_goal.image_raw = mask_result.img_mask
-            recognition_goal.dataset = "coco"
-            recognition_goal.confidence = 0.3
-            recognition_goal.nms = 0.3
-            # send goal and wait for result
-            self.object_recognition_client.send_goal(recognition_goal)
-            rospy.loginfo('Recognition goal sent')
-            rospy.loginfo('Waiting for the detection result...')
-            self.object_recognition_client.wait_for_result()
-            count_objects_result = self.object_recognition_client.get_result()
+            self.lookAt(points[i])
+            mask_result = self.depthMask(1, 1, 3.5)
+            count_objects_result = self.detectObject(mask_result.img_mask, "coco", 0.3, 0.3)
 
             # update dictionary
             for detection in count_objects_result.detected_objects:
@@ -192,13 +43,8 @@ class P1Server(object):
             # cv2.imshow('image_masked', frame)
             # cv2.waitKey(0)
 
-            # RETURN TO DEFAULT POSE
-            # Wait for the play motion server to come up and send goal
-            self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-            pose_goal.motion_name = "back_to_default"
-            self.play_motion_client.send_goal(pose_goal)
-            rospy.loginfo('Play motion goal sent')
-            self.play_motion_client.wait_for_result()
+        # RETURN TO DEFAULT POSE
+        self.playMotion('back_to_default')
 
         # calculate and output result
         person_count = object_count['person']
@@ -216,37 +62,16 @@ class P1Server(object):
 
     # Sleeps are required to avoid Tiago's busy status from body motions controllers
     def identifyStatus(self):
-        # TODO: move to individual action file
         table_index = rospy.get_param('/HAL9000/current_table')
         rospy.loginfo('Identifying the status of: %d' % table_index)
 
         # Step 1: Look down to see the table
-        # Wait for the play motion server to come up and send goal
-        self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-        pose_goal = PlayMotionGoal()
-        pose_goal.motion_name = "check_table"
-        pose_goal.skip_planning = True
-        self.play_motion_client.send_goal(pose_goal)
-        rospy.loginfo('Looking down goal sent')
-        rospy.sleep(3)
+        self.playMotion('check_table')
 
         # Step 2: Take a picture of the table surface
-        # Wait for recognition action server to come up and send goal
-        # COSTA DETECTION
-        self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
-        # create goal
-        recognition_goal = yolo_detectionGoal()
-        recognition_goal.image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
-        recognition_goal.dataset = "costa"
-        recognition_goal.confidence = 0.3
-        recognition_goal.nms = 0.3
-        # send goal and wait for result
-        self.object_recognition_client.send_goal(recognition_goal)
-        rospy.loginfo('Recognition goal sent')
-        rospy.loginfo('Waiting for the detection result...')
-        self.object_recognition_client.wait_for_result()
-        count_objects_result = self.object_recognition_client.get_result()
-
+        image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
+        count_objects_result = self.detectObject(image_raw, "costa", 0.3, 0.3)
+        
         # dictionary of results
         object_count = defaultdict(int)
         for detection in count_objects_result.detected_objects:
@@ -261,11 +86,8 @@ class P1Server(object):
         else:
             self.talk('no objects found')
 
-        # Step 4: Get head and torso back to default
-        pose_goal.motion_name = "back_to_default"
-        self.play_motion_client.send_goal(pose_goal)
-        rospy.loginfo('Default head position goal sent')
-        rospy.sleep(3)
+        # Step 3: Get head and torso back to default
+        self.playMotion('back_to_default')
 
         # Step 4: Decide on table status and send tts goal to the sound server
         foundPerson = rospy.get_param('/tables/table' + str(table_index) + '/person_count')
@@ -291,21 +113,20 @@ class P1Server(object):
         rospy.sleep(1)
 
     def count(self):
-        # TODO: move to individual action file
         rospy.loginfo('Counting all the tables')
 
         # if any table status is unknown, set it to the robot's current table
-        self.tables = rospy.get_param("/tables")
-        print(self.tables)
+        tables = rospy.get_param("/tables")
+        print(tables)
         unknown_exist = False
-        for table in self.tables:
+        for table in tables:
             print(table)
-            if (self.tables[table])['status'] == 'unknown':
+            if (tables[table])['status'] == 'unknown':
                 if not unknown_exist:
                     unknown_exist = True
-                    next_table = self.tables[table]['id']
-                elif self.tables[table]['id'] < next_table:
-                    next_table = self.tables[table]['id']
+                    next_table = tables[table]['id']
+                elif tables[table]['id'] < next_table:
+                    next_table = tables[table]['id']
 
         if unknown_exist:
             rospy.set_param('/HAL9000/current_table', next_table)
