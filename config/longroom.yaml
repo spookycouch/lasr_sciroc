@@ -4,7 +4,7 @@ tables:
     person_count: -1
     status: "unknown"
     order: []
-    loc:
+    location:
       position: { x: 21.9364580226, y: 19.5228118361, z: 0.0 }
       orientation: { x: 0.0, y: 0.0, z: -0.356255293448, w: 0.934388658905 }
 
@@ -13,7 +13,7 @@ tables:
     person_count: -1
     status: "unknown"
     order: []
-    loc:
+    location:
       position: { x: 20.2735464103, y: 18.3279660725, z: 0.0 }
       orientation: { x: 0.0, y: 0.0, z: -0.413929405535, w: 0.910308984485 }
 
@@ -22,7 +22,7 @@ tables:
     person_count: -1
     status: "unknown"
     order: []
-    loc:
+    location:
       position: { x: 18.7223304879, y: 16.3367719378, z: 0.0 }
       orientation: { x: 0.0, y: 0.0, z: -0.347106215937, w: 0.937825823305 }
   
@@ -31,7 +31,7 @@ tables:
     person_count: -1
     status: "unknown"
     order: []
-    loc:
+    location:
       position: { x: 7.03416643896, y: 6.08865910191, z: 0.0 }
       orientation: { x: 0.0, y: 0.0, z: -0.34457305185, w: 0.938759506976 }
 
@@ -40,7 +40,7 @@ tables:
     person_count: -1
     status: "unknown"
     order: []
-    loc:
+    location:
       position: { x: 5.33803681296, y: 4.4170952369, z: 0.0 }
       orientation: { x: 0.0, y: 0.0, z: -0.398052256046, w: 0.917362742571 }
 
@@ -49,18 +49,18 @@ tables:
     person_count: -1
     status: "unknown"
     order: []
-    loc:
+    location:
       position: { x: 3.35535288015, y: 2.39627467118, z: 0.0 }
       orientation: { x: 0.0, y: 0.0, z: -0.350030969818, w: 0.93673812785 }
 
 Bar:
-  loc:
+  location:
     position: { x: 9.90713465504, y: 8.17895241188, z: 0.0 }
     orientation: { x: 0.0, y: 0.0, z: 0.934551413362, w: 0.355828126746 }
 
 
 Home:
-  loc:
+  location:
     position: { x: 9.90713465504, y: 8.17895241188, z: 0.0 }
     orientation: { x: 0.0, y: 0.0, z: 0.934551413362, w: 0.355828126746 }
   
@@ -68,6 +68,6 @@ Home:
 # it is actually the bar
 # dont believe in the fake home
 # Home:
-#   loc:
+#   location:
 #     position: { x: 12.9419836537, y: 12.3956073234, z: 0.0 }
 #     orientation: { x: 0.0, y: 0.0, z: -0.91871896815, w: 0.394911961787 }
