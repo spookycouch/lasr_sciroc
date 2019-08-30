@@ -1,42 +1,30 @@
 tables:
-  # table0:
-  #   id: 0
-  #   person_count: -1
-  #   status: "unknown"
-  #   order: []
-  #   loc:
-  #     - far_pose: 
-  #         position: { x: 22.1162827565, y: 20.4308204055, z: 0.0 }
-  #         orientation: { x: 0.0, y: 0.0, z: -0.428947062594, w: 0.90332962837 }
-  #     - close_pose:
-  #         position: { x: 21.9364580226, y: 19.5228118361, z: 0.0 }
-  #         orientation: { x: 0.0, y: 0.0, z: -0.356255293448, w: 0.934388658905 }
+  table0:
+    id: 0
+    person_count: -1
+    status: "unknown"
+    order: []
+    loc:
+      position: { x: 21.9364580226, y: 19.5228118361, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.356255293448, w: 0.934388658905 }
 
-  # table1:
-  #   id: 1
-  #   person_count: -1
-  #   status: "unknown"
-  #   order: []
-  #   loc:
-  #     - far_pose: 
-  #         position: { x: 20.370884203, y: 18.7770893724, z: 0.0 }
-  #         orientation: { x: 0.0, y: 0.0, z: -0.413659217799, w: 0.910431794002 }
-  #     - close_pose:
-  #         position: { x: 20.2735464103, y: 18.3279660725, z: 0.0 }
-  #         orientation: { x: 0.0, y: 0.0, z: -0.413929405535, w: 0.910308984485 }
+  table1:
+    id: 1
+    person_count: -1
+    status: "unknown"
+    order: []
+    loc:
+      position: { x: 20.2735464103, y: 18.3279660725, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.413929405535, w: 0.910308984485 }
 
-  # table2:
-  #   id: 2
-  #   person_count: -1
-  #   status: "unknown"
-  #   order: []
-  #   loc:
-  #     - far_pose: 
-  #         position: { x: 18.4067505612, y: 16.742603369, z: 0.0 }
-  #         orientation: { x: 0.0, y: 0.0, z: -0.355047915642, w: 0.934848104024 }
-  #     - close_pose:
-  #         position: { x: 18.7223304879, y: 16.3367719378, z: 0.0 }
-  #         orientation: { x: 0.0, y: 0.0, z: -0.347106215937, w: 0.937825823305 }
+  table2:
+    id: 2
+    person_count: -1
+    status: "unknown"
+    order: []
+    loc:
+      position: { x: 18.7223304879, y: 16.3367719378, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.347106215937, w: 0.937825823305 }
   
   table3:
     id: 3
@@ -44,12 +32,8 @@ tables:
     status: "unknown"
     order: []
     loc:
-      - far_pose: 
-          position: { x: 6.68054919015, y: 6.23598974223, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: -0.304227240786, w: 0.952599488748 }
-      - close_pose:
-          position: { x: 7.03416643896, y: 6.08865910191, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: -0.34457305185, w: 0.938759506976 }
+      position: { x: 7.03416643896, y: 6.08865910191, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.34457305185, w: 0.938759506976 }
 
   table4:
     id: 4
@@ -57,12 +41,8 @@ tables:
     status: "unknown"
     order: []
     loc:
-      - far_pose: 
-          position: { x: 5.00019594478, y: 4.74756175974, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: -0.476338959538, w: 0.879261733289 }
-      - close_pose:
-          position: { x: 5.33803681296, y: 4.4170952369, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: -0.398052256046, w: 0.917362742571 }
+      position: { x: 5.33803681296, y: 4.4170952369, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.398052256046, w: 0.917362742571 }
 
   table5:
     id: 5
@@ -70,12 +50,8 @@ tables:
     status: "unknown"
     order: []
     loc:
-      - far_pose: 
-          position: { x: 3.01125161888, y: 2.66693128866, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: -0.359612696102, w: 0.933101660486 }
-      - close_pose:
-          position: { x: 3.35535288015, y: 2.39627467118, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: -0.350030969818, w: 0.93673812785 }
+      position: { x: 3.35535288015, y: 2.39627467118, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.350030969818, w: 0.93673812785 }
 
 Bar:
   loc:
@@ -87,6 +63,10 @@ Home:
   loc:
     position: { x: 9.90713465504, y: 8.17895241188, z: 0.0 }
     orientation: { x: 0.0, y: 0.0, z: 0.934551413362, w: 0.355828126746 }
+  
+# Proper home: the home above is a fake home
+# it is actually the bar
+# dont believe in the fake home
 # Home:
 #   loc:
 #     position: { x: 12.9419836537, y: 12.3956073234, z: 0.0 }
