@@ -5,12 +5,11 @@ tables:
     status: "unknown"
     order: []
     loc:
-      - far_pose:
-          position: { x: 6.79765179408, y: -0.625241101834, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: 0.683917530186, w: 0.7295593272 }
-      - close_pose:
-          position: { x: 6.783693856, y: 0.174163159293, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: 0.694576864659, w: 0.719418500652 }
+      # - far_pose:
+      #     position: { x: 6.79765179408, y: -0.625241101834, z: 0.0 }
+      #     orientation: { x: 0.0, y: 0.0, z: 0.683917530186, w: 0.7295593272 }
+        position: { x: 6.783693856, y: 0.174163159293, z: 0.0 }
+        orientation: { x: 0.0, y: 0.0, z: 0.694576864659, w: 0.719418500652 }
 
   table1:
     id: 1
@@ -18,12 +17,11 @@ tables:
     status: "unknown"
     order: []
     loc:
-      - far_pose:
-          position: { x: 9.34957322785, y: -0.217437855221, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: 0.668811752922, w: 0.743431798589 }
-      - close_pose: 
-          position: { x: 9.38863755014, y: 0.202148583446, z: 0.0 }
-          orientation: { x: 0.0, y: 0.0, z: 0.655514163585, w: 0.7551828794 }
+      # - far_pose:
+      #     position: { x: 9.34957322785, y: -0.217437855221, z: 0.0 }
+      #     orientation: { x: 0.0, y: 0.0, z: 0.668811752922, w: 0.743431798589 }
+        position: { x: 9.38863755014, y: 0.202148583446, z: 0.0 }
+        orientation: { x: 0.0, y: 0.0, z: 0.655514163585, w: 0.7551828794 }
 
 Bar:
   loc:

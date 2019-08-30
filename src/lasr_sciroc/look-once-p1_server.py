@@ -95,15 +95,23 @@ class P1Server(object):
 
     def goto(self):
         table_index = rospy.get_param('/HAL9000/current_table')
+        pose_index = rospy.get_param('/HAL9000/current_pose')
+        print table_index
         # TODO: move to individual action file
-        rospy.loginfo('Going to: %d ', table_index)
+        rospy.loginfo('Going to: %d with pose %d', table_index, pose_index)
 
         self.move_base_client.wait_for_server(rospy.Duration(15.0))
 
+        # For now
+        if pose_index == 0:
+            pose = 'far_pose'
+        else:
+            pose = 'close_pose'
+
         goal = MoveBaseGoal()
         goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-        goal.target_pose.pose = Pose(position = Point(**self.tables['table' + str(table_index)]['loc']['position']),
-            orientation = Quaternion(**self.tables['table' + str(table_index)]['loc']['orientation']))
+        goal.target_pose.pose = Pose(position = Point(**self.tables['table' + str(table_index)]['loc'][pose_index][pose]['position']),
+            orientation = Quaternion(**self.tables['table' + str(table_index)]['loc'][pose_index][pose]['orientation']))
 
         rospy.loginfo('Sending goal location ...')
         self.move_base_client.send_goal(goal) #waits forever
@@ -111,6 +119,11 @@ class P1Server(object):
             rospy.loginfo('Goal location achieved!')
         else:
             rospy.logwarn("Couldn't reach the goal!")
+
+        # If we moved close to the table means we have already taken the picture
+        if pose_index == 1:
+           self._result.condition_event = ['pictureDone']
+           rospy.set_param('/HAL9000/current_pose', 0)
 
     def talk(self, speech_in):
         print('\033[1;36mTIAGO: ' + speech_in + '\033[0m')
@@ -129,88 +142,93 @@ class P1Server(object):
     
     def countPeople(self):
         table_index = rospy.get_param('/HAL9000/current_table')
-        poses = ['count_people_left', 'count_people_right']
-        object_count = defaultdict(int)
-
-
         # TODO: move to individual action file
         # Take a picture of the table from afar
         # Wait for recognition action server to come up and send goal
-        for i in range(2):
-            # LOOK LEFT/RIGHT
-            # Wait for the play motion server to come up and send goal
-            self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-            pose_goal = PlayMotionGoal()
-            pose_goal.motion_name = poses[i]
-            pose_goal.skip_planning = True
-            self.play_motion_client.send_goal(pose_goal)
-            rospy.loginfo('Play motion goal sent')
-            self.play_motion_client.wait_for_result()
 
-            # DEPTH MASK
-            # create depth cloud subscriber, wait for depth_points to be updated
-            self.depth_points = None
-            self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, self.maskCallback)
-            while True:
-                if self.depth_points != None:
-                    break
-            # create goal
-            mask_goal = DepthMaskGoal()
-            mask_goal.depth_points = self.depth_points
-            mask_goal.filter_left = 1
-            mask_goal.filter_right = 1
-            mask_goal.filter_front = 3.5
-            # send goal and wait for result
-            self.depth_mask_client.send_goal(mask_goal)
-            rospy.loginfo('Depth mask goal sent')
-            rospy.loginfo('Waiting for the depth mask result...')
-            self.depth_mask_client.wait_for_result()
-            mask_result = self.depth_mask_client.get_result()
+        # Step 1: Raise torso up to have a better view of people
+        # Wait for the play motion server to come up and send goal
+        # self.play_motion_client.wait_for_server(rospy.Duration(15.0))
+        # pose_goal = PlayMotionGoal()
+        # pose_goal.motion_name = "count_people"
+        # pose_goal.skip_planning = True
+        # self.play_motion_client.send_goal(pose_goal)
+        # rospy.loginfo('Count people goal sent')
+        # rospy.sleep(3)
 
-            # COCO DETECTION
-            self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
-            # create goal
-            recognition_goal = yolo_detectionGoal()
-            recognition_goal.image_raw = mask_result.img_mask
-            recognition_goal.dataset = "coco"
-            recognition_goal.confidence = 0.3
-            recognition_goal.nms = 0.3
-            # send goal and wait for result
-            self.object_recognition_client.send_goal(recognition_goal)
-            rospy.loginfo('Recognition goal sent')
-            rospy.loginfo('Waiting for the detection result...')
-            self.object_recognition_client.wait_for_result()
-            count_objects_result = self.object_recognition_client.get_result()
+        # DEPTH MASK
+        # create depth cloud subscriber, wait for depth_points to be updated
+        self.depth_points = None
+        self.depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, self.maskCallback)
+        while True:
+            if self.depth_points != None:
+                break
+        # create goal
+        mask_goal = DepthMaskGoal()
+        mask_goal.depth_points = self.depth_points
+        mask_goal.filter_left = 1
+        mask_goal.filter_right = 1
+        mask_goal.filter_front = 3.5
+        # send goal and wait for result
+        self.depth_mask_client.send_goal(mask_goal)
+        rospy.loginfo('Depth mask goal sent')
+        rospy.loginfo('Waiting for the depth mask result...')
+        self.depth_mask_client.wait_for_result()
+        mask_result = self.depth_mask_client.get_result()
 
-            # update dictionary
-            for detection in count_objects_result.detected_objects:
-                object_count[detection.name] += 1
-            
-            # view the image - debug
-            # bridge = CvBridge()
-            # frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
-            # cv2.imshow('image_masked', frame)
-            # cv2.waitKey(0)
+        # COCO DETECTION
+        #TODO VIEW RESULTS BECAUSE INVISIBLE PERSON APPEARED
+        self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
+        # create goal
+        recognition_goal = yolo_detectionGoal()
+        recognition_goal.image_raw = mask_result.img_mask
+        recognition_goal.dataset = "coco"
+        recognition_goal.confidence = 0.3
+        recognition_goal.nms = 0.3
+        # send goal and wait for result
+        self.object_recognition_client.send_goal(recognition_goal)
+        rospy.loginfo('Recognition goal sent')
+        rospy.loginfo('Waiting for the detection result...')
+        self.object_recognition_client.wait_for_result()
+        count_objects_result = self.object_recognition_client.get_result()
 
-            # RETURN TO DEFAULT POSE
-            # Wait for the play motion server to come up and send goal
-            self.play_motion_client.wait_for_server(rospy.Duration(15.0))
-            pose_goal.motion_name = "back_to_default"
-            self.play_motion_client.send_goal(pose_goal)
-            rospy.loginfo('Play motion goal sent')
-            self.play_motion_client.wait_for_result()
-
-        # calculate and output result
+        # dictionary of results
+        object_count = defaultdict(int)
+        for detection in count_objects_result.detected_objects:
+            object_count[detection.name] += 1
         person_count = object_count['person']
         speech_out = 'I see ' + str(person_count) + ' person'
         if not person_count == 1:
             speech_out += 's'
+        
+        # view the image - debug
+        # bridge = CvBridge()
+        # frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+        # cv2.imshow('image_masked', frame)
+        # cv2.waitKey(0)
+
+        # Step 1: Back to default
+        # Wait for the play motion server to come up and send goal
+        # self.play_motion_client.wait_for_server(rospy.Duration(15.0))
+        # pose_goal = PlayMotionGoal()
+        # pose_goal.motion_name = "back_to_default"
+        # pose_goal.skip_planning = True
+        # self.play_motion_client.send_goal(pose_goal)
+        # rospy.loginfo('Back to default goal sent')
+        # rospy.sleep(3)
+
+
+        # output result
         self.talk(speech_out)
 
         # Update the number of people in the parameter server
         rospy.loginfo('Updating the number of people found at table %d' % table_index)
         rospy.set_param('/tables/table' + str(table_index) + '/person_count', person_count)
         rospy.loginfo('Updated the person counter successfully')
+
+        # Switch to the pose closer to the table
+        rospy.loginfo('Switching to the second pose')
+        rospy.set_param('/HAL9000/current_pose', 1)
 
 
 
