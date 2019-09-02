@@ -19,7 +19,7 @@ class SciRocServer(object):
     _result = lpb_msg.BridgeResult()
 
     # Imports
-    from .movement_actions import gotoTable, gotoLocation, lookAt, playMotion
+    from .movement_actions import gotoTable, gotoLocation, lookAt, playMotion, turn, shiftQuaternion
     from .speech_actions import planWakeWord, talk, keywordDetected, keywordCallback
     from .vision_actions import detectObject, depthMask, maskCallback
 
