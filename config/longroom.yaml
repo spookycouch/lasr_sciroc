@@ -1,42 +1,42 @@
 tables:
-  table0:
-    id: 0
-    person_count: -1
-    status: "unknown"
-    order: []
-    location:
-      position: { x: 21.9364580226, y: 19.5228118361, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: -0.356255293448, w: 0.934388658905 }
-    cuboid:
-      frame: 'map'
-      max: { x: 23.348, y: 20.037, z: 2.0 }
-      min: { x: 22.894, y: 17.868, z: 0.2 }
+  # table0:
+  #   id: 0
+  #   person_count: -1
+  #   status: "unknown"
+  #   order: []
+  #   location:
+  #     position: { x: 21.9364580226, y: 19.5228118361, z: 0.0 }
+  #     orientation: { x: 0.0, y: 0.0, z: -0.356255293448, w: 0.934388658905 }
+  #   cuboid:
+  #     frame: 'map'
+  #     max: { x: 23.348, y: 20.037, z: 2.0 }
+  #     min: { x: 22.894, y: 17.868, z: 0.2 }
 
-  table1:
-    id: 1
-    person_count: -1
-    status: "unknown"
-    order: []
-    location:
-      position: { x: 20.2735464103, y: 18.3279660725, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: -0.413929405535, w: 0.910308984485 }
-    cuboid:
-      frame: 'map'
-      max: { x: 21.946, y: 18.803, z: 2.0 }
-      min: { x: 20.975, y: 16.347, z: 0.2 }
+  # table1:
+  #   id: 1
+  #   person_count: -1
+  #   status: "unknown"
+  #   order: []
+  #   location:
+  #     position: { x: 20.2735464103, y: 18.3279660725, z: 0.0 }
+  #     orientation: { x: 0.0, y: 0.0, z: -0.413929405535, w: 0.910308984485 }
+  #   cuboid:
+  #     frame: 'map'
+  #     max: { x: 21.946, y: 18.803, z: 2.0 }
+  #     min: { x: 20.975, y: 16.347, z: 0.2 }
 
-  table2:
-    id: 2
-    person_count: -1
-    status: "unknown"
-    order: []
-    location:
-      position: { x: 18.7223304879, y: 16.3367719378, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: -0.347106215937, w: 0.937825823305 }
-    cuboid:
-      frame: 'map'
-      max: { x: 20.233, y: 16.875, z: 2.0 }
-      min: { x: 19.335, y: 14.406, z: 0.2 }
+  # table2:
+  #   id: 2
+  #   person_count: -1
+  #   status: "unknown"
+  #   order: []
+  #   location:
+  #     position: { x: 18.7223304879, y: 16.3367719378, z: 0.0 }
+  #     orientation: { x: 0.0, y: 0.0, z: -0.347106215937, w: 0.937825823305 }
+  #   cuboid:
+  #     frame: 'map'
+  #     max: { x: 20.233, y: 16.875, z: 2.0 }
+  #     min: { x: 19.335, y: 14.406, z: 0.2 }
   
   table3:
     id: 3
@@ -64,18 +64,18 @@ tables:
       max: { x: 6.696, y: 4.726, z: 2.0 }
       min: { x: 5.891, y: 2.082, z: 0.2 }
 
-  table5:
-    id: 5
-    person_count: -1
-    status: "unknown"
-    order: []
-    location:
-      position: { x: 3.35535288015, y: 2.39627467118, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: -0.350030969818, w: 0.93673812785 }
-    cuboid:
-      frame: 'map'
-      max: { x: 4.83, y: 2.711, z: 2.0 }
-      min: { x: 3.886, y: -0.198, z: 0.2 }
+  # table5:
+  #   id: 5
+  #   person_count: -1
+  #   status: "unknown"
+  #   order: []
+  #   location:
+  #     position: { x: 3.35535288015, y: 2.39627467118, z: 0.0 }
+  #     orientation: { x: 0.0, y: 0.0, z: -0.350030969818, w: 0.93673812785 }
+  #   cuboid:
+  #     frame: 'map'
+  #     max: { x: 4.83, y: 2.711, z: 2.0 }
+  #     min: { x: 3.886, y: -0.198, z: 0.2 }
 
 Bar:
   location:

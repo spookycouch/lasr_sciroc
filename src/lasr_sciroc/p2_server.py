@@ -5,7 +5,7 @@ import tf.transformations
 
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
-from std_msgs.msg import Header
+from std_msgs.msg import String, Header
 from move_base_msgs.msg import MoveBaseGoal
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Quaternion
 from collections import defaultdict
@@ -30,28 +30,15 @@ class P2Server(SciRocServer):
                     next_table = tables[table]['id']
         
         if needServing_exist:
-            rospy.set_param('/HAL9000/current_table', next_table)
+            rospy.set_param('/current_table', next_table)
             print "\033[1;33m" + "The next table that needs serving is " + str(next_table) + "\033[0m"
         else:
             # if all tables have been served, counting is done
             self._result.condition_event = ['doneServing']
 
     
-    def takeOrder(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
-
-        # For now we will just change the rosparam server as if the customer placed the order
-        order = ['water', 'biscotti', 'berry smoothie']
-        print('[INFO] Updating the order at table %d', table_index)
-        print('[INFO] the order is ')
-        print(order)  
-        rospy.set_param('/tables/table' + str(table_index) + '/order', order)
-        rospy.loginfo('Updated the order of table %d successfully', table_index)
-        rospy.sleep(5)
-
-    
     def orderConfirm(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
+        table_index = rospy.get_param('/current_table')
 
         # Fetch the order from the parameter server
         order = rospy.get_param('/tables/table' + str(table_index) + '/order')
@@ -60,16 +47,19 @@ class P2Server(SciRocServer):
 
         # Say the order
         self.talk('The order of table {0} is {1}'.format(table_index, order))
-        rospy.sleep(10)
+        rospy.sleep(3)
 
     
     def checkOrder(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
+        table_index = rospy.get_param('/current_table')
 
         # Fetch the order from the parameter server
         order = rospy.get_param('/tables/table' + str(table_index) + '/order')
-        rospy.loginfo('The order fetched from the parameter server in checkOrderCorrectness is ')
+        rospy.loginfo('The order fetched from the parameter server in checkOrder is ')
         print(order)  
+
+        # wait for the keyword
+        self.keywordDetected('check order')
 
         while True:
             rospy.sleep(5)
@@ -120,8 +110,6 @@ class P2Server(SciRocServer):
                         if not excess_items[item] == 1:
                             speech_out += 's'
                 self.talk(speech_out)
-                # REMOVE THSI BREAK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                break
             else:
                 self.talk('Order is correct, please place the items on my back.')
                 break
@@ -161,8 +149,7 @@ class P2Server(SciRocServer):
         self.turn()
 
         # Wait for keyword detection porcupine
-        # nothing for now
-        rospy.sleep(15)
+        self.keywordDetected('all set')
     
     def waitUnload(self):
         # Turn TIAGo so customers grab the tings
@@ -172,9 +159,8 @@ class P2Server(SciRocServer):
         self.talk('Please collect your order and say we dont remember the keyword just now')
 
         # Wait for keyword detection porcupine
-        # nothing for now
-        rospy.sleep(15)
+        self.keywordDetected('order collected')
 
         # Set the table to be already served
-        table_index = rospy.get_param('/HAL9000/current_table')
+        table_index = rospy.get_param('/current_table')
         rospy.set_param('/tables/table' + str(table_index) + '/status', 'Already served')

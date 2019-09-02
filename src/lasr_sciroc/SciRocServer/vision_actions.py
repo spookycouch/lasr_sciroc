@@ -1,4 +1,6 @@
 import rospy
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
 
 # Actionlib messages
 from sensor_msgs.msg import PointCloud2

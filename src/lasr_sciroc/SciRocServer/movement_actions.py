@@ -12,7 +12,7 @@ from tf2_geometry_msgs import do_transform_point
 
 def gotoTable(self):
     # Get the current table from the parameter server
-    table_index = rospy.get_param('/HAL9000/current_table')
+    table_index = rospy.get_param('/current_table')
     rospy.loginfo('Going to: %d ', table_index)
 
     # Get a fresh updated copy of the tables dictionary from the parameter server
@@ -83,8 +83,8 @@ def lookAt(self, point):
     ph_goal.target.header.frame_id = 'map'
     ph_goal.max_velocity = 1
     ph_goal.min_duration = rospy.Duration(0.5)
-    ph_goal.target.point.x = point['x']
-    ph_goal.target.point.y = point['y']
+    ph_goal.target.point.x = point[0]
+    ph_goal.target.point.y = point[1]
 
     ph_goal.pointing_frame = 'head_2_link'
     ph_goal.pointing_axis.x = 1

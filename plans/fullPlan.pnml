@@ -357,9 +357,9 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P2Server/takeOrder.exec</value>
+        <value>extern_/lasr_dialogflow/LasrDialogflow/takeOrder.exec</value>
         <graphics>
-          <offset x="-63" y="32" />
+          <offset x="-129" y="32" />
         </graphics>
       </name>
       <initialMarking>
@@ -382,7 +382,7 @@
       <name>
         <value>orderTaken</value>
         <graphics>
-          <offset x="-18" y="35" />
+          <offset x="-5" y="35" />
         </graphics>
       </name>
       <initialMarking>
@@ -1137,9 +1137,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/takeOrder.start</value>
+        <value>extern_/lasr_dialogflow/LasrDialogflow/takeOrder.start</value>
         <graphics>
-          <offset x="-55" y="15" />
+          <offset x="-121" y="15" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -1157,9 +1157,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/takeOrder.end</value>
+        <value>extern_/lasr_dialogflow/LasrDialogflow/takeOrder.end</value>
         <graphics>
-          <offset x="-66" y="11" />
+          <offset x="-132" y="11" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">

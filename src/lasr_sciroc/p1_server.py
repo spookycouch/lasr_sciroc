@@ -11,20 +11,25 @@ class P1Server(SciRocServer):
         SciRocServer.__init__(self, server_name)
 
     def initialise(self):
-        # Restart move basse with a lower yaw threshold for more accurate turning
-        rospy.loginfo('killing move base server')
-        rospy.set_param("/move_base/PalLocalPlanner/yaw_goal_tolerance", 0.05)
-        rosnode.kill_nodes(['/move_base'])
+        # # Restart move basse with a lower yaw threshold for more accurate turning
+        # rospy.loginfo('killing move base server')
+        # rospy.set_param("/move_base/PalLocalPlanner/yaw_goal_tolerance", 0.05)
+        # rosnode.kill_nodes(['/move_base'])
 
-        if self.move_base_client.wait_for_server(rospy.Duration(10)):
-            rospy.loginfo('Move base server is back up')
-        else:
-            rospy.loginfo("Failed to connect to move base")
+        # if self.move_base_client.wait_for_server(rospy.Duration(10)):
+        #     rospy.loginfo('Move base server is back up')
+        # else:
+        #     rospy.loginfo("Failed to connect to move base")
+        pass
         
     
     def countPeople(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
-        points = rospy.get_param('/tables/table' + str(table_index) + '/pointsLR')
+        table_index = rospy.get_param('/current_table')
+        cuboid = rospy.get_param('/tables/table' + str(table_index) + '/cuboid')
+        x_left = float((cuboid['max'])['x'])
+        x_right = float((cuboid['min'])['x'])
+        y = float(((cuboid['max'])['y']) + float((cuboid['min'])['y'])) / 2
+        points = [(x_left, y), (x_right, y)]
         object_count = defaultdict(int)
 
         # Take a picture using the depth mask and feed it to the detection
@@ -62,7 +67,7 @@ class P1Server(SciRocServer):
 
     # Sleeps are required to avoid Tiago's busy status from body motions controllers
     def identifyStatus(self):
-        table_index = rospy.get_param('/HAL9000/current_table')
+        table_index = rospy.get_param('/current_table')
         rospy.loginfo('Identifying the status of: %d' % table_index)
 
         # Step 1: Look down to see the table
@@ -129,7 +134,7 @@ class P1Server(SciRocServer):
                     next_table = tables[table]['id']
 
         if unknown_exist:
-            rospy.set_param('/HAL9000/current_table', next_table)
+            rospy.set_param('/current_table', next_table)
             print "\033[1;33m" + "The next table is " + str(next_table) + "\033[0m"
         else:
             # if all tables have been identified, counting is done

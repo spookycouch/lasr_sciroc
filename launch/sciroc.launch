@@ -8,9 +8,9 @@
     <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
 
     <!-- Load the longroom tables and motions data into the parameter server -->
-    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/longroom.yaml" /> -->
+    <rosparam command="load" file="$(find lasr_sciroc)/config/longroom.yaml" />
     <rosparam command="load" file="$(find lasr_sciroc)/config/HAL9000.yaml" />
-    <rosparam command="load" file="$(find lasr_sciroc)/config/locations.yaml" />
+    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/locations.yaml" /> -->
     <rosparam command="load" file="$(find lasr_sciroc)/config/motions.yaml" />
 
     <!-- Yolo object detection server and the depth mask servers-->

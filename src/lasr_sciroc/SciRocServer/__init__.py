@@ -20,7 +20,7 @@ class SciRocServer(object):
 
     # Imports
     from .movement_actions import gotoTable, gotoLocation, lookAt, playMotion
-    from .speech_actions import planWakeWord, talk
+    from .speech_actions import planWakeWord, talk, keywordDetected, keywordCallback
     from .vision_actions import detectObject, depthMask, maskCallback
 
     def __init__(self, server_name):
@@ -39,8 +39,7 @@ class SciRocServer(object):
 
         # Bool variable and wake_word subscriber for voice plan activation
         self.running = False
-        rospy.Subscriber('/wake_word/wake_word_detected', String, self.planWakeWord)
-        self.plan_publisher = rospy.Publisher('/p1/planToExec', String, queue_size=1)
+        self.sub = rospy.Subscriber('/wake_word/wake_word_detected', String, self.planWakeWord)
 
     
     def execute_cb(self, goal):
