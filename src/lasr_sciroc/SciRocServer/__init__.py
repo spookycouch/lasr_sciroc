@@ -9,7 +9,7 @@ from std_msgs.msg import String
 from move_base_msgs.msg import MoveBaseAction
 from play_motion_msgs.msg import PlayMotionAction
 from lasr_img_depth_mask.msg import DepthMaskAction
-from lasr_object_detection_yolo.msg import yolo_detectionAction
+from lasr_object_detection_yolo.msg import YoloDetectionAction
 from pal_interaction_msgs.msg import TtsAction
 from control_msgs.msg import PointHeadAction
 
@@ -21,7 +21,7 @@ class SciRocServer(object):
     # Imports
     from .movement_actions import gotoTable, gotoLocation, lookAt, playMotion
     from .speech_actions import planWakeWord, talk, keywordDetected, keywordCallback
-    from .vision_actions import detectObject, depthMask, maskCallback
+    from .vision_actions import detectObject, depthMask, getRecentPcl
 
     def __init__(self, server_name):
         rospy.loginfo('%s Action Server has been initialised!', server_name)
@@ -33,7 +33,7 @@ class SciRocServer(object):
         self.move_base_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
         self.play_motion_client = actionlib.SimpleActionClient('/play_motion', PlayMotionAction)
         self.depth_mask_client = actionlib.SimpleActionClient('/depth_mask', DepthMaskAction)
-        self.object_recognition_client = actionlib.SimpleActionClient('/yolo_detection', yolo_detectionAction)
+        self.object_recognition_client = actionlib.SimpleActionClient('/yolo_detection', YoloDetectionAction)
         self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
         self.point_head_client = actionlib.SimpleActionClient('/head_controller/point_head_action', PointHeadAction)
 
