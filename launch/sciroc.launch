@@ -15,6 +15,7 @@
 
     <!-- Yolo object detection server and the depth mask servers-->
     <node pkg="lasr_object_detection_yolo" type="object_detection_server.py" name="yolo_detection" args="" output="screen" />
+    <node pkg="lasr_object_detection_yolo" type="pcl2_to_image_server.py" name="pcl2_to_image" args="" output="screen" />
     <node pkg="lasr_img_depth_mask" type="blur_mask_server.py" name="depth_mask" args="" output="screen" />
 
     <group ns="$(arg robotname)">
@@ -32,6 +33,8 @@
 	    <node pkg="lasr_sciroc" type="lasr_sciroc_p1" name="P1Server" args="" output="screen" /> 
         
         <node pkg="lasr_sciroc" type="lasr_sciroc_p2" name="P2Server" args="" output="screen" /> 
+
+        <node pkg="lasr_sciroc" type="lasr_sciroc_p3" name="P3Server" args="" output="screen" /> 
     </group>
 
 </launch>

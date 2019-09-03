@@ -1,0 +1,9 @@
+#!/usr/bin/python
+
+import rospy
+from lasr_sciroc import P3Server
+
+if __name__== '__main__':
+    rospy.init_node('P3Server')
+    P3Server(rospy.get_name())
+    rospy.spin()
