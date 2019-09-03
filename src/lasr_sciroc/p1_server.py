@@ -35,7 +35,8 @@ class P1Server(SciRocServer):
         # Take a picture using the depth mask and feed it to the detection
         for i in range(2):
             self.lookAt(points[i])
-            mask_result = self.depthMask(1, 1, 3.5)
+            depth_points = self.getRecentPcl()
+            mask_result = self.depthMask(depth_points, 1, 1, 3.5)
             count_objects_result = self.detectObject(mask_result.img_mask, "coco", 0.3, 0.3)
 
             # update dictionary
@@ -117,25 +118,23 @@ class P1Server(SciRocServer):
         self.talk('Status of table {0} is {1}'.format(table_index, result))
         rospy.sleep(1)
 
+    # TODO: rename please to determineNextUnknownTable
     def count(self):
         rospy.loginfo('Counting all the tables')
 
         # if any table status is unknown, set it to the robot's current table
         tables = rospy.get_param("/tables")
-        print(tables)
-        unknown_exist = False
-        for table in tables:
-            print(table)
-            if (tables[table])['status'] == 'unknown':
-                if not unknown_exist:
-                    unknown_exist = True
-                    next_table = tables[table]['id']
-                elif tables[table]['id'] < next_table:
-                    next_table = tables[table]['id']
+        # get an unknown table of the lowest id
 
-        if unknown_exist:
-            rospy.set_param('/current_table', next_table)
-            print "\033[1;33m" + "The next table is " + str(next_table) + "\033[0m"
+        next_table_id = None
+        for table in tables:
+            if tables[table]['status'] == 'unknown':
+                if next_table_id is None or tables[table]['id'] < next_table_id:
+                    next_table_id = tables[table]['id']
+
+        if next_table_id is not None:
+            rospy.set_param('/current_table', next_table_id)
+            print "\033[1;33m" + "The next table is " + str(next_table_id) + "\033[0m"
         else:
             # if all tables have been identified, counting is done
             self._result.condition_event = ['doneCounting']

@@ -10,6 +10,7 @@ from play_motion_msgs.msg import PlayMotionGoal
 from control_msgs.msg import PointHeadGoal
 from tf2_geometry_msgs import do_transform_point
 
+# TODO: handle not reaching goal and bypass rest of count loop
 def gotoTable(self):
     # Get the current table from the parameter server
     table_index = rospy.get_param('/current_table')
