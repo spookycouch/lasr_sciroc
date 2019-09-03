@@ -7,7 +7,7 @@ from six.moves import queue
 # Actionlib messages
 from sensor_msgs.msg import PointCloud2
 from lasr_img_depth_mask.msg import DepthMaskGoal
-from lasr_object_detection_yolo.msg import YoloDetectionGoal, PclToImageGoal
+from lasr_object_detection_yolo.srv import YoloDetection
 
 def getRecentPcl(self):
     pcl_queue = queue.Queue()
@@ -43,22 +43,14 @@ def depthMask(self, depth_points, filter_left, filter_right, filter_front):
     return self.depth_mask_client.get_result()
 
 def detectObject(self, image_raw, dataset, confidence, nms):
-    # Wait for the action server to come up
-    self.object_recognition_client.wait_for_server(rospy.Duration(15.0))
-
-    # Create the recognition goal
-    recognition_goal = YoloDetectionGoal()
-    recognition_goal.image_raw = image_raw
-    recognition_goal.dataset = dataset
-    recognition_goal.confidence = confidence
-    recognition_goal.nms = nms
-
-    # send goal and wait for result
-    self.object_recognition_client.send_goal(recognition_goal)
-    rospy.loginfo('Recognition goal sent')
-    rospy.loginfo('Waiting for the detection result...')
-    self.object_recognition_client.wait_for_result()
-    return self.object_recognition_client.get_result()
+    # wait for the service to come up
+    rospy.wait_for_service('yolo_detection')
+    # call the service
+    try:
+        detect_objects = rospy.ServiceProxy('yolo_detection', YoloDetection)
+        return detect_objects(image_raw, dataset, confidence, nms)
+    except rospy.ServiceException as e:
+        print "Service call failed: %s"%e
 
 def locateCustomer(self, person, cloud):
     # Get center point of the person bounding box
