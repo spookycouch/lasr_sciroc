@@ -17,6 +17,7 @@
     <node pkg="lasr_object_detection_yolo" type="object_detection_server.py" name="yolo_detection" args="" output="screen" />
     <node pkg="lasr_object_detection_yolo" type="pcl2_to_image_server.py" name="pcl2_to_image" args="" output="screen" />
     <node pkg="lasr_img_depth_mask" type="blur_mask_server.py" name="depth_mask" args="" output="screen" />
+    <node pkg="turn_robot" type="turn_to_point_server.py" name="turn_to_point_server" args="" output="screen" />
 
     <group ns="$(arg robotname)">
         <param name="robot_name" value="$(arg robotname)" />

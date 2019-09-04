@@ -144,6 +144,12 @@ def locateCustomer(self, person, depth_points):
     cloud = np.fromstring(depth_points.data, np.float32)
     cloud = cloud.reshape(height, width, 8)
 
+    image_raw = self.pclToImage(depth_points)
+    bridge = CvBridge()
+    frame = bridge.imgmsg_to_cv2(image_raw, "bgr8")
+    cv2.imshow('image_masked', frame)
+    cv2.waitKey(0)
+
     region_size = 2
     while True:
         # calculate centre points

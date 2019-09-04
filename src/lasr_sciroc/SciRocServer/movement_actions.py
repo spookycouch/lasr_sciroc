@@ -56,7 +56,6 @@ def gotoLocation(self, location):
     else:
         rospy.logwarn("Couldn't reach the goal!")
 
-
 def playMotion(self, motion_name):
     # Wait for the play motion server to come up and send goal
     self.play_motion_client.wait_for_server(rospy.Duration(15.0))
