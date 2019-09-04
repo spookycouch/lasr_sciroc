@@ -76,12 +76,16 @@ class P1Server(SciRocServer):
 
         # Step 2: Take a picture of the table surface
         image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
-        count_objects_result = self.detectObject(image_raw, "costa", 0.3, 0.3)
+        count_objects_result = self.detectObject(image_raw, "coco", 0.3, 0.3)
         
         # dictionary of results
         object_count = defaultdict(int)
         for detection in count_objects_result.detected_objects:
+            if(detection.name == 'cup'):
+                self.setCupSize(detection)
             object_count[detection.name] += 1
+
+        # output results
         if len(object_count):
             speech_out = 'I see '
             for costa_object in object_count:

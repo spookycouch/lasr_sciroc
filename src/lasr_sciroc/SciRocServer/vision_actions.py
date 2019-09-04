@@ -73,7 +73,6 @@ def getTransformedPoint(self, header, point, frame):
 # add size to the name field of a cup Detection
 # for cups of invalid or indeterminate height, name remains unchanged
 def setCupSize(self, cup, depth_points):
-
     # validate bounding box
     if cup.xywh[2] < 3 or cup.xywh[3] < 6:
         rospy.loginfo('cup too small to determine size')
@@ -86,6 +85,15 @@ def setCupSize(self, cup, depth_points):
     top_y = cup.xywh[1]
     btm_y = cup.xywh[1] + cup.xywh[3]
     
+    # SEE WHERE THE 
+    # image_raw = self.pclToImage(depth_points)
+    # bridge = CvBridge()
+    # frame = bridge.imgmsg_to_cv2(image_raw, "bgr8")
+    # frame[top_y : top_y + y_range, mid_x : mid_x + x_range] = (0,0,255)
+    # frame[btm_y - y_range : btm_y, mid_x : mid_x + x_range] = (0,0,255)
+    # cv2.imshow('image_masked', frame)
+    # cv2.waitKey(0)
+
     # get pcl and reshape to image dimensions
     header = depth_points.header
     height = depth_points.height
@@ -94,27 +102,24 @@ def setCupSize(self, cup, depth_points):
     cloud = cloud.reshape(height, width, 8)
 
     # extract xyz values along points of interest
-    top_cluster    = cloud[mid_x : mid_x + x_range, top_y : top_y + y_range, 0:3]
-    bottom_cluster = cloud[mid_x : mid_x + x_range, btm_y - y_range : btm_y, 0:3]
+    top_cluster    = cloud[top_y : top_y + y_range, mid_x : mid_x + x_range, 0:3]
+    bottom_cluster = cloud[btm_y - y_range : btm_y, mid_x : mid_x + x_range, 0:3]
     
     # transform points to map frame and get y values
-    top_cluster_y = []
-    bottom_cluster_y = []
+    top_cluster_z = []
+    bottom_cluster_z = []
     for axes in top_cluster:
         for point in axes:
-            print(point)
             current_point = self.getTransformedPoint(header, point, 'map')
-            top_cluster_y.append(current_point.point.z)
+            top_cluster_z.append(current_point.point.z)
     for axes in bottom_cluster:
         for point in axes:
             current_point = self.getTransformedPoint(header, point, 'map')
-            bottom_cluster_y.append(current_point.point.z)
-
-
+            bottom_cluster_z.append(current_point.point.z)
     
     # get max and min y-coords
-    cup_top    = np.nanmax(top_cluster_y)
-    cup_bottom = np.nanmin(bottom_cluster_y)
+    cup_top    = np.nanmax(top_cluster_z)
+    cup_bottom = np.nanmin(bottom_cluster_z)
 
     # determine and set size
     if (not np.isnan(cup_top)) and (not np.isnan(cup_bottom)):
@@ -122,127 +127,49 @@ def setCupSize(self, cup, depth_points):
         
         print(cup_height)
 
-        # if cup_height > 0.23:
-        #     pass
-        # elif cup_height > 0.17:
-        #     cup.name = 'large coffee'
-        # elif cup_height > 0.13:
-        #     cup.name = 'medium coffee'
-        # elif cup_height > 0.9:
-        #     cup.name = 'small coffee'
-        if cup_height > 0.3:
+        if cup_height > 0.23:
             pass
-        elif cup_height > 0.2:
+        elif cup_height > 0.17:
             cup.name = 'large coffee'
-        elif cup_height > 0.1:
+        elif cup_height > 0.13:
             cup.name = 'medium coffee'
-        elif cup_height > 0.5:
+        elif cup_height > 0.04:
             cup.name = 'small coffee'
 
 
-def locateCustomer(self, person, cloud):
-    # Get center point of the person bounding box
-    point1 = (person.xywh[0], person.xywh[1])
-    point2 = (person.xywh[0] + person.xywh[2], person.xywh[1] + person.xywh[3])
-    center_point = ( (point1[0] + point2[0])/2, (point1[1] + point2[1])/2 )
+def locateCustomer(self, person, depth_points):
+    header = depth_points.header
+    height = depth_points.height
+    width = depth_points.width
+    cloud = np.fromstring(depth_points.data, np.float32)
+    cloud = cloud.reshape(height, width, 8)
 
-        # Converts a pixel representing the centre point of a detected
-        # person to a real world coordinate with respect to the robot base.
-
-        # Params:
-        #     center_point[0]: x coordinate of the detection centre point
-        #     center_point[1]: y coordinate of the detection centre point
-        #     cloud: PointCloud2 from depth camera topic
-
-        # Returns:
-        #     PointStamped: PointStamped object with the real world
-        #     coordinates relative to the robot base
-    
-    # Initialise PointCloud2 properties
     region_size = 2
-    width = cloud.width
-    height = cloud.height
-    point_step = cloud.point_step
-    row_step = cloud.row_step
-
     while True:
-        # Get a region of points around the centre points
-        x_centres = [center_point[0]]
-        y_centres = [center_point[1]]
-        for i in range(1, region_size):
-            x_centres.append(center_point[0]-i)
-            y_centres.append(center_point[1]-i)
-        for i in range(1, region_size):
-            x_centres.append(center_point[0]+i)
-            y_centres.append(center_point[1]+i)
+        # calculate centre points
+        centre_x = int((person.xywh[0] + person.xywh[2]/2) - region_size)
+        centre_y = int((person.xywh[1] + person.xywh[3]/2) - region_size)
+        # extract xyz values along points of interest
+        centre_cluster = cloud[centre_y  : centre_y + region_size, centre_x : centre_x + region_size, 0:3]
+        not_nan_count = 0
 
-        x_array = []
-        y_array = []
-        z_array = []
+        for axes in centre_cluster:
+            for point in axes:
+                if not (np.isnan(point[0]) or np.isnan(point[1]) or np.isnan(point[2])):
+                    not_nan_count += 1
 
-        # Extract point in PointCloud corresponding to the detection centre
-        for x,y in zip(x_centres,y_centres):
-            array_pos = y*row_step + x*point_step
-            # extract x,y,z as separate arrays in order of pixel.
-            x_bytes = [ord(x) for x in cloud.data[array_pos:array_pos+4]]
-            y_bytes = [ord(x) for x in cloud.data[array_pos+4: array_pos+8]]
-            z_bytes = [ord(x) for x in cloud.data[array_pos+8:array_pos+12]]
-            # pack the bytes into
-            byte_format=struct.pack('4B', *x_bytes)
-            X = struct.unpack('f', byte_format)[0]
-
-            byte_format=struct.pack('4B', *y_bytes)
-            Y = struct.unpack('f', byte_format)[0]
-
-            byte_format=struct.pack('4B', *z_bytes)
-            Z = struct.unpack('f', byte_format)[0]
-
-            # Filter out NaN values from PointCloud as it is not dense
-            if not math.isnan(X) and not math.isnan(Y) and not math.isnan(Z):
-                x_array.append(X)
-                y_array.append(Y)
-                z_array.append(Z)
-
-        # Check at least 3 valid points exist to calculate average
-        if len(x_array) >= 3:
+        if not_nan_count >= 3:
             break
+        
+        region_size += 2
 
-        # Increase region of points around the centre points
-        region_size += 5
+    mean = np.nanmean(centre_cluster, axis=1)
+    mean = np.nanmean(mean, axis=0)
+    centre_point = PointStamped()
+    centre_point.header = depth_points.header
+    centre_point.point = Point(*mean)
 
-    x_mean = numpy.mean(x_array)
-    y_mean = numpy.mean(y_array)
-    z_mean = numpy.mean(z_array)
-
-    transformer = tf.TransformListener()
-    transformer.waitForTransform("/xtion_rgb_optical_frame", "/map", rospy.Time(0), rospy.Duration(4.0))
-    depth_point = PointStamped()
-    depth_point.header.frame_id="/xtion_rgb_optical_frame"
-    depth_point.header.stamp=cloud.header.stamp
-    depth_point.point.x=x_mean
-    depth_point.point.y=y_mean
-    depth_point.point.z=z_mean
-    try:
-        person_position = transformer.transformPoint("map", depth_point)
-        print(person_position)
-        # return goal
-    except:
-        pass
-
-    # Set a move base goal to our found point
-        # Wait for the action server to come up
-    # self.move_base_client.wait_for_server(rospy.Duration(15.0))
-
-    # Create the move_base goal and send it
-    # goal = MoveBaseGoal()
-    # goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-    # goal.target_pose.pose.x = person_position.point.x
-    # goal.target_pose.pose.y = person_position.y
-    # goal.target_pose.pose.z = 0
-
-    # rospy.loginfo('Sending goal location ...')
-    # self.move_base_client.send_goal(goal) 
-    # if self.move_base_client.wait_for_result():
-    #     rospy.loginfo('Goal location achieved!')
-    # else:
-    #     rospy.logwarn("Couldn't reach the goal!")
+    self.transformer.waitForTransform('xtion_rgb_optical_frame', 'map', depth_points.header.stamp, rospy.Duration(4.0))
+    person_point = self.transformer.transformPoint('map', centre_point)
+    print person_point
+    return person_point

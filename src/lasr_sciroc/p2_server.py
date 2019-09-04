@@ -11,6 +11,9 @@ from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Quaternion
 from collections import defaultdict
 from math import pi as PI
 
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+
 class P2Server(SciRocServer):
     def __init__(self, server_name):
         SciRocServer.__init__(self, server_name)
@@ -79,6 +82,13 @@ class P2Server(SciRocServer):
                 if(detection.name == 'cup'):
                     self.setCupSize(detection, depth_points)
                 object_count[detection.name] += 1
+            
+            # view the image - debug
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(result.image_bb, "bgr8")
+            cv2.imshow('image_masked', frame)
+            cv2.waitKey(0)
+
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
 
