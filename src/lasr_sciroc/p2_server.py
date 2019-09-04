@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import rospy
-import tf.transformations
+import tf
 
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
@@ -59,16 +59,16 @@ class P2Server(SciRocServer):
         print(order)  
 
         # wait for the keyword
-        self.keywordDetected('check order')
+        # self.keywordDetected('check order')
 
         while True:
-            rospy.sleep(5)
             # Look down to see the items on the counter
             self.playMotion('look_down')
 
             # Run the object detection client on the items
-            image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
-            result = self.detectObject(image_raw, "costa", 0.3, 0.3)
+            depth_points = self.getRecentPcl()
+            image_raw = self.pclToImage(depth_points)
+            result = self.detectObject(image_raw, "coco", 0.3, 0.3)
 
             order_count = defaultdict(int)
             for item in order:
@@ -76,6 +76,8 @@ class P2Server(SciRocServer):
             
             object_count = defaultdict(int)
             for detection in result.detected_objects:
+                if(detection.name == 'cup'):
+                    self.setCupSize(detection, depth_points)
                 object_count[detection.name] += 1
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))

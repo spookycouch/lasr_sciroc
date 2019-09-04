@@ -1,10 +1,12 @@
 import rospy
 import cv2
+import numpy as np
 import tf
 from cv_bridge import CvBridge, CvBridgeError
 from six.moves import queue
 
 # Actionlib messages
+from geometry_msgs.msg import Point, PointStamped
 from sensor_msgs.msg import PointCloud2
 from lasr_img_depth_mask.msg import DepthMaskGoal
 from lasr_object_detection_yolo.srv import YoloDetection, Pcl2ToImage
@@ -59,6 +61,84 @@ def detectObject(self, image_raw, dataset, confidence, nms):
         return detect_objects(image_raw, dataset, confidence, nms)
     except rospy.ServiceException as e:
         print "Service call failed: %s"%e
+
+
+# transform point to map frame
+def getTransformedPoint(self, header, point, frame):
+    current_point = PointStamped()
+    current_point.header = header
+    current_point.point = Point(*point)
+    return self.transformer.transformPoint(frame, current_point)
+
+# add size to the name field of a cup Detection
+# for cups of invalid or indeterminate height, name remains unchanged
+def setCupSize(self, cup, depth_points):
+
+    # validate bounding box
+    if cup.xywh[2] < 3 or cup.xywh[3] < 6:
+        rospy.loginfo('cup too small to determine size')
+        return
+    
+    # set ranges and get points of interest
+    x_range = 2
+    y_range = 5
+    mid_x = int((cup.xywh[0] + cup.xywh[2]/2) - 1)
+    top_y = cup.xywh[1]
+    btm_y = cup.xywh[1] + cup.xywh[3]
+    
+    # get pcl and reshape to image dimensions
+    header = depth_points.header
+    height = depth_points.height
+    width = depth_points.width
+    cloud = np.fromstring(depth_points.data, np.float32)
+    cloud = cloud.reshape(height, width, 8)
+
+    # extract xyz values along points of interest
+    top_cluster    = cloud[mid_x : mid_x + x_range, top_y : top_y + y_range, 0:3]
+    bottom_cluster = cloud[mid_x : mid_x + x_range, btm_y - y_range : btm_y, 0:3]
+    
+    # transform points to map frame and get y values
+    top_cluster_y = []
+    bottom_cluster_y = []
+    for axes in top_cluster:
+        for point in axes:
+            print(point)
+            current_point = self.getTransformedPoint(header, point, 'map')
+            top_cluster_y.append(current_point.point.z)
+    for axes in bottom_cluster:
+        for point in axes:
+            current_point = self.getTransformedPoint(header, point, 'map')
+            bottom_cluster_y.append(current_point.point.z)
+
+
+    
+    # get max and min y-coords
+    cup_top    = np.nanmax(top_cluster_y)
+    cup_bottom = np.nanmin(bottom_cluster_y)
+
+    # determine and set size
+    if (not np.isnan(cup_top)) and (not np.isnan(cup_bottom)):
+        cup_height = cup_top - cup_bottom
+        
+        print(cup_height)
+
+        # if cup_height > 0.23:
+        #     pass
+        # elif cup_height > 0.17:
+        #     cup.name = 'large coffee'
+        # elif cup_height > 0.13:
+        #     cup.name = 'medium coffee'
+        # elif cup_height > 0.9:
+        #     cup.name = 'small coffee'
+        if cup_height > 0.3:
+            pass
+        elif cup_height > 0.2:
+            cup.name = 'large coffee'
+        elif cup_height > 0.1:
+            cup.name = 'medium coffee'
+        elif cup_height > 0.5:
+            cup.name = 'small coffee'
+
 
 def locateCustomer(self, person, cloud):
     # Get center point of the person bounding box

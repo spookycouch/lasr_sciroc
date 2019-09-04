@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import rospy
+import tf
 import actionlib
 
 # Actionlib messages
@@ -20,7 +21,7 @@ class SciRocServer(object):
     # Imports
     from .movement_actions import gotoTable, gotoLocation, lookAt, playMotion, turn, shiftQuaternion
     from .speech_actions import planWakeWord, talk, keywordDetected, keywordCallback
-    from .vision_actions import detectObject, depthMask, getRecentPcl, pclToImage, locateCustomer
+    from .vision_actions import detectObject, depthMask, getRecentPcl, pclToImage, getTransformedPoint, setCupSize, locateCustomer
 
     def __init__(self, server_name):
         rospy.loginfo('%s Action Server has been initialised!', server_name)
@@ -34,6 +35,7 @@ class SciRocServer(object):
         self.depth_mask_client = actionlib.SimpleActionClient('/depth_mask', DepthMaskAction)
         self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
         self.point_head_client = actionlib.SimpleActionClient('/head_controller/point_head_action', PointHeadAction)
+        self.transformer = tf.TransformListener()
 
         # Bool variable and wake_word subscriber for voice plan activation
         self.running = False
