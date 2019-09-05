@@ -26,9 +26,9 @@ class P1Server(SciRocServer):
     def countPeople(self):
         table_index = rospy.get_param('/current_table')
         cuboid = rospy.get_param('/tables/table' + str(table_index) + '/cuboid')
-        x_left = float((cuboid['max'])['x'])
-        x_right = float((cuboid['min'])['x'])
-        y = float(((cuboid['max'])['y']) + float((cuboid['min'])['y'])) / 2
+        x_left = float((cuboid['max_xyz'])[0])
+        x_right = float((cuboid['min_xyz'])[0])
+        y = float(((cuboid['max_xyz'])[1]) + float((cuboid['min_xyz'])[1])) / 2
         points = [(x_left, y), (x_right, y)]
         object_count = defaultdict(int)
 
@@ -36,7 +36,9 @@ class P1Server(SciRocServer):
         for i in range(2):
             self.lookAt(points[i])
             depth_points = self.getRecentPcl()
-            mask_result = self.depthMask(depth_points, 1, 1, 3.5)
+            image = self.pclToImage(depth_points)
+            mask = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            image_masked = self.applyDepthMask(image, mask, 150)
             count_objects_result = self.detectObject(mask_result.img_mask, "coco", 0.3, 0.3)
 
             # update dictionary

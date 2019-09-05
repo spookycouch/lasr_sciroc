@@ -7,7 +7,7 @@ from six.moves import queue
 
 # Actionlib messages
 from geometry_msgs.msg import Point, PointStamped
-from sensor_msgs.msg import PointCloud2
+from sensor_msgs.msg import Image, PointCloud2
 from lasr_img_depth_mask.msg import DepthMaskGoal
 from lasr_object_detection_yolo.srv import YoloDetection, Pcl2ToImage
 
@@ -38,19 +38,53 @@ def pclToImage(self, depth_points):
     except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
-def depthMask(self, depth_points, filter_left, filter_right, filter_front):
-    # create goal
-    mask_goal = DepthMaskGoal()
-    mask_goal.depth_points = depth_points
-    mask_goal.filter_left = filter_left
-    mask_goal.filter_right = filter_right
-    mask_goal.filter_front = filter_front
+def getDepthMask(self, depth_points, point_min, point_max):
+    # time and cloud
+    current_time = rospy.Time.now()
+    cloud = depth_points.data
+    # min pointstamped
+    pointStamped_min = PointStamped()
+    pointStamped_min.header.stamp = current_time
+    pointStamped_min.header.frame_id = 'map'
+    pointStamped_min.point = Point(*point_min)
+    # max pointstamped
+    pointStamped_max =  PointStamped()
+    pointStamped_max.header.stamp = current_time
+    pointStamped_max.header.frame_id = 'map'
+    pointStamped_max.point = Point(*point_max)
     # send goal and wait for result
-    self.depth_mask_client.send_goal(mask_goal)
-    rospy.loginfo('Depth mask goal sent')
-    rospy.loginfo('Waiting for the depth mask result...')
-    self.depth_mask_client.wait_for_result()
-    return self.depth_mask_client.get_result()
+    rospy.wait_for_service('/depth_crop_mask_server')
+    try:
+        get_crop_mask = rospy.ServiceProxy('/depth_crop_mask_server', DepthCropMask)
+        return get_crop_mask(cloud, pointStamped_min, pointStamped_max)
+    except rospy.ServiceException as e:
+        print "Service call failed: %s"%e
+
+
+
+def applyDepthMask(self, image_msg, mask_msg, blur):
+    # get images
+    image_raw = np.fromstring(image_msg.data, np.uint8)
+    image_blur = cv2.blur(image_raw, (blur, blur))
+    mask = np.fromstring(mask_msg.data, np.uint8)
+    # for index i in images,
+    # select image_raw[i] when mask[i] true
+    # select image_blur[i] when mask[i] false
+    image_masked = np.where(mask, image_raw, image_blur)
+
+    # create sensor_msgs image
+    image_msg_out = Image()
+    image_msg_out.header.stamp = image_raw.header.stamp
+    image_msg_out.header.frame_id = image_raw.header.frame_id
+    image_msg_out.height = image_raw.height
+    image_msg_out.width = image_raw.width
+    image_msg_out.encoding = image_raw.encoding
+    image_msg_out.is_bigendian = image_raw.is_bigendian
+    image_msg_out.step = image_raw.step
+    image_msg_out.data = list(image_masked)
+
+    # result
+    return image_msg_out
 
 def detectObject(self, image_raw, dataset, confidence, nms):
     # wait for the service to come up

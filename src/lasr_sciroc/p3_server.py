@@ -51,8 +51,8 @@ class P3Server(SciRocServer):
 
         # We will get 80% of the distance to the point
         goal_pose = Pose()
-        goal_pose.position.x = (tiago_pose.position.x + person_position.point.x)*distance_factor
-        goal_pose.position.y = (tiago_pose.position.y + person_position.point.y)*distance_factor
+        goal_pose.position.x = tiago_pose.position.x + (person_position.point.x - tiago_pose.position.x)*distance_factor
+        goal_pose.position.y = tiago_pose.position.y + (person_position.point.y - tiago_pose.position.y)*distance_factor
         goal_pose.position.z = 0.0
         goal_pose.orientation = tiago_pose.orientation
 
