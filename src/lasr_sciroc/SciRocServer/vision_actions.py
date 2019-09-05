@@ -9,6 +9,7 @@ from six.moves import queue
 from geometry_msgs.msg import Point, PointStamped
 from sensor_msgs.msg import Image, PointCloud2
 from lasr_img_depth_mask.msg import DepthMaskGoal
+from lasr_pcl.srv import DepthCropMask
 from lasr_object_detection_yolo.srv import YoloDetection, Pcl2ToImage
 
 def getRecentPcl(self):
@@ -53,9 +54,11 @@ def getDepthMask(self, depth_points, point_min, point_max):
     pointStamped_max.header.frame_id = 'map'
     pointStamped_max.point = Point(*point_max)
     # send goal and wait for result
-    rospy.wait_for_service('/depth_crop_mask_server')
+    print('waiting for server')
+    rospy.wait_for_service('/depth_crop_mask')
+    print('waited for server')
     try:
-        get_crop_mask = rospy.ServiceProxy('/depth_crop_mask_server', DepthCropMask)
+        get_crop_mask = rospy.ServiceProxy('/depth_crop_mask', DepthCropMask)
         return get_crop_mask(cloud, pointStamped_min, pointStamped_max)
     except rospy.ServiceException as e:
         print "Service call failed: %s"%e
