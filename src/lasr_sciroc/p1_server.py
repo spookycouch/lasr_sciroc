@@ -42,7 +42,7 @@ class P1Server(SciRocServer):
             depth_points = self.getRecentPcl()
             image = self.pclToImage(depth_points)
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
-            image_masked = self.applyDepthMask(image, mask_msg.mask, 150)
+            image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             count_objects_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
             # update dictionary
