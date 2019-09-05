@@ -6,6 +6,10 @@ from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict
 
+# for debug
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+
 class P1Server(SciRocServer):
     def __init__(self, server_name):
         SciRocServer.__init__(self, server_name)
@@ -37,19 +41,19 @@ class P1Server(SciRocServer):
             self.lookAt(points[i])
             depth_points = self.getRecentPcl()
             image = self.pclToImage(depth_points)
-            mask = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
-            image_masked = self.applyDepthMask(image, mask, 150)
-            count_objects_result = self.detectObject(mask_result.img_mask, "coco", 0.3, 0.3)
+            mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            image_masked = self.applyDepthMask(image, mask_msg.mask, 150)
+            count_objects_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
             # update dictionary
             for detection in count_objects_result.detected_objects:
                 object_count[detection.name] += 1
             
             # view the image - debug
-            # bridge = CvBridge()
-            # frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
-            # cv2.imshow('image_masked', frame)
-            # cv2.waitKey(0)
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+            cv2.imshow('image_masked', frame)
+            cv2.waitKey(0)
 
         # RETURN TO DEFAULT POSE
         self.playMotion('back_to_default')

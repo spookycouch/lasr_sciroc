@@ -42,7 +42,6 @@ def pclToImage(self, depth_points):
 def getDepthMask(self, depth_points, point_min, point_max):
     # time and cloud
     current_time = rospy.Time.now()
-    cloud = depth_points.data
     # min pointstamped
     pointStamped_min = PointStamped()
     pointStamped_min.header.stamp = current_time
@@ -59,31 +58,40 @@ def getDepthMask(self, depth_points, point_min, point_max):
     print('waited for server')
     try:
         get_crop_mask = rospy.ServiceProxy('/depth_crop_mask', DepthCropMask)
-        return get_crop_mask(cloud, pointStamped_min, pointStamped_max)
+        return get_crop_mask(depth_points, pointStamped_min, pointStamped_max)
     except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
 
 
 def applyDepthMask(self, image_msg, mask_msg, blur):
+    # height and width
+    height = image_msg.height
+    width = image_msg.width
     # get images
     image_raw = np.fromstring(image_msg.data, np.uint8)
     image_blur = cv2.blur(image_raw, (blur, blur))
     mask = np.fromstring(mask_msg.data, np.uint8)
+    # reshape arrrays (fromstring) to matrices
+    mask = mask.reshape(height * width, 1)
+    image_raw = image_raw.reshape(height * width * 3, 1)
     # for index i in images,
     # select image_raw[i] when mask[i] true
     # select image_blur[i] when mask[i] false
-    image_masked = np.where(mask, image_raw, image_blur)
+    image_masked = np.empty(image_raw.shape)
+    for i in range(3):
+        image_masked[i::3] = np.where(mask, image_raw[i::3], image_blur[i::3])
+
 
     # create sensor_msgs image
     image_msg_out = Image()
-    image_msg_out.header.stamp = image_raw.header.stamp
-    image_msg_out.header.frame_id = image_raw.header.frame_id
-    image_msg_out.height = image_raw.height
-    image_msg_out.width = image_raw.width
-    image_msg_out.encoding = image_raw.encoding
-    image_msg_out.is_bigendian = image_raw.is_bigendian
-    image_msg_out.step = image_raw.step
+    image_msg_out.header.stamp = image_msg.header.stamp
+    image_msg_out.header.frame_id = image_msg.header.frame_id
+    image_msg_out.height = image_msg.height
+    image_msg_out.width = image_msg.width
+    image_msg_out.encoding = image_msg.encoding
+    image_msg_out.is_bigendian = image_msg.is_bigendian
+    image_msg_out.step = image_msg.step
     image_msg_out.data = list(image_masked)
 
     # result
