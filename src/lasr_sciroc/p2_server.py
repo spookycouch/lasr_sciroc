@@ -33,7 +33,7 @@ class P2Server(SciRocServer):
                     next_table = tables[table]['id']
         
         if needServing_exist:
-            rospy.set_param('/current_table', next_table)
+            rospy.set_param('/current_table', 'table' + str(next_table))
             print "\033[1;33m" + "The next table that needs serving is " + str(next_table) + "\033[0m"
         else:
             # if all tables have been served, counting is done
@@ -41,23 +41,23 @@ class P2Server(SciRocServer):
 
     
     def orderConfirm(self):
-        table_index = rospy.get_param('/current_table')
+        current_table = rospy.get_param('/current_table')
 
         # Fetch the order from the parameter server
-        order = rospy.get_param('/tables/table' + str(table_index) + '/order')
+        order = rospy.get_param('/tables/' + current_table + '/order')
         rospy.loginfo('The order fetched from the parameter server is ')
         print(order)  
 
         # Say the order
-        self.talk('The order of table {0} is {1}'.format(table_index, order))
+        self.talk('The order of {0} is {1}'.format(current_table, order))
         rospy.sleep(3)
 
     
     def checkOrder(self):
-        table_index = rospy.get_param('/current_table')
+        current_table = rospy.get_param('/current_table')
 
         # Fetch the order from the parameter server
-        order = rospy.get_param('/tables/table' + str(table_index) + '/order')
+        order = rospy.get_param('/tables/' + current_table + '/order')
         rospy.loginfo('The order fetched from the parameter server in checkOrder is ')
         print(order)  
 
@@ -145,5 +145,5 @@ class P2Server(SciRocServer):
         self.keywordDetected('order collected')
 
         # Set the table to be already served
-        table_index = rospy.get_param('/current_table')
-        rospy.set_param('/tables/table' + str(table_index) + '/status', 'Already served')
+        current_table = rospy.get_param('/current_table')
+        rospy.set_param('/tables/' + current_table + '/status', 'Already served')

@@ -28,17 +28,19 @@ class P1Server(SciRocServer):
         
     
     def countPeople(self):
-        table_index = rospy.get_param('/current_table')
-        cuboid = rospy.get_param('/tables/table' + str(table_index) + '/cuboid')
-        x_left = float((cuboid['max_xyz'])[0])
-        x_right = float((cuboid['min_xyz'])[0])
-        y = float(((cuboid['max_xyz'])[1]) + float((cuboid['min_xyz'])[1])) / 2
-        points = [(x_left, y), (x_right, y)]
+        # Get the current table from the parameter server
+        current_table = rospy.get_param('/current_table')
+        
+        # Get Cuboid for Min and Max points of the table
+        cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
+
+        # Get Left and Right points of the sides of the table
+        side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
         object_count = defaultdict(int)
 
         # Take a picture using the depth mask and feed it to the detection
         for i in range(2):
-            self.lookAt(points[i])
+            self.lookAt(side_points[i])
             depth_points = self.getRecentPcl()
             image = self.pclToImage(depth_points)
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
@@ -66,29 +68,27 @@ class P1Server(SciRocServer):
         self.talk(speech_out)
 
         # Update the number of people in the parameter server
-        rospy.loginfo('Updating the number of people found at table %d' % table_index)
-        rospy.set_param('/tables/table' + str(table_index) + '/person_count', person_count)
+        rospy.loginfo('Updating the number of people found at %s' % current_table)
+        rospy.set_param('/tables/' + current_table + '/person_count', person_count)
         rospy.loginfo('Updated the person counter successfully')
 
 
 
     # Sleeps are required to avoid Tiago's busy status from body motions controllers
     def identifyStatus(self):
-        table_index = rospy.get_param('/current_table')
-        rospy.loginfo('Identifying the status of: %d' % table_index)
+        current_table = rospy.get_param('/current_table')
+        rospy.loginfo('Identifying the status of: %s' % current_table)
 
         # Step 1: Look down to see the table
         self.playMotion('check_table')
 
         # Step 2: Take a picture of the table surface
         image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
-        count_objects_result = self.detectObject(image_raw, "coco", 0.3, 0.3)
+        count_objects_result = self.detectObject(image_raw, "costa", 0.3, 0.3)
         
         # dictionary of results
         object_count = defaultdict(int)
         for detection in count_objects_result.detected_objects:
-            if(detection.name == 'cup'):
-                self.setCupSize(detection)
             object_count[detection.name] += 1
 
         # output results
@@ -106,7 +106,7 @@ class P1Server(SciRocServer):
         self.playMotion('back_to_default')
 
         # Step 4: Decide on table status and send tts goal to the sound server
-        foundPerson = rospy.get_param('/tables/table' + str(table_index) + '/person_count')
+        foundPerson = rospy.get_param('/tables/' + current_table + '/person_count')
         foundConsumable = len(object_count)
 
         if foundPerson:
@@ -121,11 +121,11 @@ class P1Server(SciRocServer):
                 result = 'Clean'
         
         # Update the status of the table in the parameter server
-        rospy.loginfo('Updating the table status of table %d', table_index)
-        rospy.set_param('/tables/table' + str(table_index) + '/status', result)
+        rospy.loginfo('Updating the table status of %s', current_table)
+        rospy.set_param('/tables/' + current_table + '/status', result)
         rospy.loginfo('Updated the table status successfully')
         # output result
-        self.talk('Status of table {0} is {1}'.format(table_index, result))
+        self.talk('Status of table {0} is {1}'.format(current_table, result))
         rospy.sleep(1)
 
     # TODO: rename please to determineNextUnknownTable
@@ -143,7 +143,7 @@ class P1Server(SciRocServer):
                     next_table_id = tables[table]['id']
 
         if next_table_id is not None:
-            rospy.set_param('/current_table', next_table_id)
+            rospy.set_param('/current_table', 'table' + str(next_table_id))
             print "\033[1;33m" + "The next table is " + str(next_table_id) + "\033[0m"
         else:
             # if all tables have been identified, counting is done

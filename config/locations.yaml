@@ -9,8 +9,9 @@ tables:
       orientation: { x: 0.0, y: 0.0, z: 0.694576864659, w: 0.719418500652 }
     cuboid:
       frame: 'map'
-      max_xyz: [ 5.587, 0.480, 10.0 ]
-      min_xyz: [ 8.042, 2.315, 0.00 ]
+      max_xyz: [ 8.042, 2.315, 10.0 ]
+      min_xyz: [ 5.587, 0.480, 0.00 ]
+    lookLR: [[6.17, 1.66], [7.29, 1.66]]
 
   table1:
     id: 1
@@ -24,6 +25,7 @@ tables:
       frame: 'map'
       max_xyz: [ 10.771, 2.283, 10.0 ]
       min_xyz: [ 8.057, 0.574, 0.000 ]
+    lookLR: [[8.93, 1.54], [9.97, 1.66]]
 
 Bar:
   location:
