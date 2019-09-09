@@ -15,18 +15,8 @@ class P1Server(SciRocServer):
         SciRocServer.__init__(self, server_name)
 
     def initialise(self):
-        # # Restart move basse with a lower yaw threshold for more accurate turning
-        # rospy.loginfo('killing move base server')
-        # rospy.set_param("/move_base/PalLocalPlanner/yaw_goal_tolerance", 0.05)
-        # rosnode.kill_nodes(['/move_base'])
-
-        # if self.move_base_client.wait_for_server(rospy.Duration(10)):
-        #     rospy.loginfo('Move base server is back up')
-        # else:
-        #     rospy.loginfo("Failed to connect to move base")
         pass
-        
-    
+
     def countPeople(self):
         table_index = rospy.get_param('/current_table')
         cuboid = rospy.get_param('/tables/table' + str(table_index) + '/cuboid')
@@ -39,8 +29,7 @@ class P1Server(SciRocServer):
         # Take a picture using the depth mask and feed it to the detection
         for i in range(2):
             self.lookAt(points[i])
-            depth_points = self.getRecentPcl()
-            image = self.pclToImage(depth_points)
+            depth_points, image = self.getPcl2AndImage()
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             count_objects_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
@@ -71,8 +60,6 @@ class P1Server(SciRocServer):
         rospy.loginfo('Updated the person counter successfully')
 
 
-
-    # Sleeps are required to avoid Tiago's busy status from body motions controllers
     def identifyStatus(self):
         table_index = rospy.get_param('/current_table')
         rospy.loginfo('Identifying the status of: %d' % table_index)
@@ -80,7 +67,7 @@ class P1Server(SciRocServer):
         # Step 1: Look down to see the table
         self.playMotion('check_table')
 
-        # Step 2: Take a picture of the table surface
+        # Step 2: YOLOv3 object detection
         image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
         count_objects_result = self.detectObject(image_raw, "coco", 0.3, 0.3)
         
@@ -109,16 +96,14 @@ class P1Server(SciRocServer):
         foundPerson = rospy.get_param('/tables/table' + str(table_index) + '/person_count')
         foundConsumable = len(object_count)
 
-        if foundPerson:
-            if foundConsumable:
-                result = 'Already served'
-            else:
-                result = 'Needs serving'
+        if foundPerson and foundConsumable:
+            result = 'Already served'
+        elif foundPerson and not foundConsumable:
+            result = 'Needs serving'
+        elif not foundPerson and foundConsumable:
+            result = 'Dirty'
         else:
-            if foundConsumable:
-                result = 'Dirty'
-            else:
-                result = 'Clean'
+            result = 'Clean'
         
         # Update the status of the table in the parameter server
         rospy.loginfo('Updating the table status of table %d', table_index)
