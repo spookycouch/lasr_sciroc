@@ -29,4 +29,4 @@ def talk(self, speech_in):
     tts_goal.rawtext.lang_id = 'en_GB'
     tts_goal.rawtext.text = speech_in
     self.speech_client.send_goal(tts_goal)
-    self.speech_client.wait_for_result()
+    #self.speech_client.wait_for_result()

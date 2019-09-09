@@ -62,8 +62,6 @@ def getDepthMask(self, depth_points, point_min, point_max):
     except rospy.ServiceException as e:
         print "Service call failed: %s"%e
 
-
-
 def applyDepthMask(self, image_msg, mask_msg, blur):
     # height and width
     height = image_msg.height
