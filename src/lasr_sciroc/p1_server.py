@@ -30,7 +30,7 @@ class P1Server(SciRocServer):
 
         # Take a picture using the depth mask and feed it to the detection
         for i in range(2):
-            self.lookAt(points[i])
+            self.lookAt(side_points[i])
             depth_points, image = self.getPcl2AndImage()
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
@@ -110,7 +110,7 @@ class P1Server(SciRocServer):
         rospy.set_param('/tables/' + current_table + '/status', result)
         rospy.loginfo('Updated the table status successfully')
         # output result
-        self.talk('Status of table {0} is {1}'.format(current_table, result))
+        self.talk('Status of {0} is {1}'.format(current_table, result))
         rospy.sleep(1)
 
     # TODO: rename please to determineNextUnknownTable

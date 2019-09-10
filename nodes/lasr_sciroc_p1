@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import rospy
 from lasr_sciroc import P1Server

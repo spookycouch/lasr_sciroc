@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import rospy
 import tf
@@ -12,7 +12,7 @@ from play_motion_msgs.msg import PlayMotionAction
 from lasr_img_depth_mask.msg import DepthMaskAction
 from pal_interaction_msgs.msg import TtsAction
 from control_msgs.msg import PointHeadAction
-
+from ..MKHub import MKHubBridge
 
 class SciRocServer(object):
     _feedback = lpb_msg.BridgeFeedback()
@@ -21,7 +21,7 @@ class SciRocServer(object):
     # Imports
     from .movement_actions import gotoTable, gotoLocation, lookAt, playMotion, turn, shiftQuaternion
     from .speech_actions import planWakeWord, talk, keywordDetected, keywordCallback
-    from .vision_actions import detectObject, getDepthMask, applyDepthMask, getRecentPcl, getPcl2AndImage, pclToImage, getTransformedPoint, setCupSize, locateCustomer
+    from .vision_actions import detectObject, getDepthMask, applyDepthMask, getPcl2AndImage, getTransformedPoint, setCupSize, locateCustomer
 
     def __init__(self, server_name):
         rospy.loginfo('%s Action Server has been initialised!', server_name)
