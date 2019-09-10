@@ -66,12 +66,11 @@ class P2Server(SciRocServer):
 
         while True:
             # Look down to see the items on the counter
-            self.playMotion('look_down')
+            # self.playMotion('look_down')
 
             # Run the object detection client on the items
-            depth_points = self.getRecentPcl()
-            image_raw = self.pclToImage(depth_points)
-            result = self.detectObject(image_raw, "coco", 0.3, 0.3)
+            depth_points, image_raw = self.getPcl2AndImage()
+            result = self.detectObject(image_raw, "costa", 0.3, 0.3)
 
             order_count = defaultdict(int)
             for item in order:
@@ -79,8 +78,8 @@ class P2Server(SciRocServer):
             
             object_count = defaultdict(int)
             for detection in result.detected_objects:
-                if(detection.name == 'cup'):
-                    self.setCupSize(detection, depth_points)
+                if(detection.name == 'costa cup'):
+                    self.setCupSize(detection, depth_points, image_raw)
                 object_count[detection.name] += 1
             
             # view the image - debug
@@ -93,7 +92,7 @@ class P2Server(SciRocServer):
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
 
             # Back to default pose
-            self.playMotion('back_to_default')
+            # self.playMotion('back_to_default')
 
             # Compare the result to the order and announce the missing item
             missing_items = defaultdict(int)

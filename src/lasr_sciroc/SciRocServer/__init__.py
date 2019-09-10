@@ -35,11 +35,12 @@ class SciRocServer(object):
         self.depth_mask_client = actionlib.SimpleActionClient('/depth_mask', DepthMaskAction)
         self.speech_client = actionlib.SimpleActionClient('/tts', TtsAction)
         self.point_head_client = actionlib.SimpleActionClient('/head_controller/point_head_action', PointHeadAction)
-        self.transformer = tf.TransformListener()
 
         # Bool variable and wake_word subscriber for voice plan activation
         self.running = False
         self.sub = rospy.Subscriber('/wake_word/wake_word_detected', String, self.planWakeWord)
+
+        self.transformer = tf.TransformListener()
 
     
     def execute_cb(self, goal):

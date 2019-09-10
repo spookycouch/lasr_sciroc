@@ -89,3 +89,24 @@ class P3Server(SciRocServer):
                 print "Failed to turned towards person"
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
+
+    def findReady(self):
+        # Get the Tables Dictionary from the parameter server
+        tables = rospy.get_param("/tables")
+
+        # Get the ID of a table that needs serving
+        clean_table = {}
+        for table in tables:
+            if (tables[table])['status'] == 'Ready':
+                if not len(clean_table):
+                    clean_table['data'] = tables[table]['id']
+                elif tables[table]['id'] < clean_table['data']:
+                    clean_table['data'] = tables[table]['id']
+        
+        # if a clean table is found, set PNP foundReady to true
+        if len(clean_table):
+            rospy.set_param('/current_table', 'table' + str(clean_table['data']))
+            print "\033[1;33m" + "The next table that needs serving is " + str(next_table) + "\033[0m"
+            self._result.condition_event = ['foundReady']
+        else:
+            print "\033[1;33m" + "No clean tables found. " + "\033[0m"

@@ -19,7 +19,6 @@ def getPcl2AndImage(self):
 
     # return the stuff
     def pcl2_and_image_callback(pcl2, image):
-        print 'in the callback'
         vision_queue.put((pcl2, image))
     
     image_sub = message_filters.Subscriber('/xtion/rgb/image_rect_color', Image)
@@ -30,7 +29,6 @@ def getPcl2AndImage(self):
     while True:
         try:
             result = vision_queue.get(block=False)
-            rospy.loginfo('result found {}'.format(result))
             break
         except queue.Empty:
             rospy.sleep(0.1)
@@ -61,6 +59,8 @@ def getDepthMask(self, depth_points, point_min, point_max):
         return get_crop_mask(depth_points, pointStamped_min, pointStamped_max)
     except rospy.ServiceException as e:
         print "Service call failed: %s"%e
+
+
 
 def applyDepthMask(self, image_msg, mask_msg, blur):
     # height and width
@@ -115,27 +115,26 @@ def getTransformedPoint(self, header, point, frame):
 
 # add size to the name field of a cup Detection
 # for cups of invalid or indeterminate height, name remains unchanged
-def setCupSize(self, cup, depth_points):
+def setCupSize(self, cup, depth_points, image_raw):
     # validate bounding box
     if cup.xywh[2] < 3 or cup.xywh[3] < 6:
         rospy.loginfo('cup too small to determine size')
         return
     
     # set ranges and get points of interest
-    x_range = 2
-    y_range = 5
+    x_range = 4
+    y_range = 10
     mid_x = int((cup.xywh[0] + cup.xywh[2]/2) - 1)
     top_y = cup.xywh[1]
     btm_y = cup.xywh[1] + cup.xywh[3]
     
     # SEE WHERE THE 
-    # image_raw = self.pclToImage(depth_points)
-    # bridge = CvBridge()
-    # frame = bridge.imgmsg_to_cv2(image_raw, "bgr8")
-    # frame[top_y : top_y + y_range, mid_x : mid_x + x_range] = (0,0,255)
-    # frame[btm_y - y_range : btm_y, mid_x : mid_x + x_range] = (0,0,255)
-    # cv2.imshow('image_masked', frame)
-    # cv2.waitKey(0)
+    bridge = CvBridge()
+    frame = bridge.imgmsg_to_cv2(image_raw, "bgr8")
+    frame[top_y : top_y + y_range, mid_x : mid_x + x_range] = (0,0,255)
+    frame[btm_y - y_range : btm_y, mid_x : mid_x + x_range] = (0,0,255)
+    cv2.imshow('image_masked', frame)
+    cv2.waitKey(0)
 
     # get pcl and reshape to image dimensions
     header = depth_points.header
@@ -164,6 +163,10 @@ def setCupSize(self, cup, depth_points):
     cup_top    = np.nanmax(top_cluster_z)
     cup_bottom = np.nanmin(bottom_cluster_z)
 
+    if np.isnan(cup_top):
+        print 'top nan'
+    if np.isnan(cup_bottom):
+        print 'bottom nan'
     # determine and set size
     if (not np.isnan(cup_top)) and (not np.isnan(cup_bottom)):
         cup_height = cup_top - cup_bottom
@@ -172,11 +175,11 @@ def setCupSize(self, cup, depth_points):
 
         if cup_height > 0.23:
             pass
-        elif cup_height > 0.17:
+        elif cup_height > 0.14:
             cup.name = 'large coffee'
-        elif cup_height > 0.13:
+        elif cup_height > 0.12:
             cup.name = 'medium coffee'
-        elif cup_height > 0.04:
+        elif cup_height > 0.09:
             cup.name = 'small coffee'
 
 
