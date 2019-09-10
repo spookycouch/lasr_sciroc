@@ -10,6 +10,7 @@ from move_base_msgs.msg import MoveBaseGoal
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Quaternion
 from collections import defaultdict
 from math import pi as PI
+from MKHub import MKHubBridge
 
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
@@ -38,6 +39,28 @@ class P2Server(SciRocServer):
         else:
             # if all tables have been served, counting is done
             self._result.condition_event = ['doneServing']
+
+    def updateHubTableOrder(self, status):
+        current_table = rospy.get_param('/current_table')
+
+        # For now set a fake order
+        rospy.set_param('/tables/' + current_table + '/order', ['biscotti'])
+
+        # Fetch the order from the parameter server set by dialogflow
+        order = rospy.get_param('/tables/' + current_table + '/order')
+
+        # MKHub bridge object
+        bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-order')
+
+        # PUT the order of the table to the data hub
+        payload = bridge.constructOrderPayload(current_table, order, status)
+        print('PRINTING ORDER PAYLOAD')
+        print(payload)
+        response = bridge.put(current_table, payload)
+
+        # Get the update to check (log)
+        got = bridge.get(current_table)
+        print(got)
 
     
     def orderConfirm(self):

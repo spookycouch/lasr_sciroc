@@ -2,7 +2,7 @@ tables:
   # table0:
   #   id: 0
   #   person_count: -1
-  #   status: "unknown"
+  #   status: "Unknown"
   #   order: []
   #   location:
   #     position: { x: 21.9364580226, y: 19.5228118361, z: 0.0 }
@@ -15,7 +15,7 @@ tables:
   # table1:
   #   id: 1
   #   person_count: -1
-  #   status: "unknown"
+  #   status: "Unknown"
   #   order: []
   #   location:
   #     position: { x: 20.2735464103, y: 18.3279660725, z: 0.0 }
@@ -28,7 +28,7 @@ tables:
   # table2:
   #   id: 2
   #   person_count: -1
-  #   status: "unknown"
+  #   status: "Unknown"
   #   order: []
   #   location:
   #     position: { x: 18.7223304879, y: 16.3367719378, z: 0.0 }
@@ -41,7 +41,7 @@ tables:
   table3:
     id: 3
     person_count: -1
-    status: "unknown"
+    status: "Unknown"
     order: []
     location:
       position: { x: 7.03416643896, y: 6.08865910191, z: 0.0 }
@@ -54,7 +54,7 @@ tables:
   table4:
     id: 4
     person_count: -1
-    status: "unknown"
+    status: "Unknown"
     order: []
     location:
       position: { x: 5.33803681296, y: 4.4170952369, z: 0.0 }
@@ -67,7 +67,7 @@ tables:
   # table5:
   #   id: 5
   #   person_count: -1
-  #   status: "unknown"
+  #   status: "Unknown"
   #   order: []
   #   location:
   #     position: { x: 3.35535288015, y: 2.39627467118, z: 0.0 }

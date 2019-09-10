@@ -2587,7 +2587,7 @@
         </ArrowMode>
       </toolspecific>
     </arc>
-    <arc id="a67" source="p1" target="t1">
+    <arc id="a67" source="p9" target="t6">
       <inscription>
         <value>1</value>
         <graphics>
@@ -2603,7 +2603,7 @@
         </ArrowMode>
       </toolspecific>
     </arc>
-    <arc id="a68" source="p9" target="t6">
+    <arc id="a68" source="t30" target="p29">
       <inscription>
         <value>1</value>
         <graphics>
@@ -2619,7 +2619,7 @@
         </ArrowMode>
       </toolspecific>
     </arc>
-    <arc id="a69" source="t30" target="p29">
+    <arc id="a69" source="t2" target="p35">
       <inscription>
         <value>1</value>
         <graphics>
@@ -2635,7 +2635,7 @@
         </ArrowMode>
       </toolspecific>
     </arc>
-    <arc id="a70" source="t2" target="p35">
+    <arc id="a70" source="p35" target="t8">
       <inscription>
         <value>1</value>
         <graphics>
@@ -2651,7 +2651,7 @@
         </ArrowMode>
       </toolspecific>
     </arc>
-    <arc id="a71" source="p35" target="t8">
+    <arc id="a71" source="t7" target="p35">
       <inscription>
         <value>1</value>
         <graphics>
@@ -2667,7 +2667,7 @@
         </ArrowMode>
       </toolspecific>
     </arc>
-    <arc id="a72" source="t7" target="p35">
+    <arc id="a72" source="p1" target="t1">
       <inscription>
         <value>1</value>
         <graphics>

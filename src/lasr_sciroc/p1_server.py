@@ -5,6 +5,7 @@ import rosnode
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict
+from MKHub import MKHubBridge
 
 # for debug
 import cv2
@@ -61,6 +62,20 @@ class P1Server(SciRocServer):
         rospy.set_param('/tables/' + current_table + '/person_count', person_count)
         rospy.loginfo('Updated the person counter successfully')
 
+        # MKHub bridge object
+        bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-table')
+
+        # Post the people count of the table to the data hub
+        status = rospy.get_param('/tables/' + current_table + '/status')
+        payload = bridge.constructTablePayload(current_table, person_count, status)
+        print('PRINTING PAYLOAD')
+        print(payload)
+        response = bridge.post(current_table, payload)
+
+        # Get the update to check (log)
+        got = bridge.get(current_table)
+        print(got)
+
 
     def identifyStatus(self):
         current_table = rospy.get_param('/current_table')
@@ -97,21 +112,34 @@ class P1Server(SciRocServer):
         foundConsumable = len(object_count)
 
         if foundPerson and foundConsumable:
-            result = 'Already served'
+            status = 'Already served'
         elif foundPerson and not foundConsumable:
-            result = 'Needs serving'
+            status = 'Needs serving'
         elif not foundPerson and foundConsumable:
-            result = 'Dirty'
+            status = 'Needs cleaning'
         else:
-            result = 'Clean'
+            status = 'Ready'
         
         # Update the status of the table in the parameter server
-        rospy.loginfo('Updating the table status of %s', current_table)
-        rospy.set_param('/tables/' + current_table + '/status', result)
-        rospy.loginfo('Updated the table status successfully')
-        # output result
-        self.talk('Status of {0} is {1}'.format(current_table, result))
-        rospy.sleep(1)
+        rospy.loginfo('Updating the status of %s', current_table)
+        rospy.set_param('/tables/' + current_table + '/status', status)
+        rospy.loginfo('Updated the status successfully')
+        # output status
+        self.talk('Status of {0} is {1}'.format(current_table, status))
+        
+        # MKHub bridge object
+        bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-table')
+
+        # Post the status of the table to the data hub
+        person_count = rospy.get_param('/tables/' + current_table + '/person_count')
+        payload = bridge.constructTablePayload(current_table, person_count, status)
+        print('PRINTING PAYLOAD')
+        print(payload)
+        response = bridge.post(current_table, payload)
+
+        # Get the update to check (log)
+        got = bridge.get(current_table)
+        print(got)
 
     # TODO: rename please to determineNextUnknownTable
     def count(self):
@@ -123,7 +151,7 @@ class P1Server(SciRocServer):
 
         next_table_id = None
         for table in tables:
-            if tables[table]['status'] == 'unknown':
+            if tables[table]['status'] == 'Unknown':
                 if next_table_id is None or tables[table]['id'] < next_table_id:
                     next_table_id = tables[table]['id']
 

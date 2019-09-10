@@ -2,7 +2,7 @@ tables:
   table0:
     id: 0
     person_count: -1
-    status: "unknown"
+    status: "Unknown"
     order: []
     location:
       position: { x: 6.783693856, y: 0.174163159293, z: 0.0 }
@@ -16,7 +16,7 @@ tables:
   table1:
     id: 1
     person_count: -1
-    status: "unknown"
+    status: "Unknown"
     order: []
     location:
       position: { x: 9.38863755014, y: 0.202148583446, z: 0.0 }
