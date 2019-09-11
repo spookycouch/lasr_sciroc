@@ -56,6 +56,25 @@ def gotoLocation(self, location):
     else:
         rospy.logwarn("Couldn't reach the goal!")
 
+
+def gotoPose(self, goal_pose):
+    rospy.loginfo('Going to %s', goal_pose)
+
+    # Wait for the action server to come up
+    self.move_base_client.wait_for_server(rospy.Duration(15.0))
+
+    # Create the move_base goal and send it
+    goal = MoveBaseGoal()
+    goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
+    goal.target_pose.pose = goal_pose
+
+    rospy.loginfo('Sending goal location ...')
+    self.move_base_client.send_goal(goal) 
+    if self.move_base_client.wait_for_result():
+        rospy.loginfo('Goal location achieved!')
+    else:
+        rospy.logwarn("Couldn't reach the goal!")
+
 def playMotion(self, motion_name):
     # Wait for the play motion server to come up and send goal
     self.play_motion_client.wait_for_server(rospy.Duration(15.0))
@@ -123,31 +142,3 @@ def lookAt(self, point):
         rospy.loginfo('Head goal achieved!')
     else:
         rospy.logwarn("Couldn't reach the head goal!")
-
-def shiftQuaternion(self, orientation, radians):
-        theEuler = tf.transformations.euler_from_quaternion([orientation.x, orientation.y, orientation.z, orientation.w])
-        if(theEuler[2] > 0):
-            newEuler = theEuler[0], theEuler[1], theEuler[2] - radians
-        else:
-            newEuler = theEuler[0], theEuler[1], theEuler[2] + radians
-        theFakeQuaternion = tf.transformations.quaternion_from_euler(newEuler[0], newEuler[1], newEuler[2])
-        theRealQuaternion = Quaternion(theFakeQuaternion[0], theFakeQuaternion[1], theFakeQuaternion[2], theFakeQuaternion[3])
-        return theRealQuaternion
-    
-def turn(self):
-    # Get his current pose
-    current_pose = rospy.wait_for_message('/amcl_pose', PoseWithCovarianceStamped).pose.pose
-
-    # Change orientation to turn TIAGo 180 degrees
-    self.move_base_client.wait_for_server(rospy.Duration(15.0))
-    goal = MoveBaseGoal()
-    goal.target_pose.header = Header(frame_id="map", stamp=rospy.Time.now())
-    goal.target_pose.pose = Pose(position=current_pose.position, orientation=self.shiftQuaternion(current_pose.orientation, PI))
-
-    # Send the move_base goal
-    rospy.loginfo('Sending goal location ...')
-    self.move_base_client.send_goal(goal) 
-    if self.move_base_client.wait_for_result():
-        rospy.loginfo('Goal location achieved!')
-    else:
-        rospy.logwarn("Couldn't reach the goal!")

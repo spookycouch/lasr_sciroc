@@ -6,6 +6,7 @@ from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict
 from MKHub import MKHubBridge
+from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
 
 # for debug
 import cv2
@@ -145,10 +146,10 @@ class P1Server(SciRocServer):
     def count(self):
         rospy.loginfo('Counting all the tables')
 
-        # if any table status is unknown, set it to the robot's current table
+        # Fetch tables dictionary from the parameter server
         tables = rospy.get_param("/tables")
-        # get an unknown table of the lowest id
 
+        # get an unknown table of the lowest id
         next_table_id = None
         for table in tables:
             if tables[table]['status'] == 'Unknown':
@@ -158,9 +159,25 @@ class P1Server(SciRocServer):
         if next_table_id is not None:
             rospy.set_param('/current_table', 'table' + str(next_table_id))
             print "\033[1;33m" + "The next table is " + str(next_table_id) + "\033[0m"
+
+            # Update the RobotStatus on the hub using the service
+            rospy.wait_for_service('/robot_status')
+            try:
+                robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
+                response = robot_status('Checking table' + str(next_table_id), 'EPISODE3')
+            except rospy.ServiceException, e:
+                print "Service call failed: %s"%e
         else:
             # if all tables have been identified, counting is done
             self._result.condition_event = ['doneCounting']
+
+            # Update the RobotStatus on the hub using the service
+            rospy.wait_for_service('/robot_status')
+            try:
+                robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
+                response = robot_status('Done checking tables', 'EPISODE3')
+            except rospy.ServiceException, e:
+                print "Service call failed: %s"%e
 
         
 

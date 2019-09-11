@@ -3,7 +3,7 @@ import rospy
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from mkhub_bridge import MKHubBridge
     
-def StartLocationPublishing():
+def StartLocationPublishing(episode):
     rospy.init_node('RobotLocationHubPublisher', anonymous=True)
 
     while not rospy.is_shutdown():
@@ -15,15 +15,15 @@ def StartLocationPublishing():
 
         # Construct a RobotLocation payload using the position
         bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-robot-location')
-        payload = bridge.constructRobotLocationPayload(position.x, position.y, position.z)
+        payload = bridge.constructRobotLocationPayload(episode, position.x, position.y, position.z)
 
         # PUT the RobotLocation on the MKHub if the object is not there already otherwise updated it using POST
         dictionary, get_response = bridge.get('Tiago')
         if get_response.status_code == 404: # Error code 404 is for 'object not found'
-            bridge.put('Tiago', payload) # Create the RobotLocation object
+            bridge.put('Tiago', payload)
             print('I HAVE JUST PUUUUUUUUUUUT TIAGO ON DE HUB MAN')
         else:
-            bridge.post('Tiago', payload) # Update the RobotLocation object
+            bridge.post('Tiago', payload)
             print('I updated Tiago on the hub :)')
 
         # # During development get the payload from the server to check that it has been posted on there
@@ -37,6 +37,6 @@ def StartLocationPublishing():
 
 if __name__ == '__main__':
     try:
-        StartLocationPublishing()
+        StartLocationPublishing('EPISODE3')
     except rospy.ROSInterruptException:
         pass

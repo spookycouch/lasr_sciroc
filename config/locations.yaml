@@ -27,6 +27,11 @@ tables:
       min_xyz: [ 8.057, 0.574, 0.000 ]
     lookLR: [[8.93, 1.54], [9.97, 1.66]]
 
+WaitingArea:
+  location:
+    position: { x: 5.37525378807, y: -2.76729462994, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.999590316484, w: 0.0286216559798 }
+
 Bar:
   location:
     position: { x: 0.447394763282, y: 0.00754231950464, z: 0.0 }

@@ -1,0 +1,5 @@
+# goal definition
+string status_message
+string episode
+---
+bool success

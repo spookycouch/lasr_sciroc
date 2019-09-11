@@ -9,7 +9,7 @@ class MKHubBridge(object):
         self.teamkey = 'bb3d3002-4d51-4f01-9e79-b209870a4f04'
         self.url = server + '/' + namespace + '/' + challenge
     
-    # put to the MK data hub, returns a boolean for operation status
+    # PUT request to the MK data hub, returns a boolean for operation status
     def put(self, parameter, payload):
         try:
             print 'MKHub: putting to {}'.format(parameter)
@@ -20,13 +20,13 @@ class MKHubBridge(object):
 
         except requests.exceptions.ConnectionError as e:
             print ('Error: could not connect to MK hub!')
-            return 0
+            return response
 
         except ValueError as e:
             print 'Error: {}. Is the payload correct?'.format(e)
-            return 0
+            return response
 
-        return 1
+        return response
 
     # post to the MK data hub, returns a boolean for operation status
     def post(self, parameter, payload):
@@ -39,13 +39,13 @@ class MKHubBridge(object):
 
         except requests.exceptions.ConnectionError as e:
             print ('Error: could not connect to MK hub!')
-            return 0
+            return response
 
         except ValueError as e:
             print 'Error: {}. Is the payload correct?'.format(e)
-            return 0
+            return response
 
-        return 1
+        return response
 
     # get operation from the MK data hub, returns an empty dictionary if nothing is found
     def get(self, parameter=''):
@@ -68,11 +68,25 @@ class MKHubBridge(object):
 
         return data, response
 
-    def constructRobotLocationPayload(self, x, y, z):
+    def constructRobotStatusPayload(self, status_message, episode, x, y, z):
+        data = {}
+        data['@id'] = 'Tiago'
+        data['@type'] = 'RobotStatus'
+        data['message'] = status_message
+        data['episode'] = episode
+        data['team'] = 'leedsasr'
+        data['timestamp'] = datetime.datetime.now().isoformat()
+        data['x'] = x
+        data['y'] = y
+        data['z'] = z
+        payload = json.dumps(data)
+        return payload
+
+    def constructRobotLocationPayload(self, episode, x, y, z):
         data = {}
         data['@id'] = 'Tiago'
         data['@type'] = 'RobotLocation'
-        data['episode'] = 'EPISODE3'
+        data['episode'] = episode
         data['team'] = 'leedsasr'
         data['timestamp'] = datetime.datetime.now().isoformat()
         data['x'] = x
@@ -100,11 +114,3 @@ class MKHubBridge(object):
         data['status'] = status
         payload = json.dumps(data)
         return payload
-
-    # GET TABLE
-    def getTable(self, id):
-        data = get(id)
-        print '{}:'.format(data[0]['@id'])
-        print '\tType: {}'.format(data[0]['@type'])
-        print '\tCustomers: {}'.format(data[0]['customers'])
-        print '\tStatus: {}'.format(data[0]['status'])
