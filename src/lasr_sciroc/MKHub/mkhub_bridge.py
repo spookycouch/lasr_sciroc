@@ -60,13 +60,26 @@ class MKHubBridge(object):
 
         except requests.exceptions.ConnectionError as e:
             print ('Error: could not connect to MK hub!')
-            return {}
+            return {}, response
 
         except ValueError as e:
             print('ValueError: no JSON to decode. Is the parameter correct?')
-            return {}
+            return {}, response
 
-        return data
+        return data, response
+
+    def constructRobotLocationPayload(self, x, y, z):
+        data = {}
+        data['@id'] = 'Tiago'
+        data['@type'] = 'RobotLocation'
+        data['episode'] = 'EPISODE3'
+        data['team'] = 'leedsasr'
+        data['timestamp'] = datetime.datetime.now().isoformat()
+        data['x'] = x
+        data['y'] = y
+        data['z'] = z
+        payload = json.dumps(data)
+        return payload
     
     def constructTablePayload(self, id, people_count, status):
         data = {}
