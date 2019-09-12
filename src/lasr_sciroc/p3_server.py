@@ -136,6 +136,27 @@ class P3Server(SciRocServer):
                     break
             
             if customerSatDown:
+                # # Fetch the number of people from the parameter server set by dialogflow
+                # num_of_people = rospy.get_param('/cafe/group_size')
+
+                # # Update the parameter server
+                # rospy.set_param('/tables/' + current_table + '/person_count', num_of_people)
+                # rospy.set_param('/tables/' + current_table + '/status', 'Needs serving')
+
+                # # Update the table on the MKHub
+                # bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-table')
+
+                # # Post the people count of the table to the data hub
+                # status = rospy.get_param('/tables/' + current_table + '/status')
+                # payload = bridge.constructTablePayload(current_table, num_of_people, status)
+                # print('PRINTING PAYLOAD')
+                # print(payload)
+                # response = bridge.post(current_table, payload)
+
+                # # Get the update to check (log)
+                # got = bridge.get(current_table)
+                # print(got)
+
                 self.talk('Enjoy your stay in my Coffee shop!')
                  # Update the RobotStatus on the hub using the service
                 rospy.wait_for_service('/robot_status')

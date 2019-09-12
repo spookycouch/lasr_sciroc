@@ -63,6 +63,7 @@ class P1Server(SciRocServer):
         rospy.set_param('/tables/' + current_table + '/person_count', person_count)
         rospy.loginfo('Updated the person counter successfully')
 
+        # TODO: Make an updateHubTableStatus function that does the below since this block of code is duplicated a lot
         # MKHub bridge object
         bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-table')
 
