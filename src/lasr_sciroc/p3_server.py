@@ -8,6 +8,7 @@ from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped
 from move_base_msgs.msg import MoveBaseGoal
 from elevator import TheGlobalClass
+from math import sqrt
 
 class P3Server(SciRocServer):
     def __init__(self, server_name):
@@ -40,22 +41,50 @@ class P3Server(SciRocServer):
             self._result.condition_event = ['doneEscorting']
     
     def detectAndLocateCustomer(self):
-        depth_points = self.getRecentPcl()
-        image_bgr = self.pclToImage(depth_points)
-        detection_result = self.detectObject(image_bgr, 'coco', 0.3, 0.5)
-        detected_objects = detection_result.detected_objects
-        foundCustomer = False
-        for detection in detected_objects:
-            if detection.name == 'person':
-                foundCustomer = True
-                location = self.locateCustomer(detection, depth_points)
-                print(location)
+        # Get Cuboid for Min and Max points of the table
+        cuboid = rospy.get_param('/WaitingArea/cuboid')
+
+        foundCustomer_counter = 0
+        while True:
+            depth_points, image = self.getPcl2AndImage()
+            mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
+            detected_objects = self.detectObject(image_masked, "coco", 0.3, 0.3)
+
+            foundCustomer = False
+            persons_location[]
+            for detection in detected_objects:
+                if detection.name == 'person':
+                    foundCustomer = True
+                    location = self.locateCustomer(detection, depth_points)
+                    persons_location.append(location)
+                    print(location)
+            
+            if foundCustomer:
+                foundCustomer_counter += 1
+            else:
+                foundCustomer_counter = 0
+            
+            if foundCustomer_counter == 3:
                 break
-        
-        # Call other stuff
-        if foundCustomer:
-            result = self.calculateApproachPoint(location, 0.8)
-            self.gotoPose(result)   
+            else:
+                rospy.sleep(2)
+
+        # Calculate the goal pose and the distance for each person detected 
+        persons_info[]
+        for location in persons_location:
+            goal_pose, distance = self.calculateApproachPoint(location, 0.8)
+            persons_info.append((goal_pose, distance))
+
+        # Findout whos the nearest person
+        nearest_person = None
+        for person_info in persons_info:
+            if nearest_person is None or person_info[1] < nearest_person[1]:
+                nearest_person = person_info
+
+        # Go to the nearest person
+        self.talk('New customer detected')
+        self.gotoPose(nearest_person[0])
 
     def calculateApproachPoint(self, person_position, distance_factor):
         # Get Tiago's current pose
@@ -69,4 +98,52 @@ class P3Server(SciRocServer):
         goal_pose.position.z = 0.0
         goal_pose.orientation = TheGlobalClass.quaternionAtPointFromPoint(goal_pose.position, person_position.point)
 
-        return goal_pose
+        # Calculate distance
+        distance = sqrt( (tiago_pose.position.x - person_position.point.x)**2 + (tiago_pose.position.y - person_position.point.y)**2 )
+
+        return goal_pose, distance
+
+    def greetCustomer(self):
+        self.talk('Hello my name is Tiago, please follow me to a ready table')
+
+        # Update the RobotStatus on the hub using the service
+        rospy.wait_for_service('/robot_status')
+        try:
+            robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
+            response = robot_status('Escorting new customers to a ready table', 'EPISODE3')
+        except rospy.ServiceException, e:
+            print "Service call failed: %s"%e
+
+    def confirmCustomerEscorted(self):
+        # Get the current table from the parameter server
+        current_table = rospy.get_param('/current_table')
+        
+        # Get Cuboid for Min and Max points of the table
+        cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
+
+        while True:
+            # Run YOLO object detection
+            depth_points, image = self.getPcl2AndImage()
+            mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
+            detected_objects = self.detectObject(image_masked, "coco", 0.3, 0.3)
+
+            customerSatDown = False
+            for detection in detected_objects:
+                if detection.name == 'person':
+                    customerSatDown = True
+                    break
+            
+            if customerSatDown:
+                self.talk('Enjoy your stay in my Coffee shop!')
+                 # Update the RobotStatus on the hub using the service
+                rospy.wait_for_service('/robot_status')
+                try:
+                    robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
+                    response = robot_status('New Customer escorted', 'EPISODE3')
+                except rospy.ServiceException, e:
+                    print "Service call failed: %s"%e
+                break
+            else:
+                rospy.sleep(3)
+

@@ -31,6 +31,10 @@ WaitingArea:
   location:
     position: { x: 5.37525378807, y: -2.76729462994, z: 0.0 }
     orientation: { x: 0.0, y: 0.0, z: 0.999590316484, w: 0.0286216559798 }
+  cuboid:
+      frame: 'map'
+      max_xyz: [ 2.98, -2.04, 10.0 ]
+      min_xyz: [ -1.13, -5.28, 0.0 ]
 
 Bar:
   location:
