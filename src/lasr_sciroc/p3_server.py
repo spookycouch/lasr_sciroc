@@ -45,7 +45,7 @@ class P3Server(SciRocServer):
         cuboid = rospy.get_param('/WaitingArea/cuboid')
 
         foundCustomer_counter = 0
-        while True:
+        while not rospy.is_shutdown():
             depth_points, image = self.getPcl2AndImage()
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
@@ -121,7 +121,8 @@ class P3Server(SciRocServer):
         # Get Cuboid for Min and Max points of the table
         cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
 
-        while True:
+        rospy.sleep(5)
+        while not rospy.is_shutdown():
             # Run YOLO object detection
             depth_points, image = self.getPcl2AndImage()
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
