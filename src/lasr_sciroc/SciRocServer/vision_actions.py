@@ -123,10 +123,10 @@ def setCupSize(self, cup, depth_points, image_raw):
     
     # set ranges and get points of interest
     x_range = 4
-    y_range = 10
-    mid_x = int((cup.xywh[0] + cup.xywh[2]/2) - 1)
-    top_y = cup.xywh[1]
-    btm_y = cup.xywh[1] + cup.xywh[3]
+    y_range = 15
+    mid_x = int((cup.xywh[0] + cup.xywh[2]/2) - x_range/2)
+    top_y = int(cup.xywh[1])
+    btm_y = int(cup.xywh[1] + cup.xywh[3])
     
     # SEE WHERE THE 
     bridge = CvBridge()
@@ -164,11 +164,11 @@ def setCupSize(self, cup, depth_points, image_raw):
     cup_bottom = np.nanmin(bottom_cluster_z)
 
     if np.isnan(cup_top):
-        print 'top nan'
-    if np.isnan(cup_bottom):
-        print 'bottom nan'
+        return 'top nan'
+    elif np.isnan(cup_bottom):
+        return 'bottom nan'
     # determine and set size
-    if (not np.isnan(cup_top)) and (not np.isnan(cup_bottom)):
+    else:
         cup_height = cup_top - cup_bottom
         
         print(cup_height)
@@ -181,6 +181,8 @@ def setCupSize(self, cup, depth_points, image_raw):
             cup.name = 'medium coffee'
         elif cup_height > 0.09:
             cup.name = 'small coffee'
+    
+    return 'success'
 
 
 def locateCustomer(self, person, depth_points):
