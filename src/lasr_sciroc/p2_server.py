@@ -112,6 +112,7 @@ class P2Server(SciRocServer):
 
         # wait for the keyword
         self.keywordDetected('check the items')
+        rospy.loginfo('keyword got!')
 
         while True:
             # Look down to see the items on the counter
@@ -127,7 +128,7 @@ class P2Server(SciRocServer):
             
             object_count = defaultdict(int)
             for detection in result.detected_objects:
-                if(detection.name == 'costa cup'):
+                if(detection.name == 'coffee'):
                     self.setCupSize(detection, depth_points, image_raw)
                 object_count[detection.name] += 1
             
@@ -154,7 +155,16 @@ class P2Server(SciRocServer):
                     excess_items[item] = object_count[item] - order_count[item]
 
             # Output incorrect items
-            if len(missing_items) or len(excess_items):
+            if 'coffee' in object_count:
+                coffee_count = object_count['coffee']
+                if coffee_count == 1:
+                    suffix = ''
+                else:
+                    suffix = 's'
+                speech_out = 'I could not get {} coffee size{}.'
+                speech_out += ' Could you please ensure all cups are in full view?'.format(coffee_count, suffix)
+                self.talk(speech_out)
+            elif len(missing_items) or len(excess_items):
                 speech_out = 'The order is incorrect. Please correct the order.'
                 if len(missing_items):
                     speech_out += '. The missing items are '
