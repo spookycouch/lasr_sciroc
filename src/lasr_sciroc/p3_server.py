@@ -52,7 +52,7 @@ class P3Server(SciRocServer):
             detected_objects = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
             foundCustomer = False
-            persons_location[]
+            persons_location = []
             for detection in detected_objects:
                 if detection.name == 'person':
                     foundCustomer = True
@@ -71,7 +71,7 @@ class P3Server(SciRocServer):
                 rospy.sleep(2)
 
         # Calculate the goal pose and the distance for each person detected 
-        persons_info[]
+        persons_info = []
         for location in persons_location:
             goal_pose, distance = self.calculateApproachPoint(location, 0.8)
             persons_info.append((goal_pose, distance))
