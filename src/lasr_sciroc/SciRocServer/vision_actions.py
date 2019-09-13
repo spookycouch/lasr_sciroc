@@ -14,28 +14,63 @@ from lasr_object_detection_yolo.srv import YoloDetection, Pcl2ToImage
 
 import message_filters
 
-def getPcl2AndImage(self):
-    vision_queue = queue.Queue()
+# NEW IMPLEMENTATION
+# def getPcl2AndImage(self):
+#     vision_queue = queue.Queue()
 
-    # return the stuff
-    def pcl2_and_image_callback(pcl2, image):
-        vision_queue.put((pcl2, image))
+#     # return the stuff
+#     def pcl2_and_image_callback(pcl2, image):
+#         vision_queue.put((pcl2, image))
     
-    image_sub = message_filters.Subscriber('/xtion/rgb/image_rect_color', Image)
-    pcl2_sub = message_filters.Subscriber('/xtion/depth_registered/points_throttle', PointCloud2)
-    ts = message_filters.ApproximateTimeSynchronizer([pcl2_sub, image_sub], 10, 0.2)
-    ts.registerCallback(pcl2_and_image_callback)
+#     image_sub = message_filters.Subscriber('/xtion/rgb/image_rect_color', Image)
+#     pcl2_sub = message_filters.Subscriber('/xtion/depth_registered/points_throttle', PointCloud2)
+#     ts = message_filters.ApproximateTimeSynchronizer([pcl2_sub, image_sub], 10, 0.2)
+#     ts.registerCallback(pcl2_and_image_callback)
 
+#     while True:
+#         try:
+#             result = vision_queue.get(block=False)
+#             break
+#         except queue.Empty:
+#             rospy.sleep(0.1)
+    
+#     image_sub.unregister()
+#     pcl2_sub.unregister()
+#     return result
+
+# OLD IMPLEMENTATION
+def getPcl2AndImage(self):
+    pcl2 = self.getRecentPcl()
+    image = self.pclToImage()
+    return pcl2, image
+
+def getRecentPcl(self):
+    pcl_queue = queue.Queue()
+
+    # subscribes to topic until a recent depth cloud image (less than 2 seconds ago) is taken
+    def pclCallback(data):
+        print('Time now: ' + str(rospy.Time.now().secs) + '. Time of pcl: ' + str(data.header.stamp.secs))
+        if((rospy.Time.now().secs - data.header.stamp.secs) < 2):
+            pcl_queue.put(data)
+            depth_sub.unregister()
+    
+    # once a recent pcl image has been captured, return it
+    depth_sub = rospy.Subscriber('/xtion/depth_registered/points', PointCloud2, pclCallback)
+    # return pcl_queue.get()
     while True:
         try:
-            result = vision_queue.get(block=False)
-            break
+            return pcl_queue.get(block=False)
         except queue.Empty:
             rospy.sleep(0.1)
-    
-    image_sub.unregister()
-    pcl2_sub.unregister()
-    return result
+
+def pclToImage(self, depth_points):
+    rospy.wait_for_service('/pcl2_to_image')
+    try:
+        extract_image = rospy.ServiceProxy('/pcl2_to_image', Pcl2ToImage)
+        return extract_image(depth_points).image_bgr
+    except rospy.ServiceException as e:
+        print "Service call failed: %s"%e
+
 
 def getDepthMask(self, depth_points, point_min, point_max):
     # time and cloud
