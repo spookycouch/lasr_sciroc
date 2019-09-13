@@ -1,0 +1,70 @@
+tables:
+  table0:
+    id: 0
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: { x: -0.3554191655, y: 0.17935381314, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: -0.000657426896773, w: 0.999999783895 }
+    cuboid:
+      frame: 'map'
+      max_xyz: [ 3.04, 0.99, 2.0]
+      min_xyz: [ 0.397, -1.09, 0.2 ]
+    lookLR: [ [ 1.91, 0.97 ] , [ 1.87, -1.12 ] ]
+
+  table1:
+    id: 1
+    person_count: -1
+    status: "Unknown"
+    order: []
+    location:
+      position: { x: -0.140178627821, y: -2.52652433608, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.0172770675541, w: 0.999850740329 }
+    cuboid:
+      frame: 'map'
+      max_xyz: [ 2.83, -1.29, 2.0 ]
+      min_xyz: [ 0.344, -3.23, 0.2 ]
+    lookLR: [ [ 1.9, -1.4 ], [2.02, -2.79] ]
+
+  table2:
+    id: 2
+    person_count: -1
+    status: "Unknown"
+    order: []
+    location:
+      position: { x: -0.0425966467433, y: -5.40104704443, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.00134923122141, w: 0.999999089787 }
+    cuboid:
+      frame: 'map'
+      max_xyz: [ 2.86, -3.92, 2.0 ]
+      min_xyz: [ 0.458, -6.44, 0.2 ]
+    lookLR: [ [ 1.83, -4.12], [ 1.85, -6.35] ]
+
+Bar:
+  location:
+    position: { x: 0.498723948691, y: 3.5356488352, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.999964292856, w: 0.00845062203029 }
+
+
+Home:
+  location:
+    position: { x: 0.498723948691, y: 3.5356488352, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.999964292856, w: 0.00845062203029 }
+  
+WaitingArea:
+  location:
+    position: { x: 1.54749975194, y: 4.83081445717, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.883388310723, w: 0.468641752811}
+  cuboid:
+      frame: 'map'
+      max_xyz: [ 1.83, 8.17, 0.0 ]
+      min_xyz: [ -1.01, 4.7, 0.0 ]
+
+# Proper home: the home above is a fake home
+# it is actually the bar
+# dont believe in the fake home
+# Home:
+#   location:
+#     position: { x: 12.9419836537, y: 12.3956073234, z: 0.0 }
+#     orientation: { x: 0.0, y: 0.0, z: -0.91871896815, w: 0.394911961787 }

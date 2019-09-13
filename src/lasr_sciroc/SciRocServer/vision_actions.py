@@ -22,7 +22,7 @@ def getPcl2AndImage(self):
         vision_queue.put((pcl2, image))
     
     image_sub = message_filters.Subscriber('/xtion/rgb/image_rect_color', Image)
-    pcl2_sub = message_filters.Subscriber('/xtion/depth_registered/points', PointCloud2)
+    pcl2_sub = message_filters.Subscriber('/xtion/depth_registered/points_throttle', PointCloud2)
     ts = message_filters.ApproximateTimeSynchronizer([pcl2_sub, image_sub], 10, 0.2)
     ts.registerCallback(pcl2_and_image_callback)
 

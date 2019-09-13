@@ -33,8 +33,11 @@ class P1Server(SciRocServer):
         # Take a picture using the depth mask and feed it to the detection
         for i in range(2):
             self.lookAt(side_points[i])
+            rospy.loginfo('Getting the image..')
             depth_points, image = self.getPcl2AndImage()
+            rospy.loginfo('GOT THE IMAGE GOT EEEM ')
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            rospy.loginfo('FINISHED FROM DE MASK BRODA')
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             count_objects_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
