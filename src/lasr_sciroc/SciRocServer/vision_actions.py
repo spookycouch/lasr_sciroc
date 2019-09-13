@@ -65,7 +65,6 @@ def getRecentPcl(self):
 
 def pclToImage(self, depth_points):
     # get relevant information
-    frame_id = depth_points.header.frame_id
     height = depth_points.height
     width = depth_points.width
     cloud = np.fromstring(depth_points.data, np.float32)
@@ -79,8 +78,7 @@ def pclToImage(self, depth_points):
     bgr = bgr.reshape(height * width * 3)
     # create image
     image = Image()
-    image.header.stamp = rospy.Time.now()
-    image.header.frame_id = frame_id
+    image.header = depth_points.header
     image.height = height
     image.width = width
     image.encoding = 'bgr8'
