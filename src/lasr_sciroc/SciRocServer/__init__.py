@@ -20,7 +20,7 @@ class SciRocServer(object):
     # Imports
     from .movement_actions import gotoTable, gotoLocation, gotoPose, lookAt, playMotion
     from .speech_actions import planWakeWord, talk, keywordDetected, keywordCallback
-    from .vision_actions import detectObject, getDepthMask, applyDepthMask, getPcl2AndImage, getTransformedPoint, setCupSize, locateCustomer
+    from .vision_actions import detectObject, getDepthMask, applyDepthMask, getPcl2AndImage, getTransformedPoint, setCupSize, locateCustomer, getRecentPcl, pclToImage
 
     def __init__(self, server_name):
         rospy.loginfo('%s Action Server has been initialised!', server_name)

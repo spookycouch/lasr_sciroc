@@ -156,6 +156,7 @@ class P1Server(SciRocServer):
         # get an unknown table of the lowest id
         next_table_id = None
         for table in tables:
+            print table
             if tables[table]['status'] == 'Unknown':
                 if next_table_id is None or tables[table]['id'] < next_table_id:
                     next_table_id = tables[table]['id']

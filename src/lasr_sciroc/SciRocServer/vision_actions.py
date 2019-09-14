@@ -41,7 +41,7 @@ import message_filters
 # OLD IMPLEMENTATION
 def getPcl2AndImage(self):
     pcl2 = self.getRecentPcl()
-    image = self.pclToImage()
+    image = self.pclToImage(pcl2)
     return pcl2, image
 
 def getRecentPcl(self):
@@ -64,30 +64,12 @@ def getRecentPcl(self):
             rospy.sleep(0.1)
 
 def pclToImage(self, depth_points):
-    # get relevant information
-    height = depth_points.height
-    width = depth_points.width
-    cloud = np.fromstring(depth_points.data, np.float32)
-    # get bgr float (32-bit)
-    # view as int; float comprised of 4 8-bit colour values 
-    bgr = cloud[4::8].astype(np.float32)
-    bgr = bgr.view(dtype = np.uint8)
-    # remove unused byte from bgr view by 2D indexing
-    bgr = bgr.reshape(height * width, 4)
-    bgr = bgr[:, 0:3]
-    bgr = bgr.reshape(height * width * 3)
-    # create image
-    image = Image()
-    image.header = depth_points.header
-    image.height = height
-    image.width = width
-    image.encoding = 'bgr8'
-    image.is_bigendian = 0
-    image.step = width * 3
-    image.data = list(bgr)
-    # success
-    rospy.loginfo('pcl to image successful')
-    return image
+    rospy.wait_for_service('/pcl2_to_image')
+    try:
+        extract_image = rospy.ServiceProxy('/pcl2_to_image', Pcl2ToImage)
+        return extract_image(depth_points).image_bgr
+    except rospy.ServiceException as e:
+        print "Service call failed: %s"%e
 
 
 def getDepthMask(self, depth_points, point_min, point_max):

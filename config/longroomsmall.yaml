@@ -13,33 +13,33 @@ tables:
       min_xyz: [ 0.397, -1.09, 0.2 ]
     lookLR: [ [ 1.91, 0.97 ] , [ 1.87, -1.12 ] ]
 
-  table1:
-    id: 1
-    person_count: -1
-    status: "Unknown"
-    order: []
-    location:
-      position: { x: 0.219730023047, y: -2.72764341791, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: 0.026267115756, w: 0.999654959789 }
-    cuboid:
-      frame: 'map'
-      max_xyz: [ 2.83, -1.29, 2.0 ]
-      min_xyz: [ 0.344, -3.23, 0.2 ]
-    lookLR: [ [ 1.9, -1.4 ], [2.02, -2.79] ]
+  # table1:
+  #   id: 1
+  #   person_count: -1
+  #   status: "Unknown"
+  #   order: []
+  #   location:
+  #     position: { x: 0.219730023047, y: -2.72764341791, z: 0.0 }
+  #     orientation: { x: 0.0, y: 0.0, z: 0.026267115756, w: 0.999654959789 }
+  #   cuboid:
+  #     frame: 'map'
+  #     max_xyz: [ 2.83, -1.29, 2.0 ]
+  #     min_xyz: [ 0.344, -3.23, 0.2 ]
+  #   lookLR: [ [ 1.9, -1.4 ], [2.02, -2.79] ]
 
-  table2:
-    id: 2
-    person_count: -1
-    status: "Unknown"
-    order: []
-    location:
-      position: { x: 0.105891034703, y: -5.138560093, z: 0.0 }
-      orientation: { x: 0.0, y: 0.0, z: 0.00314606332639, w: 0.999995051131 }
-    cuboid:
-      frame: 'map'
-      max_xyz: [ 2.86, -3.92, 2.0 ]
-      min_xyz: [ 0.458, -6.44, 0.2 ]
-    lookLR: [ [ 1.83, -4.12], [ 1.85, -6.35] ]
+  # table2:
+  #   id: 2
+  #   person_count: -1
+  #   status: "Unknown"
+  #   order: []
+  #   location:
+  #     position: { x: 0.105891034703, y: -5.138560093, z: 0.0 }
+  #     orientation: { x: 0.0, y: 0.0, z: 0.00314606332639, w: 0.999995051131 }
+  #   cuboid:
+  #     frame: 'map'
+  #     max_xyz: [ 2.86, -3.92, 2.0 ]
+  #     min_xyz: [ 0.458, -6.44, 0.2 ]
+  #   lookLR: [ [ 1.83, -4.12], [ 1.85, -6.35] ]
 
 Bar:
   location:

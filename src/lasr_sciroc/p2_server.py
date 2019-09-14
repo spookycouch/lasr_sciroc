@@ -53,9 +53,6 @@ class P2Server(SciRocServer):
     def updateHubTableOrder(self, status):
         current_table = rospy.get_param('/current_table')
 
-        # For now set a fake order
-        rospy.set_param('/tables/' + current_table + '/order', ['biscotti'])
-
         # Fetch the order from the parameter server set by dialogflow
         order = rospy.get_param('/tables/' + current_table + '/order')
 
@@ -111,12 +108,13 @@ class P2Server(SciRocServer):
             print "Service call failed: %s"%e
 
         # wait for the keyword
+        self.talk('Could you please place the order on the counter and say \"check the items\" when you are done')
         self.keywordDetected('check the items')
         rospy.loginfo('keyword got!')
 
         while True:
             # Look down to see the items on the counter
-            # self.playMotion('look_down')
+            self.playMotion('look_down')
 
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
@@ -142,7 +140,7 @@ class P2Server(SciRocServer):
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
 
             # Back to default pose
-            # self.playMotion('back_to_default')
+            self.playMotion('back_to_default')
 
             # Compare the result to the order and announce the missing item
             missing_items = defaultdict(int)
@@ -161,7 +159,7 @@ class P2Server(SciRocServer):
                     suffix = ''
                 else:
                     suffix = 's'
-                speech_out = 'I could not get {} coffee size{}.'
+                speech_out = 'I could not get {} coffee size{}.'.format(coffee_count, suffix)
                 speech_out += ' Could you please ensure all cups are in full view?'.format(coffee_count, suffix)
                 self.talk(speech_out)
             elif len(missing_items) or len(excess_items):
@@ -187,7 +185,9 @@ class P2Server(SciRocServer):
 
     def waitLoad(self):
         # Turn TIAGo so customers grab the tings
-        TheGlobalClass.turnBehind()
+        rospy.loginfo('Still did not turn yet')
+        TheGlobalClass.turnRadians(PI, self.move_base_client)
+        rospy.loginfo('Done turning')
 
         # Wait for keyword detection porcupine
         self.keywordDetected('all set')
