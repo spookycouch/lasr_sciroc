@@ -138,7 +138,7 @@ def lookAt(self, point):
     self.point_head_client.send_goal(ph_goal)
     rospy.loginfo("Goal sent!!")
 
-    rospy.sleep(4)
+    rospy.sleep(3)
  
     # if self.point_head_client.wait_for_result():
     #     rospy.loginfo('Head goal achieved!')

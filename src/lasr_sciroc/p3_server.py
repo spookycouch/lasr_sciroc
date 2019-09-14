@@ -9,6 +9,7 @@ from geometry_msgs.msg import Pose, PoseWithCovarianceStamped
 from move_base_msgs.msg import MoveBaseGoal
 from elevator import TheGlobalClass
 from math import sqrt
+from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
 
 class P3Server(SciRocServer):
     def __init__(self, server_name):
@@ -49,11 +50,11 @@ class P3Server(SciRocServer):
             depth_points, image = self.getPcl2AndImage()
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
-            detected_objects = self.detectObject(image_masked, "coco", 0.3, 0.3)
+            detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
             foundCustomer = False
             persons_location = []
-            for detection in detected_objects:
+            for detection in detection_result.detected_objects:
                 if detection.name == 'person':
                     foundCustomer = True
                     location = self.locateCustomer(detection, depth_points)
@@ -62,7 +63,9 @@ class P3Server(SciRocServer):
             
             if foundCustomer:
                 foundCustomer_counter += 1
+                rospy.loginfo('Found customer! counter at {}'.format(foundCustomer_counter))
             else:
+                rospy.loginfo('Didnt find a new customer, Tiago is so sad :( reseting counter')
                 foundCustomer_counter = 0
             
             if foundCustomer_counter == 3:
@@ -96,7 +99,7 @@ class P3Server(SciRocServer):
         goal_pose.position.x = tiago_pose.position.x + (person_position.point.x - tiago_pose.position.x)*distance_factor
         goal_pose.position.y = tiago_pose.position.y + (person_position.point.y - tiago_pose.position.y)*distance_factor
         goal_pose.position.z = 0.0
-        goal_pose.orientation = TheGlobalClass.quaternionAtPointFromPoint(goal_pose.position, person_position.point)
+        goal_pose.orientation = TheGlobalClass.quaternionFromPointAtPoint(goal_pose.position, person_position.point)
 
         # Calculate distance
         distance = sqrt( (tiago_pose.position.x - person_position.point.x)**2 + (tiago_pose.position.y - person_position.point.y)**2 )
@@ -121,43 +124,37 @@ class P3Server(SciRocServer):
         # Get Cuboid for Min and Max points of the table
         cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
 
+        # Get Left and Right points of the sides of the table
+        side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
+
         rospy.sleep(5)
+        i = 0
         while not rospy.is_shutdown():
+            self.lookAt(side_points[i])
+            if i == 1:
+                i = 0
+            else:
+                i += 1
             # Run YOLO object detection
             depth_points, image = self.getPcl2AndImage()
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
-            detected_objects = self.detectObject(image_masked, "coco", 0.3, 0.3)
+            detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
             customerSatDown = False
-            for detection in detected_objects:
+            for detection in detection_result.detected_objects:
                 if detection.name == 'person':
                     customerSatDown = True
                     break
             
             if customerSatDown:
-                # # Fetch the number of people from the parameter server set by dialogflow
-                # num_of_people = rospy.get_param('/cafe/group_size')
-
-                # # Update the parameter server
-                # rospy.set_param('/tables/' + current_table + '/person_count', num_of_people)
-                # rospy.set_param('/tables/' + current_table + '/status', 'Needs serving')
-
-                # # Update the table on the MKHub
-                # bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-table')
-
-                # # Post the people count of the table to the data hub
-                # status = rospy.get_param('/tables/' + current_table + '/status')
-                # payload = bridge.constructTablePayload(current_table, num_of_people, status)
-                # print('PRINTING PAYLOAD')
-                # print(payload)
-                # response = bridge.post(current_table, payload)
-
-                # # Get the update to check (log)
-                # got = bridge.get(current_table)
-                # print(got)
-
+                # Update the parameter server
+                rospy.set_param('/tables/' + current_table + '/status', 'Needs serving')
                 self.talk('Enjoy your stay in my Coffee shop!')
+
+                # RETURN TO DEFAULT POSE
+                self.playMotion('back_to_default')
+
                  # Update the RobotStatus on the hub using the service
                 rospy.wait_for_service('/robot_status')
                 try:
