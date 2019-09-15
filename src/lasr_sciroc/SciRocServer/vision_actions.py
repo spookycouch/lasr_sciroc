@@ -103,7 +103,7 @@ def applyDepthMask(self, image_msg, mask_msg, blur):
     width = image_msg.width
     # get images
     image_raw = np.fromstring(image_msg.data, np.uint8)
-    image_blur = cv2.blur(image_raw, (blur, blur))
+    image_blur = np.full((height * width * 3, 1), 225)
     mask = np.fromstring(mask_msg.data, np.uint8)
     # reshape arrrays (fromstring) to matrices
     mask = mask.reshape(height * width, 1)
@@ -228,10 +228,6 @@ def locateCustomer(self, person, depth_points):
     cloud = cloud.reshape(height, width, 8)
 
     image_raw = self.pclToImage(depth_points)
-    bridge = CvBridge()
-    frame = bridge.imgmsg_to_cv2(image_raw, "bgr8")
-    cv2.imshow('image_masked', frame)
-    cv2.waitKey(0)
 
     region_size = 2
     while True:

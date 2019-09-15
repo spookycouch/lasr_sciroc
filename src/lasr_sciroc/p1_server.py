@@ -46,10 +46,10 @@ class P1Server(SciRocServer):
                 object_count[detection.name] += 1
             
             # view the image - debug
-            bridge = CvBridge()
-            frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
-            cv2.imshow('image_masked', frame)
-            cv2.waitKey(0)
+            # bridge = CvBridge()
+            # frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+            # cv2.imshow('image_masked', frame)
+            # cv2.waitKey(0)
 
         # RETURN TO DEFAULT POSE
         self.playMotion('back_to_default')

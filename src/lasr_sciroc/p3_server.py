@@ -11,6 +11,9 @@ from elevator import TheGlobalClass
 from math import sqrt
 from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
 
+import cv2
+from cv_bridge import CvBridge, CvBridgeError
+
 class P3Server(SciRocServer):
     def __init__(self, server_name):
         SciRocServer.__init__(self, server_name)
@@ -52,6 +55,11 @@ class P3Server(SciRocServer):
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(detection_result.image_bb, "bgr8")
+            cv2.imshow('image_masked', frame)
+            cv2.waitKey(1)
+
             foundCustomer = False
             persons_location = []
             for detection in detection_result.detected_objects:
@@ -68,7 +76,7 @@ class P3Server(SciRocServer):
                 rospy.loginfo('Didnt find a new customer, Tiago is so sad :( reseting counter')
                 foundCustomer_counter = 0
             
-            if foundCustomer_counter == 3:
+            if foundCustomer_counter == 2:
                 break
             else:
                 rospy.sleep(2)

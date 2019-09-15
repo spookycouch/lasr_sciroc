@@ -58,7 +58,7 @@ WaitingArea:
     orientation: { x: 0.0, y: 0.0, z: 0.883388310723, w: 0.468641752811}
   cuboid:
       frame: 'map'
-      max_xyz: [ 1.83, 8.17, 0.0 ]
+      max_xyz: [ 1.83, 8.17, 10.0 ]
       min_xyz: [ -1.01, 4.7, 0.0 ]
 
 # Proper home: the home above is a fake home
