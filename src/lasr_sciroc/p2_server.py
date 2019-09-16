@@ -187,7 +187,7 @@ class P2Server(SciRocServer):
     def waitLoad(self):
         # Turn TIAGo so customers grab the tings
         rospy.loginfo('Still did not turn yet')
-        TheGlobalClass.turnRadians(PI, self.move_base_client)
+        TheGlobalClass.turn_radians(PI, self.move_base_client)
         rospy.loginfo('Done turning')
 
         # Wait for keyword detection porcupine
@@ -203,7 +203,7 @@ class P2Server(SciRocServer):
     
     def waitUnload(self):
         # Turn TIAGo so customers grab the tings
-        TheGlobalClass.turnBehind()
+        TheGlobalClass.turn_radians(PI, self.move_base_client)
 
         # Ask them very politely to take the tings off
         self.talk('Please collect your order and say the phrase "items collected" when you are done')

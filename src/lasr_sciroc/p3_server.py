@@ -109,7 +109,7 @@ class P3Server(SciRocServer):
         goal_pose.position.x = tiago_pose.position.x + (person_position.point.x - tiago_pose.position.x)*distance_factor
         goal_pose.position.y = tiago_pose.position.y + (person_position.point.y - tiago_pose.position.y)*distance_factor
         goal_pose.position.z = 0.0
-        goal_pose.orientation = TheGlobalClass.quaternionFromPointAtPoint(goal_pose.position, person_position.point)
+        goal_pose.orientation = TheGlobalClass.quaternion_from_point_at_point(goal_pose.position, person_position.point)
 
         # Calculate distance
         distance = sqrt( (tiago_pose.position.x - person_position.point.x)**2 + (tiago_pose.position.y - person_position.point.y)**2 )
