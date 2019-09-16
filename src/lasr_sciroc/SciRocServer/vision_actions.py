@@ -1,4 +1,5 @@
 import rospy
+import rospack
 import cv2
 import numpy as np
 import tf
@@ -8,7 +9,6 @@ from six.moves import queue
 # Actionlib messages
 from geometry_msgs.msg import Point, PointStamped
 from sensor_msgs.msg import Image, PointCloud2
-#from lasr_img_depth_mask.msg import DepthMaskGoal
 from lasr_pcl.srv import DepthCropMask
 from lasr_object_detection_yolo.srv import YoloDetection, Pcl2ToImage
 
@@ -168,8 +168,14 @@ def setCupSize(self, cup, depth_points, image_raw):
     frame = bridge.imgmsg_to_cv2(image_raw, "bgr8")
     frame[top_y : top_y + y_range, mid_x : mid_x + x_range] = (0,0,255)
     frame[btm_y - y_range : btm_y, mid_x : mid_x + x_range] = (0,0,255)
-    cv2.imshow('image_masked', frame)
-    cv2.waitKey(0)
+    # cv2.imshow('image_masked', frame)
+    # cv2.waitKey(0)
+
+    # Save img to img dir for logging
+    rospack = rospkg.RosPack()
+    savedir = rospack.get_path('lasr_sciroc') + '/images/'
+    now = datetime.now()
+    cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
 
     # get pcl and reshape to image dimensions
     header = depth_points.header

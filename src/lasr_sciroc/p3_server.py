@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import rospy
+import rospack
 
 from SciRocServer import SciRocServer
 from turn_robot.srv import TurnToPoint
@@ -55,10 +56,11 @@ class P3Server(SciRocServer):
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
-            bridge = CvBridge()
-            frame = bridge.imgmsg_to_cv2(detection_result.image_bb, "bgr8")
-            cv2.imshow('image_masked', frame)
-            cv2.waitKey(1)
+            # Save img to img dir for logging
+            rospack = rospkg.RosPack()
+            savedir = rospack.get_path('lasr_sciroc') + '/images/'
+            now = datetime.now()
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', detection_result.image_bb)
 
             foundCustomer = False
             persons_location = []
@@ -76,10 +78,10 @@ class P3Server(SciRocServer):
                 rospy.loginfo('Didnt find a new customer, Tiago is so sad :( reseting counter')
                 foundCustomer_counter = 0
             
-            if foundCustomer_counter == 2:
+            if foundCustomer_counter == 3:
                 break
             else:
-                rospy.sleep(2)
+                rospy.sleep(1)
 
         # Calculate the goal pose and the distance for each person detected 
         persons_info = []
@@ -115,13 +117,13 @@ class P3Server(SciRocServer):
         return goal_pose, distance
 
     def greetCustomer(self):
-        self.talk('Hello my name is Tiago, please follow me to a ready table')
+        self.talk('Hello my name is Tiago, please follow me to a ready table!')
 
         # Update the RobotStatus on the hub using the service
         rospy.wait_for_service('/robot_status')
         try:
             robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
-            response = robot_status('Escorting new customers to a ready table', 'EPISODE3')
+            response = robot_status('Escorting new customer to a ready table', 'EPISODE3')
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
 
@@ -135,7 +137,8 @@ class P3Server(SciRocServer):
         # Get Left and Right points of the sides of the table
         side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
 
-        rospy.sleep(5)
+        self.talk('This is your table, sit down please so I can confirm that you are truly a customer devoted to the Tiago coffee shop!')
+        rospy.sleep(2)
         i = 0
         while not rospy.is_shutdown():
             self.lookAt(side_points[i])
@@ -148,6 +151,12 @@ class P3Server(SciRocServer):
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
+
+            # Save img to img dir for logging
+            rospack = rospkg.RosPack()
+            savedir = rospack.get_path('lasr_sciroc') + '/images/'
+            now = datetime.now()
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', detection_result.image_bb)
 
             customerSatDown = False
             for detection in detection_result.detected_objects:
@@ -170,7 +179,9 @@ class P3Server(SciRocServer):
                     response = robot_status('New Customer escorted', 'EPISODE3')
                 except rospy.ServiceException, e:
                     print "Service call failed: %s"%e
+
+                self.talk('I will now counting the people at the table!')
                 break
             else:
-                rospy.sleep(3)
+                rospy.sleep(1)
 

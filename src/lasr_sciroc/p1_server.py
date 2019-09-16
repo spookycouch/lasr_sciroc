@@ -2,6 +2,7 @@
 
 import rospy
 import rosnode
+import rospack
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict
@@ -44,12 +45,12 @@ class P1Server(SciRocServer):
             # update dictionary
             for detection in count_objects_result.detected_objects:
                 object_count[detection.name] += 1
-            
-            # view the image - debug
-            # bridge = CvBridge()
-            # frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
-            # cv2.imshow('image_masked', frame)
-            # cv2.waitKey(0)
+
+            # Save img to img dir for logging
+            rospack = rospkg.RosPack()
+            savedir = rospack.get_path('lasr_sciroc') + '/images/'
+            now = datetime.now()
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', count_objects_result.image_bb)
 
         # RETURN TO DEFAULT POSE
         self.playMotion('back_to_default')

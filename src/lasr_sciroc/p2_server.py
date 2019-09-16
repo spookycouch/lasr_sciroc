@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import rospy
+import rospack
 import tf
 
 from SciRocServer import SciRocServer
@@ -88,7 +89,7 @@ class P2Server(SciRocServer):
 
         # Say the order
         self.talk('The order of {0} is {1}'.format(current_table, order))
-        rospy.sleep(3)
+        rospy.sleep(2)
 
     
     def checkOrder(self):
@@ -130,11 +131,11 @@ class P2Server(SciRocServer):
                     self.setCupSize(detection, depth_points, image_raw)
                 object_count[detection.name] += 1
             
-            # view the image - debug
-            bridge = CvBridge()
-            frame = bridge.imgmsg_to_cv2(result.image_bb, "bgr8")
-            cv2.imshow('image_masked', frame)
-            cv2.waitKey(0)
+            # Save img to img dir for logging
+            rospack = rospkg.RosPack()
+            savedir = rospack.get_path('lasr_sciroc') + '/images/'
+            now = datetime.now()
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', result.image_bb)
 
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
@@ -181,7 +182,7 @@ class P2Server(SciRocServer):
             else:
                 self.talk('Order is correct, please place the items on my back.')
                 break
-            rospy.sleep(4)
+            rospy.sleep(2)
 
     def waitLoad(self):
         # Turn TIAGo so customers grab the tings
