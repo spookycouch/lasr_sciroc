@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import rospy
-import rospack
+import rospkg
 import tf
 
 from SciRocServer import SciRocServer

@@ -2,7 +2,7 @@
 
 import rospy
 import rosnode
-import rospack
+import rospkg
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict

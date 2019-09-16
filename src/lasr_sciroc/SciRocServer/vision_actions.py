@@ -1,5 +1,5 @@
 import rospy
-import rospack
+import rospkg
 import cv2
 import numpy as np
 import tf

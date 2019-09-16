@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import rospy
-import rospack
+import rospkg
 
 from SciRocServer import SciRocServer
 from turn_robot.srv import TurnToPoint
