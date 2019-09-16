@@ -8,7 +8,7 @@ from six.moves import queue
 # Actionlib messages
 from geometry_msgs.msg import Point, PointStamped
 from sensor_msgs.msg import Image, PointCloud2
-from lasr_img_depth_mask.msg import DepthMaskGoal
+#from lasr_img_depth_mask.msg import DepthMaskGoal
 from lasr_pcl.srv import DepthCropMask
 from lasr_object_detection_yolo.srv import YoloDetection, Pcl2ToImage
 
