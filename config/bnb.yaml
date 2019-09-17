@@ -1,0 +1,49 @@
+tables:
+  table0:
+    id: 0
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: { x: 0.756940863519, y: -2.15281685326, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.99930165118, w: 0.0373658928621 }
+    cuboid:
+      frame: 'map'
+      max_xyz: [ 0.198, -1.252, 10 ]
+      min_xyz: [ -0.853, -2.845, 0 ]
+    lookLR: [ [ -0.588, -2.409 ] , [ -0.502, -1.662 ] ]
+
+  table1:
+    id: 1
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: { x: 0.756940863519, y: -2.15281685326, z: 0.0 }
+      orientation: { x: 0.0, y: 0.0, z: 0.99930165118, w: 0.0373658928621 }
+    cuboid:
+      frame: 'map'
+      max_xyz: [ 0.198, -1.252, 10 ]
+      min_xyz: [ -0.853, -2.845, 0 ]
+    lookLR: [ [ -0.588, -2.409 ] , [ -0.502, -1.662 ] ]
+
+
+Bar:
+  location:
+    position: { x: 0.756940863519, y: -2.15281685326, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.99930165118, w: 0.0373658928621 }
+
+
+Home:
+  location:
+    position: { x: 0.11283560183, y: -0.0973307420372, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.713479909184, w: 0.700675687597 }
+  
+WaitingArea:
+  location:
+    position: { x: 0.11283560183, y: -0.0973307420372, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.713479909184, w: 0.700675687597 }
+  cuboid:
+      frame: 'map'
+      max_xyz: [ 0.771, 2.039, 10 ]
+      min_xyz: [ -0.897, 1.139, 0 ]

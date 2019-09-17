@@ -3,6 +3,7 @@
 import rospy
 import rosnode
 import rospkg
+from datetime import datetime
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict
