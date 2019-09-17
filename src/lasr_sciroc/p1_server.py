@@ -3,6 +3,7 @@
 import rospy
 import rosnode
 import rospkg
+import numpy as np
 from datetime import datetime
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
@@ -30,6 +31,7 @@ class P1Server(SciRocServer):
 
         tables = rospy.get_param('/tables')
         locations = tables[current_table]['locations']
+        rospy.loginfo('locations {}'.format(locations))
 
         # Get Left and Right points of the sides of the table
         side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
@@ -54,9 +56,9 @@ class P1Server(SciRocServer):
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', count_objects_result.image_bb)
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(count_objects_result.image_bb.data))
 
-        if len(locations > 1):
+        if len(locations) > 1:
             for name in object_count:
                 object_count[name] = object_count[name] / 2
 

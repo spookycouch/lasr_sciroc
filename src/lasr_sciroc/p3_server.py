@@ -157,7 +157,7 @@ class P3Server(SciRocServer):
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', detection_result.image_bb)
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(detection_result.image_bb.data))
 
             customerSatDown = False
             for detection in detection_result.detected_objects:

@@ -12,19 +12,27 @@ from tf2_geometry_msgs import do_transform_point
 
 # TODO: handle not reaching goal and bypass rest of count loop
 def gotoTable(self, params):
-    rospy.loginfo('Going to: %s ', current_table)
-
-
     # Get a fresh updated copy of the tables = dictionary from the parameter server
     tables = rospy.get_param('/tables')
     # Get the current table from the parameter server
     current_table = rospy.get_param('/current_table')
     locations = tables[current_table]['locations']
 
+    rospy.loginfo('Going to: %s ', current_table)
+
     # Wait for the action server to come up
     self.move_base_client.wait_for_server(rospy.Duration(15.0))
+    rospy.loginfo("params are {}".format(params))
 
-    location = locations[int(params[0])]
+
+    index = int(params)
+    if index < len(locations):
+        location = locations[int(params)]["location"]
+    else:
+        location = locations[0]["location"]
+
+    # rospy.loginfo("locations {}".format(locations))
+    # rospy.loginfo("location {}".format(location))
 
     # Create the move_base goal and send it
     goal = MoveBaseGoal()

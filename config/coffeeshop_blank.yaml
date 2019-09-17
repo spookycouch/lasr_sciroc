@@ -67,9 +67,12 @@ tables:
       max_xyz: [ 6.475, 6.733, 10 ]
       min_xyz: [ 4.262, 5.345, 0 ]
     lookLR: [ [ 4.265, 6.421 ] , [ 6.025, 6.354 ] ]
-
-
-  table4:
+, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.662340077
+, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.662340077
+  table4:, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.662340077
     id: 4
     person_count: 0
     status: "Unknown"

@@ -176,7 +176,8 @@ def setCupSize(self, cup, depth_points, image_raw):
     rospack = rospkg.RosPack()
     savedir = rospack.get_path('lasr_sciroc') + '/images/'
     now = datetime.now()
-    cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
+    cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(frame.image_bb.data))
+
 
     # get pcl and reshape to image dimensions
     header = depth_points.header
