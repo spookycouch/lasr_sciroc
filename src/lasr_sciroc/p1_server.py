@@ -28,6 +28,9 @@ class P1Server(SciRocServer):
         # Get Cuboid for Min and Max points of the table
         cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
 
+        tables = rospy.get_param('/tables')
+        locations = tables[current_table]['locations']
+
         # Get Left and Right points of the sides of the table
         side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
         object_count = defaultdict(int)
@@ -52,6 +55,10 @@ class P1Server(SciRocServer):
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
             cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', count_objects_result.image_bb)
+
+        if len(locations > 1):
+            for name in object_count:
+                object_count[name] = object_count[name] / 2
 
         # RETURN TO DEFAULT POSE
         self.playMotion('back_to_default')
