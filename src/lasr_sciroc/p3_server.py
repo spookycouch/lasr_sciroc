@@ -2,7 +2,8 @@
 
 import rospy
 import rospkg
-
+import numpy as np
+from datetime import datetime
 from SciRocServer import SciRocServer
 from turn_robot.srv import TurnToPoint
 from std_msgs.msg import Header
@@ -60,7 +61,7 @@ class P3Server(SciRocServer):
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', detection_result.image_bb)
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(detection_result.image_bb.data))
 
             foundCustomer = False
             persons_location = []
@@ -78,7 +79,7 @@ class P3Server(SciRocServer):
                 rospy.loginfo('Didnt find a new customer, Tiago is so sad :( reseting counter')
                 foundCustomer_counter = 0
             
-            if foundCustomer_counter == 3:
+            if foundCustomer_counter == 2:
                 break
             else:
                 rospy.sleep(1)
@@ -137,7 +138,7 @@ class P3Server(SciRocServer):
         # Get Left and Right points of the sides of the table
         side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
 
-        self.talk('This is your table, sit down please so I can confirm that you are truly a customer devoted to the Tiago coffee shop!')
+        self.talk('This is your table, sit down please so I can confirm that you are truly a devoted customer to the Tiago coffee shop!')
         rospy.sleep(2)
         i = 0
         while not rospy.is_shutdown():

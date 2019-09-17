@@ -1,0 +1,115 @@
+tables:
+  table0:
+    id: 0
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: { }
+      orientation: {  }
+    cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
+    lookLR: [ [  ] , [  ] ]
+
+
+tables:
+  table1:
+    id: 1
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: {  }
+      orientation: {  }
+    cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
+    lookLR: [ [  ] , [  ] ]
+
+
+tables:
+  table2:
+    id: 2
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: {  }
+      orientation: {  }
+    cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
+    lookLR: [ [  ] , [  ] ]
+
+
+tables:
+  table3:
+    id: 3
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: {  }
+      orientation: {  }
+    cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
+    lookLR: [ [  ] , [  ] ]
+
+
+tables:
+  table4:
+    id: 4
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: {  }
+      orientation: {  }
+    cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
+    lookLR: [ [  ] , [  ] ]
+
+
+tables:
+  table5:
+    id: 5
+    person_count: 0
+    status: "Unknown"
+    order: []
+    location:
+      position: {  }
+      orientation: {  }
+    cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
+    lookLR: [ [  ] , [  ] ]
+
+
+Bar:
+  location:
+    position: {  }
+    orientation: {  }
+
+
+Home:
+  location:
+    position: {  }
+    orientation: {  }
+  
+WaitingArea:
+  location:
+    position: {  }
+    orientation: {  }
+  cuboid:
+      frame: 'map'
+      max_xyz: [  ]
+      min_xyz: [  ]
