@@ -81,7 +81,7 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P1Server/gotoTable_1.exec</value>
+        <value>extern_P1Server/gotoTable_0.exec</value>
         <graphics>
           <offset x="-82" y="40" />
         </graphics>
@@ -518,9 +518,9 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P2Server/gotoTable.exec</value>
+        <value>extern_P2Server/gotoTable_0.exec</value>
         <graphics>
-          <offset x="-68" y="38" />
+          <offset x="-75" y="38" />
         </graphics>
       </name>
       <initialMarking>
@@ -1093,9 +1093,9 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P3Server/gotoTable.exec</value>
+        <value>extern_P3Server/gotoTable_0.exec</value>
         <graphics>
-          <offset x="-70" y="35" />
+          <offset x="-77" y="35" />
         </graphics>
       </name>
       <initialMarking>
@@ -1231,7 +1231,7 @@
         <size width="32" height="32" />
       </graphics>
       <name>
-        <value>extern_P1Server/gotoTable_0.exec</value>
+        <value>extern_P1Server/gotoTable_1.exec</value>
         <graphics>
           <offset x="-70" y="34" />
         </graphics>
@@ -1376,11 +1376,11 @@
     </transition>
     <transition id="t5">
       <graphics>
-        <position x="891" y="816" />
+        <position x="890" y="816" />
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P1Server/gotoTable_1.end</value>
+        <value>extern_P1Server/gotoTable_0.end</value>
         <graphics>
           <offset x="-78" y="21" />
         </graphics>
@@ -1520,7 +1520,7 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P1Server/gotoTable_1.start </value>
+        <value>extern_P1Server/gotoTable_0.start </value>
         <graphics>
           <offset x="-83" y="18" />
         </graphics>
@@ -1820,9 +1820,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/gotoTable.start</value>
+        <value>extern_P2Server/gotoTable_0.start</value>
         <graphics>
-          <offset x="-59" y="10" />
+          <offset x="-66" y="10" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -1840,9 +1840,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P2Server/gotoTable.end</value>
+        <value>extern_P2Server/gotoTable_0.end</value>
         <graphics>
-          <offset x="-46" y="13" />
+          <offset x="-53" y="13" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -2300,9 +2300,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P3Server/gotoTable.start</value>
+        <value>extern_P3Server/gotoTable_0.start</value>
         <graphics>
-          <offset x="-50" y="11" />
+          <offset x="-57" y="11" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -2320,9 +2320,9 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P3Server/gotoTable.end</value>
+        <value>extern_P3Server/gotoTable_0.end</value>
         <graphics>
-          <offset x="-47" y="14" />
+          <offset x="-54" y="14" />
         </graphics>
       </name>
       <toolspecific tool="JARP" version="1.2">
@@ -2420,7 +2420,7 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P1Server/gotoTable_0.end</value>
+        <value>extern_P1Server/gotoTable_1.end</value>
         <graphics>
           <offset x="-54" y="16" />
         </graphics>
@@ -2440,7 +2440,7 @@
         <size width="48" height="8" />
       </graphics>
       <name>
-        <value>extern_P1Server/gotoTable_0.start </value>
+        <value>extern_P1Server/gotoTable_1.start </value>
         <graphics>
           <offset x="-57" y="12" />
         </graphics>
