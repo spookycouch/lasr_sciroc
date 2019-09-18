@@ -98,7 +98,7 @@ class P1Server(SciRocServer):
 
         # Step 2: YOLOv3 object detection
         image_raw = rospy.wait_for_message('/xtion/rgb/image_raw', Image)
-        count_objects_result = self.detectObject(image_raw, "costa", 0.3, 0.3)
+        count_objects_result = self.detectObject(image_raw, "costa", 0.7, 0.3)
         
         # dictionary of results
         object_count = defaultdict(int)

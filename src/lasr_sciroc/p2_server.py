@@ -39,8 +39,7 @@ class P2Server(SciRocServer):
                 elif tables[table]['id'] < next_table_id:
                     next_table_id = tables[table]['id']
         
-        if needServing_exist and not rospy.has_param('/served_table'):
-            rospy.set_param('/served_table', True)
+        if needServing_exist and not rospy.get_param('/served_table'):
             rospy.set_param('/current_table', 'table' + str(next_table_id))
             print "\033[1;33m" + "The next table that needs serving is " + str(next_table_id) + "\033[0m"
 
@@ -127,7 +126,7 @@ class P2Server(SciRocServer):
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
             
-            cuboid = rospy.get_param('/bar/cuboid')
+            cuboid = rospy.get_param('/Bar/cuboid')
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image_raw, mask_msg.mask, 175)
             result = self.detectObject(image_masked, "costa", 0.3, 0.3)
@@ -242,6 +241,8 @@ class P2Server(SciRocServer):
 
         # Update order status on the hub
         self.updateHubTableOrder('Complete')
+
+        rospy.set_param('/served_table', True)
 
         # Update the RobotStatus on the hub using the service
         rospy.wait_for_service('/robot_status')
