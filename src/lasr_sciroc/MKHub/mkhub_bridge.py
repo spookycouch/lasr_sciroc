@@ -97,7 +97,7 @@ class MKHubBridge(object):
     
     def constructTablePayload(self, id, people_count, status):
         data = {}
-        data['@id'] = id
+        data['@id'] = id.capitalize()
         data['@type'] = 'Table'
         data['customers'] = people_count
         data['status'] = status
