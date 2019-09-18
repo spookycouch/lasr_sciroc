@@ -45,6 +45,8 @@ class P3Server(SciRocServer):
         else:
             # if all tables have been identified, counting is done
             self._result.condition_event = ['doneEscorting']
+        # log the param server
+        self.logText()
     
     def detectAndLocateCustomer(self):
         # Get Cuboid for Min and Max points of the table
@@ -143,7 +145,7 @@ class P3Server(SciRocServer):
         i = 0
         while not rospy.is_shutdown():
             self.lookAt(side_points[i])
-            if i == 1:
+            if i == len(side_points) - 1:
                 i = 0
             else:
                 i += 1
@@ -181,7 +183,7 @@ class P3Server(SciRocServer):
                 except rospy.ServiceException, e:
                     print "Service call failed: %s"%e
 
-                self.talk('I will now counting the people at the table!')
+                self.talk('I will now count the people at the table!')
                 break
             else:
                 rospy.sleep(1)

@@ -17,6 +17,7 @@ from MKHub import MKHubBridge
 from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
 from elevator import TheGlobalClass
 
+import numpy as np
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
@@ -52,6 +53,8 @@ class P2Server(SciRocServer):
         else:
             # if all tables have been served, counting is done
             self._result.condition_event = ['doneServing']
+        # log the param server
+        self.logText()
 
     def updateHubTableOrder(self, status):
         current_table = rospy.get_param('/current_table')
@@ -115,9 +118,10 @@ class P2Server(SciRocServer):
         self.keywordDetected('check the items')
         rospy.loginfo('keyword got!')
 
+        # Look down to see the items on the counter
+        self.playMotion('check_table')
+
         while True:
-            # Look down to see the items on the counter
-            self.playMotion('look_down')
 
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
@@ -142,8 +146,6 @@ class P2Server(SciRocServer):
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
 
-            # Back to default pose
-            self.playMotion('back_to_default')
 
             # Compare the result to the order and announce the missing item
             missing_items = defaultdict(int)
@@ -182,7 +184,8 @@ class P2Server(SciRocServer):
                             speech_out += 's'
                 self.talk(speech_out)
             else:
-                self.talk('Order is correct, please place the items on my back.')
+                self.talk('Order is correct. Please place the items on my back, and say "all set" when you are done.')
+                self.playMotion('back_to_default')
                 break
             rospy.sleep(2)
 

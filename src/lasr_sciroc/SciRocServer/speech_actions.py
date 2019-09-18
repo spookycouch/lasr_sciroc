@@ -2,6 +2,8 @@
 import rospy
 from std_msgs.msg import String
 from pal_interaction_msgs.msg import TtsGoal
+from datetime import datetime
+import os
 
 def planWakeWord(self, data):
         wake_word = data.data
@@ -30,3 +32,15 @@ def talk(self, speech_in):
     tts_goal.rawtext.text = speech_in
     self.speech_client.send_goal(tts_goal)
     self.speech_client.wait_for_result()
+
+def logText(self):
+    file_path = os.path.dirname(os.path.abspath(__file__)) + '/logfile.txt'
+    with open(file_path, "a") as log_file:
+        log_file.write('timestamp:\n')
+        log_file.write(str(datetime.now()) + '\n')
+        tables = rospy.get_param('/tables')
+        for table in tables:
+            log_file.write(table + ':\n')
+            log_file.write(str(tables[table]) + '\n')
+        log_file.write('=' * 50)
+        log_file.write('\n')

@@ -25,6 +25,7 @@ class P1Server(SciRocServer):
     def countPeople(self):
         # Get the current table from the parameter server
         current_table = rospy.get_param('/current_table')
+        object_count = defaultdict(int)
         
         # Get Cuboid for Min and Max points of the table
         cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
@@ -35,10 +36,9 @@ class P1Server(SciRocServer):
 
         # Get Left and Right points of the sides of the table
         side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
-        object_count = defaultdict(int)
 
         # Take a picture using the depth mask and feed it to the detection
-        for i in range(2):
+        for i in len(side_points):
             self.lookAt(side_points[i])
             rospy.loginfo('Getting the image..')
             depth_points, image = self.getPcl2AndImage()
@@ -57,10 +57,6 @@ class P1Server(SciRocServer):
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
             cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(count_objects_result.image_bb.data))
-
-        if len(locations) > 1:
-            for name in object_count:
-                object_count[name] = object_count[name] / 2
 
         # RETURN TO DEFAULT POSE
         self.playMotion('back_to_default')
@@ -194,6 +190,8 @@ class P1Server(SciRocServer):
                 response = robot_status('Done checking tables', 'EPISODE3')
             except rospy.ServiceException, e:
                 print "Service call failed: %s"%e
+        # log the param server
+        self.logText()
 
         
 

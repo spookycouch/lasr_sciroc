@@ -19,6 +19,7 @@
     <node pkg="lasr_object_detection_yolo" type="object_detection_server.py" name="yolo_detection" args="" output="screen" />
     <node pkg="lasr_object_detection_yolo" type="pcl2_to_image_server.py" name="" args="" output="screen" />
     <node pkg="lasr_sciroc" type="robot_status_service.py" name="robot_status" args="" output="screen" />
+    <node pkg="lasr_sciroc" type="robot_location.py" name="robot_location" args="" output="screen" />
     <node pkg="lasr_pcl" type="depth_crop_mask_server" name="depth_crop_mask_server" args="" output="screen" />
 
     <group ns="$(arg robotname)">
