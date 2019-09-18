@@ -120,13 +120,13 @@ class P3Server(SciRocServer):
         return goal_pose, distance
 
     def greetCustomer(self):
-        self.talk('Hello my name is Tiago, please follow me to a ready table!')
+        self.talk('Hello my name is Tiago, please follow me to a free table!')
 
         # Update the RobotStatus on the hub using the service
         rospy.wait_for_service('/robot_status')
         try:
             robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
-            response = robot_status('Escorting new customer to a ready table', 'EPISODE3')
+            response = robot_status('Escorting new customer to a free table', 'EPISODE3')
         except rospy.ServiceException, e:
             print "Service call failed: %s"%e
 

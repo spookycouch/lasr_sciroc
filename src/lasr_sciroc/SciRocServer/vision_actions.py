@@ -3,7 +3,7 @@ import rospkg
 import cv2
 import numpy as np
 import tf
-import datetime
+from datetime import datetime
 from cv_bridge import CvBridge, CvBridgeError
 from six.moves import queue
 
@@ -176,7 +176,7 @@ def setCupSize(self, cup, depth_points, image_raw):
     rospack = rospkg.RosPack()
     savedir = rospack.get_path('lasr_sciroc') + '/images/'
     now = datetime.now()
-    cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(frame.image_bb.data))
+    cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
 
 
     # get pcl and reshape to image dimensions

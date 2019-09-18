@@ -75,6 +75,27 @@ class P2Server(SciRocServer):
         got = bridge.get(current_table)
         print(got)
 
+    def get_order_string(self, items_array):
+        items_dict = defaultdict(int)
+        for item in items_array:
+            items_dict[item] += 1
+
+        string_array = []
+        for item in items_dict:
+            if items_dict[item] == 1:
+                string_array.append(str(items_dict[item]) + item)
+            else:
+                string_array.append(str(items_dict[item]) + item + 's')
+        
+        items_count = len(string_array)
+        if items_count == 0:
+            return "nothing"
+        elif items_count == 1:
+            return string_array[0]
+        elif items_count == 2:
+            return " and ".join(string_array)
+        else:
+            return ", ".join(string_array[:-1]) + " and " + string_array[-1]
     
     def orderConfirm(self):
         current_table = rospy.get_param('/current_table')
@@ -93,7 +114,7 @@ class P2Server(SciRocServer):
             print "Service call failed: %s"%e
 
         # Say the order
-        self.talk('The order of {0} is {1}'.format(current_table, order))
+        self.talk('The order of {0} is {1}'.format(current_table, self.get_order_string(order)))
         rospy.sleep(2)
 
     
@@ -122,7 +143,6 @@ class P2Server(SciRocServer):
         self.playMotion('check_table')
 
         for x in range(3):
-
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
             
@@ -130,7 +150,6 @@ class P2Server(SciRocServer):
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image_raw, mask_msg.mask, 175)
             result = self.detectObject(image_masked, "costa", 0.3, 0.3)
-
 
             order_count = defaultdict(int)
             for item in order:
@@ -150,7 +169,6 @@ class P2Server(SciRocServer):
 
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
-
 
             # Compare the result to the order and announce the missing item
             missing_items = defaultdict(int)
@@ -190,8 +208,8 @@ class P2Server(SciRocServer):
                 self.talk(speech_out)
             else:
                 self.talk('Order is correct. Please place the items on my back, and say "all set" when you are done.')
-                self.playMotion('back_to_default')
                 break
+            self.playMotion('back_to_default')
             rospy.sleep(2)
 
     def waitLoad(self):
