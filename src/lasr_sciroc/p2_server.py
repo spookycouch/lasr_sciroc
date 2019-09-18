@@ -13,9 +13,9 @@ from move_base_msgs.msg import MoveBaseGoal
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Quaternion
 from collections import defaultdict
 from math import pi as PI
-from MKHub import MKHubBridge
-from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
-from elevator import TheGlobalClass
+from utilities import MKHubBridge
+from utilities.srv import RobotStatus, RobotStatusResponse
+from utilities import TheGlobalClass
 
 import numpy as np
 import cv2

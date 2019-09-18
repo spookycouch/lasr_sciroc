@@ -8,8 +8,8 @@ from datetime import datetime
 from SciRocServer import SciRocServer
 from sensor_msgs.msg import Image
 from collections import defaultdict
-from MKHub import MKHubBridge
-from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
+from utilities import MKHubBridge
+from utilities.srv import RobotStatusResponse, RobotStatus
 
 # for debug
 import cv2

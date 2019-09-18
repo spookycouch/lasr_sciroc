@@ -5,11 +5,10 @@ import rospkg
 import numpy as np
 from datetime import datetime
 from SciRocServer import SciRocServer
-from turn_robot.srv import TurnToPoint
 from std_msgs.msg import Header
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped
 from move_base_msgs.msg import MoveBaseGoal
-from elevator import TheGlobalClass
+from utilities import TheGlobalClass
 from math import sqrt
 from lasr_sciroc.srv import RobotStatus, RobotStatusResponse
 
