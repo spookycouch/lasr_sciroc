@@ -24,7 +24,7 @@ def StartLocationPublishing(episode):
             print('I HAVE JUST PUUUUUUUUUUUT TIAGO ON DE HUB MAN')
         else:
             bridge.post('Tiago', payload)
-            print('I updated Tiago on the hub :)')
+            # print('I updated Tiago on the hub :)')
 
         # # During development get the payload from the server to check that it has been posted on there
         # got = bridge.get('Tiago')

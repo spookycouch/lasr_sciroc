@@ -38,7 +38,7 @@ class P1Server(SciRocServer):
         side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
 
         # Take a picture using the depth mask and feed it to the detection
-        for i in len(side_points):
+        for i in range(len(side_points)):
             self.lookAt(side_points[i])
             rospy.loginfo('Getting the image..')
             depth_points, image = self.getPcl2AndImage()
