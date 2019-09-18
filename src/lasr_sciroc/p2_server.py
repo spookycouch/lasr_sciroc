@@ -39,7 +39,8 @@ class P2Server(SciRocServer):
                 elif tables[table]['id'] < next_table_id:
                     next_table_id = tables[table]['id']
         
-        if needServing_exist:
+        if needServing_exist and not rospy.has_param('/served_table'):
+            rospy.set_param('/served_table', True)
             rospy.set_param('/current_table', 'table' + str(next_table_id))
             print "\033[1;33m" + "The next table that needs serving is " + str(next_table_id) + "\033[0m"
 
@@ -121,11 +122,16 @@ class P2Server(SciRocServer):
         # Look down to see the items on the counter
         self.playMotion('check_table')
 
-        while True:
+        for x in range(3):
 
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
-            result = self.detectObject(image_raw, "costa", 0.3, 0.3)
+            
+            cuboid = rospy.get_param('/bar/cuboid')
+            mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            image_masked = self.applyDepthMask(image_raw, mask_msg.mask, 175)
+            result = self.detectObject(image_masked, "costa", 0.3, 0.3)
+
 
             order_count = defaultdict(int)
             for item in order:

@@ -31,7 +31,8 @@ class P3Server(SciRocServer):
                 if next_table_id is None or tables[table]['id'] < next_table_id:
                     next_table_id = tables[table]['id']
 
-        if next_table_id is not None:
+        if next_table_id is not None and not rospy.has_param('/escorted_customer'):
+            rospy.set_param('/escorted_customer', True)
             rospy.set_param('/current_table', 'table' + str(next_table_id))
             print "\033[1;33m" + "The next table is " + str(next_table_id) + "\033[0m"
 
