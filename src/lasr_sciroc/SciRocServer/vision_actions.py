@@ -216,13 +216,13 @@ def setCupSize(self, cup, depth_points, image_raw):
         
         print(cup_height)
 
-        if cup_height > 0.23:
+        if cup_height > 0.20:
             pass
         elif cup_height > 0.14:
             cup.name = 'large coffee'
-        elif cup_height > 0.12:
+        elif cup_height > 0.10:
             cup.name = 'medium coffee'
-        elif cup_height > 0.09:
+        elif cup_height > 0.07:
             cup.name = 'small coffee'
     
     return 'success'

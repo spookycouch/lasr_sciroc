@@ -138,7 +138,7 @@ class P3Server(SciRocServer):
         cuboid = rospy.get_param('/tables/' + current_table + '/cuboid')
 
         # Get Left and Right points of the sides of the table
-        side_points = rospy.get_param('/tables/' + current_table + '/lookLR')
+        side_points = rospy.get_param('/tables/' + current_table + '/lookForPeople')
 
         self.talk('This is your table, sit down please so I can confirm that you are truly a devoted customer to the Tiago coffee shop!')
         rospy.sleep(2)
