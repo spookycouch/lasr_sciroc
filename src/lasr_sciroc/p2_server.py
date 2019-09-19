@@ -83,9 +83,9 @@ class P2Server(SciRocServer):
         string_array = []
         for item in items_dict:
             if items_dict[item] == 1:
-                string_array.append(str(items_dict[item]) + item)
+                string_array.append(str(items_dict[item]) + ' ' + item)
             else:
-                string_array.append(str(items_dict[item]) + item + 's')
+                string_array.append(str(items_dict[item]) + ' ' + item + 's')
         
         items_count = len(string_array)
         if items_count == 0:
@@ -137,17 +137,18 @@ class P2Server(SciRocServer):
         # wait for the keyword
         self.talk('Could you please place the order on the counter and say \"check the items\" when you are done')
         self.keywordDetected('check the items')
+        self.talk('Checking the order.')
         rospy.loginfo('keyword got!')
 
         # Look down to see the items on the counter
         self.playMotion('check_table')
 
-        for x in range(3):
+        for x in range(4):
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
             
             cuboid = rospy.get_param('/Bar/cuboid')
-            mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
+            mask_msg = self.getDepthNanMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image_raw, mask_msg.mask, 175)
             result = self.detectObject(image_masked, "costa", 0.3, 0.3)
 
@@ -161,11 +162,14 @@ class P2Server(SciRocServer):
                     self.setCupSize(detection, depth_points, image_raw)
                 object_count[detection.name] += 1
             
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(result.image_bb, "bgr8")
+
             # Save img to img dir for logging
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(result.image_bb.data))
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
 
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
@@ -207,10 +211,11 @@ class P2Server(SciRocServer):
                             speech_out += 's'
                 self.talk(speech_out)
             else:
-                self.talk('Order is correct. Please place the items on my back, and say "all set" when you are done.')
+                self.talk('Order is correct.')
                 break
-            self.playMotion('back_to_default')
             rospy.sleep(2)
+        self.talk('Please place the items on my back, and say "all set" when you are done.')
+        self.playMotion('back_to_default')
 
     def waitLoad(self):
         # Turn TIAGo so customers grab the tings

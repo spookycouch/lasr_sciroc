@@ -31,7 +31,6 @@ class P3Server(SciRocServer):
                     next_table_id = tables[table]['id']
 
         if next_table_id is not None and not rospy.get_param('/escorted_customer'):
-            rospy.set_param('/escorted_customer', True)
             rospy.set_param('/current_table', 'table' + str(next_table_id))
             print "\033[1;33m" + "The next table is " + str(next_table_id) + "\033[0m"
 
@@ -59,11 +58,14 @@ class P3Server(SciRocServer):
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(detection_result.image_bb, "bgr8")
+
             # Save img to img dir for logging
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(detection_result.image_bb.data))
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
 
             foundCustomer = False
             persons_location = []
@@ -140,7 +142,7 @@ class P3Server(SciRocServer):
         # Get Left and Right points of the sides of the table
         side_points = rospy.get_param('/tables/' + current_table + '/lookForPeople')
 
-        self.talk('This is your table, sit down please so I can confirm that you are truly a devoted customer to the Tiago coffee shop!')
+        self.talk('This is your table, please take a seat!')
         rospy.sleep(2)
         i = 0
         while not rospy.is_shutdown():
@@ -155,11 +157,14 @@ class P3Server(SciRocServer):
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
             detection_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
 
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(detection_result.image_bb, "bgr8")
+
             # Save img to img dir for logging
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(detection_result.image_bb.data))
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
 
             customerSatDown = False
             for detection in detection_result.detected_objects:
@@ -170,7 +175,7 @@ class P3Server(SciRocServer):
             if customerSatDown:
                 # Update the parameter server
                 rospy.set_param('/tables/' + current_table + '/status', 'Needs serving')
-                self.talk('Enjoy your stay in my Coffee shop!')
+                self.talk('Enjoy your stay in the Coffee shop!')
 
                 # RETURN TO DEFAULT POSE
                 self.playMotion('back_to_default')
@@ -184,6 +189,7 @@ class P3Server(SciRocServer):
                     print "Service call failed: %s"%e
 
                 self.talk('I will now count the people at the table!')
+                rospy.set_param('/escorted_customer', True)
                 break
             else:
                 rospy.sleep(1)

@@ -97,6 +97,24 @@ def getDepthMask(self, depth_points, point_min, point_max):
         print "Service call failed: %s"%e
 
 
+def getDepthNanMask(self, depth_points, point_min, point_max):
+    # get the nan mask
+    cloud = np.fromstring(depth_points.data, np.float32)
+    z = cloud[2::8]
+    nan_mask = np.isnan(z)
+    nan_mask = nan_mask.astype(np.uint8)
+    # get the depth
+    depth_mask_msg = self.getDepthMask(depth_points, point_min, point_max)
+    depth_mask = np.fromstring(depth_mask_msg.mask.data, np.uint8)
+    # or the masks
+    depth_nan_mask = np.bitwise_or(nan_mask, depth_mask)
+    depth_nan_mask = np.expand_dims(depth_nan_mask, axis = 1)
+    print depth_nan_mask.shape
+    depth_nan_mask_msg = depth_mask_msg
+    bridge = CvBridge()
+    depth_nan_mask_msg.mask = bridge.cv2_to_imgmsg(depth_nan_mask, "mono8")
+    return depth_nan_mask_msg
+
 
 def applyDepthMask(self, image_msg, mask_msg, blur):
     # height and width
@@ -131,6 +149,7 @@ def applyDepthMask(self, image_msg, mask_msg, blur):
     # result
     return image_msg_out
 
+
 def detectObject(self, image_raw, dataset, confidence, nms):
     # wait for the service to come up
     rospy.wait_for_service('/yolo_detection')
@@ -148,6 +167,7 @@ def getTransformedPoint(self, header, point, frame):
     current_point.header = header
     current_point.point = Point(*point)
     return self.transformer.transformPoint(frame, current_point)
+
 
 # add size to the name field of a cup Detection
 # for cups of invalid or indeterminate height, name remains unchanged

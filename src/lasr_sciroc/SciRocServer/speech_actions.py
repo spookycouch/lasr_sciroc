@@ -20,8 +20,13 @@ def keywordCallback(self, data):
 def keywordDetected(self, keyword):
     self.current_keyword = keyword
     self.keyword_found = False
+    start_time = rospy.Time.now().secs
     sub = rospy.Subscriber('/wake_word/wake_word_detected', String, self.keywordCallback)
     while not self.keyword_found:
+        current_time = rospy.Time.now().secs
+        if current_time - start_time > 15:
+            rospy.loginfo('keyword timeout')
+            break
         rospy.sleep(1)
 
 def talk(self, speech_in):

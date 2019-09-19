@@ -52,11 +52,14 @@ class P1Server(SciRocServer):
             for detection in count_objects_result.detected_objects:
                 object_count[detection.name] += 1
 
+            bridge = CvBridge()
+            frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
+
             # Save img to img dir for logging
             rospack = rospkg.RosPack()
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
-            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', np.fromstring(count_objects_result.image_bb.data))
+            cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
 
         # RETURN TO DEFAULT POSE
         self.playMotion('back_to_default')
