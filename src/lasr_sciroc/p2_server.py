@@ -219,6 +219,7 @@ class P2Server(SciRocServer):
 
     def waitLoad(self):
         # Turn TIAGo so customers grab the tings
+        current_table = rospy.get_param('/current_table')
         rospy.loginfo('Still did not turn yet')
         TheGlobalClass.turn_radians(PI, self.move_base_client)
         rospy.loginfo('Done turning')
