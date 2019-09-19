@@ -103,6 +103,18 @@ def getDepthNanMask(self, depth_points, point_min, point_max):
     z = cloud[2::8]
     nan_mask = np.isnan(z)
     nan_mask = nan_mask.astype(np.uint8)
+    # get dimensions of image
+    # mask borders - depth FOV lower than 480x640
+    height = depth_points.height
+    width = depth_points.width
+    nan_mask = nan_mask.reshape(height, width)
+    # i cannot index properly ):
+    nan_mask[0:int(height / 10), : ] = 0
+    nan_mask[height - int(height * 0.1) , : ] = 0
+    nan_mask[ : , 0:int(width / 10) ] = 0
+    nan_mask[ : , width - int(width / 10):width ] = 0
+    nan_mask = nan_mask.reshape(width * height)
+
     # get the depth
     depth_mask_msg = self.getDepthMask(depth_points, point_min, point_max)
     depth_mask = np.fromstring(depth_mask_msg.mask.data, np.uint8)
