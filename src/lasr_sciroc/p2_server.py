@@ -213,7 +213,7 @@ class P2Server(SciRocServer):
             else:
                 self.talk('Order is correct.')
                 break
-            rospy.sleep(2)
+            rospy.sleep(4)
         self.talk('Please place the items on my back, and say "all set" when you are done.')
         self.playMotion('back_to_default')
 

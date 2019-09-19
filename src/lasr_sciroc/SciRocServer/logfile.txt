@@ -613,3 +613,45 @@ table4:
 table5:
 {'status': 'Needs serving', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
 ==================================================
+timestamp:
+2019-09-19 19:52:41.871883
+table4:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'order': [], 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'id': 4}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
+==================================================
+timestamp:
+2019-09-19 19:53:29.989839
+table4:
+{'status': 'Needs serving', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'order': [], 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'id': 4}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
+==================================================
+timestamp:
+2019-09-19 19:54:37.707510
+table4:
+{'status': 'Needs serving', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'order': [], 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'id': 4}
+table5:
+{'status': 'Already served', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
+==================================================
+timestamp:
+2019-09-19 19:54:38.581874
+table4:
+{'status': 'Needs serving', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'order': [], 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'id': 4}
+table5:
+{'status': 'Already served', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
+==================================================
+timestamp:
+2019-09-19 19:58:45.778809
+table4:
+{'status': 'Already served', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'order': ['large coffee'], 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'id': 4}
+table5:
+{'status': 'Already served', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
+==================================================
+timestamp:
+2019-09-19 19:58:46.235737
+table4:
+{'status': 'Already served', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'order': ['large coffee'], 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'id': 4}
+table5:
+{'status': 'Already served', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'order': [], 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'id': 5}
+==================================================
