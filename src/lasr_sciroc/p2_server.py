@@ -150,7 +150,7 @@ class P2Server(SciRocServer):
             cuboid = rospy.get_param('/Bar/cuboid')
             mask_msg = self.getDepthNanMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image_raw, mask_msg.mask, 175)
-            result = self.detectObject(image_masked, "costa", 0.3, 0.3)
+            result = self.detectObject(image_masked, "costa", 0.5, 0.3)
 
             order_count = defaultdict(int)
             for item in order:
