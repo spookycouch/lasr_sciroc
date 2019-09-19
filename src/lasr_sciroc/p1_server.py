@@ -46,7 +46,7 @@ class P1Server(SciRocServer):
             mask_msg = self.getDepthMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             rospy.loginfo('FINISHED FROM DE MASK BRODA')
             image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
-            count_objects_result = self.detectObject(image_masked, "coco", 0.3, 0.3)
+            count_objects_result = self.detectObject(image_masked, "coco", 0.5, 0.3)
 
             # update dictionary
             for detection in count_objects_result.detected_objects:
