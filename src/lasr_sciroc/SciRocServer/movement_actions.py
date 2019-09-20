@@ -1,5 +1,6 @@
 
 import rospy
+import actionlib
 import tf2_ros
 
 # Actionlib messages
@@ -40,12 +41,15 @@ def gotoTable(self, params):
     goal.target_pose.pose = Pose(position = Point(**location['position']),
         orientation = Quaternion(**location['orientation']))
 
-    rospy.loginfo('Sending goal location ...')
-    self.move_base_client.send_goal(goal) 
-    if self.move_base_client.wait_for_result():
-        rospy.loginfo('Goal location achieved!')
-    else:
-        rospy.logwarn("Couldn't reach the goal!")
+    for x in range(6):
+        rospy.loginfo('Sending goal location ...')
+        self.move_base_client.send_goal(goal) 
+        if self.move_base_client.wait_for_result():
+            if self.move_base_client.get_state() == actionlib.GoalStatus.SUCCEEDED:
+               rospy.loginfo('Goal location achieved!')
+               break
+            else:
+                rospy.logwarn("Couldn't reach the goal!")
 
     
 def gotoLocation(self, location):
