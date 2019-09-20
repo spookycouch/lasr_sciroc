@@ -104,7 +104,7 @@ class P1Server(SciRocServer):
         depth_points, image = self.getPcl2AndImage()
         mask_msg = self.getDepthNanMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
         image_masked = self.applyDepthMask(image, mask_msg.mask, 175)
-        count_objects_result = self.detectObject(image_masked, "costa", 0.5, 0.3)
+        count_objects_result = self.detectObject(image_masked, "costa", 0.7, 0.3)
         
         bridge = CvBridge()
         frame = bridge.imgmsg_to_cv2(count_objects_result.image_bb, "bgr8")
