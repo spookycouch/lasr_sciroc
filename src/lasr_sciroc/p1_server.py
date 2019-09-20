@@ -88,8 +88,8 @@ class P1Server(SciRocServer):
         response = bridge.post(current_table, payload)
 
         # Get the update to check (log)
-        got = bridge.get(current_table)
-        print(got)
+        # got = bridge.get(current_table)
+        # print(got)
 
 
     def identifyStatus(self):
@@ -153,8 +153,8 @@ class P1Server(SciRocServer):
         response = bridge.post(current_table, payload)
 
         # Get the update to check (log)
-        got = bridge.get(current_table)
-        print(got)
+        # got = bridge.get(current_table)
+        # print(got)
 
     # TODO: rename please to determineNextUnknownTable
     def count(self):

@@ -72,8 +72,8 @@ class P2Server(SciRocServer):
         response = bridge.put(current_table, payload)
 
         # Get the update to check (log)
-        got = bridge.get(current_table)
-        print(got)
+        # got = bridge.get(current_table)
+        # print(got)
 
     def get_order_string(self, items_array):
         items_dict = defaultdict(int)
@@ -263,8 +263,8 @@ class P2Server(SciRocServer):
         response = bridge.post(current_table, payload)
 
         # Get the update to check (log)
-        got = bridge.get(current_table)
-        print(got)
+        # got = bridge.get(current_table)
+        # print(got)
 
         # Update order status on the hub
         self.updateHubTableOrder('Complete')
