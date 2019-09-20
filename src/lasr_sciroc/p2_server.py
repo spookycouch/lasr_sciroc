@@ -213,12 +213,13 @@ class P2Server(SciRocServer):
             else:
                 self.talk('Order is correct.')
                 break
-            rospy.sleep(2)
+            rospy.sleep(4)
         self.talk('Please place the items on my back, and say "all set" when you are done.')
         self.playMotion('back_to_default')
 
     def waitLoad(self):
         # Turn TIAGo so customers grab the tings
+        current_table = rospy.get_param('/current_table')
         rospy.loginfo('Still did not turn yet')
         TheGlobalClass.turn_radians(PI, self.move_base_client)
         rospy.loginfo('Done turning')
