@@ -45,6 +45,7 @@ class P3Server(SciRocServer):
         elif next_table_id is None and not rospy.get_param('/escorted_customer'):
             for table in tables:
                 if not tables[table]['status'] == 'Ready':
+                    rospy.loginfo('BACKUP TABLE CHOSEN!')
                     next_table_id = tables[table]['id']
                     rospy.set_param('/current_table', 'table' + str(next_table_id))
 

@@ -54,6 +54,7 @@ class P2Server(SciRocServer):
         elif not needServing_exist and not rospy.get_param('/served_table'):
             for table in tables:
                 if not (tables[table])['status'] == 'Needs serving':
+                    rospy.loginfo('BACKUP TABLE CHOSEN!')
                     next_table_id = tables[table]['id']
                     rospy.set_param('/current_table', 'table' + str(next_table_id))
 
