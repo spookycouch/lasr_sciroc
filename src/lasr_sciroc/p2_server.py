@@ -50,6 +50,13 @@ class P2Server(SciRocServer):
                 response = robot_status('Taking order of table' + str(next_table_id), 'EPISODE3')
             except rospy.ServiceException, e:
                 print "Service call failed: %s"%e
+
+        elif not needServing_exist and not rospy.get_param('/served_table'):
+            for table in tables:
+                if not (tables[table])['status'] == 'Needs serving':
+                    next_table_id = tables[table]['id']
+                    rospy.set_param('/current_table', 'table' + str(next_table_id))
+
         else:
             # if all tables have been served, counting is done
             self._result.condition_event = ['doneServing']

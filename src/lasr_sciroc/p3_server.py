@@ -41,6 +41,13 @@ class P3Server(SciRocServer):
                 response = robot_status('Checking for new customers', 'EPISODE3')
             except rospy.ServiceException, e:
                 print "Service call failed: %s"%e
+
+        elif next_table_id is None and not rospy.get_param('/escorted_customer'):
+            for table in tables:
+                if not tables[table]['status'] == 'Ready':
+                    next_table_id = tables[table]['id']
+                    rospy.set_param('/current_table', 'table' + str(next_table_id))
+
         else:
             # if all tables have been identified, counting is done
             self._result.condition_event = ['doneEscorting']
