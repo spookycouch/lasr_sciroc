@@ -110,7 +110,7 @@ def getDepthNanMask(self, depth_points, point_min, point_max):
     nan_mask = nan_mask.reshape(height, width)
     # i cannot index properly ):
     nan_mask[0:int(height / 10), : ] = 0
-    nan_mask[height - int(height * 0.1) , : ] = 0
+    nan_mask[height - int(height * 0.1) : height , : ] = 0
     nan_mask[ : , 0:int(width / 10) ] = 0
     nan_mask[ : , width - int(width / 10):width ] = 0
     nan_mask = nan_mask.reshape(width * height)
