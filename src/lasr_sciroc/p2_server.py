@@ -145,13 +145,13 @@ class P2Server(SciRocServer):
         # wait for the keyword
         self.talk('Could you please place the order on the counter and say \"check the items\" when you are done')
         self.keywordDetected('check the items')
-        self.talk('Checking the order.')
         rospy.loginfo('keyword got!')
 
         # Look down to see the items on the counter
         self.playMotion('check_table')
 
-        for x in range(4):
+        for x in range(5):
+            self.talk('Checking the order.')
             # Run the object detection client on the items
             depth_points, image_raw = self.getPcl2AndImage()
             

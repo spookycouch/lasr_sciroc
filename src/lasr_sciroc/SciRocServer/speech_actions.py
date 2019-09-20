@@ -24,7 +24,7 @@ def keywordDetected(self, keyword):
     sub = rospy.Subscriber('/wake_word/wake_word_detected', String, self.keywordCallback)
     while not self.keyword_found:
         current_time = rospy.Time.now().secs
-        if current_time - start_time > 15:
+        if current_time - start_time > 12:
             rospy.loginfo('keyword timeout')
             break
         rospy.sleep(1)

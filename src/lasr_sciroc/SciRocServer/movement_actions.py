@@ -41,7 +41,7 @@ def gotoTable(self, params):
     goal.target_pose.pose = Pose(position = Point(**location['position']),
         orientation = Quaternion(**location['orientation']))
 
-    for x in range(6):
+    for x in range(8):
         rospy.loginfo('Sending goal location ...')
         self.move_base_client.send_goal(goal) 
         if self.move_base_client.wait_for_result():
