@@ -159,7 +159,10 @@ class P2Server(SciRocServer):
             object_count = defaultdict(int)
             for detection in result.detected_objects:
                 if(detection.name == 'coffee'):
-                    self.setCupSize(detection, depth_points, image_raw)
+                    try:
+                        self.setCupSize(detection, depth_points, image_raw)
+                    except tf.ExtrapolationException as e:
+                        rospy.loginfo('Extrapolation error from tf!!! no cup size')
                 object_count[detection.name] += 1
             
             bridge = CvBridge()
