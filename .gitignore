@@ -1,2 +1,3 @@
 *.pyc
 images
+src/lasr_sciroc/SciRocServer/logfile.txt
