@@ -10,7 +10,7 @@
     <!-- Load the longroom tables and motions data into the parameter server -->
     <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/longroom.yaml" /> -->
     <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/bnb.yaml" /> -->
-    <rosparam command="load" file="$(find lasr_sciroc)/config/coffeeshop_actual.yaml" />
+    <rosparam command="load" file="$(find lasr_sciroc)/config/active_lab_demo.yaml" />
     <rosparam command="load" file="$(find lasr_sciroc)/config/HAL9000.yaml" />
     <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/locations.yaml" /> -->
     <rosparam command="load" file="$(find lasr_sciroc)/config/motions.yaml" />

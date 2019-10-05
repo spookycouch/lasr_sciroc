@@ -1,0 +1,87 @@
+tables:
+  table0:
+    id: 0
+    person_count: 0
+    status: "Unknown"
+    order: []
+    locations:
+      - location:
+          position: { x: 0.127, y: -1.498, z: 0.000 }
+          orientation: { x: 0.0, y: 0.0, z: -0.013, w: 1.000 }
+    cuboid:
+      frame: 'map'
+      min_xyz: [ 0.823, -2.533, 0 ]
+      max_xyz: [ 2.335, -0.231, 10 ]
+    lookLR: [ [ 1.582, -0.653 ] , [ 1.599, -2.489 ] ]
+    lookForPeople: [ [ 1.582, -0.653 ] , [ 1.599, -2.489 ] ]
+
+  table1:
+    id: 1
+    person_count: 0
+    status: "Unknown"
+    order: []
+    locations:
+      - location:
+          position: { x: 0.148, y: -1.486, z: 0.000 }
+          orientation: { x: 0.0, y: 0.0, z: 1.000, w: 0.008 }
+    cuboid:
+      frame: 'map'
+      min_xyz: [ -1.860, -2.579, 0 ]
+      max_xyz: [ -0.314, -0.186, 10 ]
+    lookLR: [ [ -1.034, -0.403 ], [ -1.113, -2.552 ] ]
+    lookForPeople: [ [ -1.034, -0.403 ], [ -1.113, -2.552 ] ]
+
+  table2:
+    id: 2
+    person_count: 0
+    status: "Unknown"
+    order: []
+    locations:
+      - location:
+          position: { x: 0.021, y: -3.665, z: 0.0  }
+          orientation: { x: 0.0, y: 0.0, z: -0.051, w: 0.999 }
+    cuboid:
+      frame: 'map'
+      min_xyz: [ 0.723, -4.746, 0 ]
+      max_xyz: [ 2.207, -2.600, 10 ]
+    lookLR: [ [ 1.531, -2.740 ] , [ 1.487, -4.800 ] ]
+    lookForPeople: [ [ 1.531, -2.740 ] , [ 1.487, -4.800 ] ]
+
+  table3:
+    id: 3
+    person_count: 0
+    status: "Unknown"
+    order: []
+    locations:
+      - location:
+          position: { x: 0.034, y: -3.666, z: 0.0 }
+          orientation: { x: 0.0, y: 0.0, z: 0.999, w: 0.051 }
+    cuboid:
+      frame: 'map'
+      min_xyz: [ -1.959, -4.782, 0 ]
+      max_xyz: [ -0.465, -2.636, 10 ]
+    lookLR: [ [ -1.193, -2.623 ] , [ -1.212, -4.608 ] ]
+    lookForPeople: [ [ -1.193, -2.623 ] , [ -1.212, -4.608 ] ]
+
+Bar:
+  location:
+    position: { x: -0.035, y: 0.327, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.999, w: 0.037 }
+  cuboid:
+      frame: 'map'
+      min_xyz: [ -3.460, -0.258, 0 ]
+      max_xyz: [ -0.560, 1.490, 10 ]
+
+Home:
+  location:
+    position: { x: -0.035, y: 0.327, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: 0.999, w: 0.037 }
+  
+WaitingArea:
+  location:
+    position: { x: 0.184, y: -1.774, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.718, w: 0.696 }
+  cuboid:
+      frame: 'map'
+      min_xyz: [ -0.505, -4.704, 0 ]
+      max_xyz: [ 0.775, -3.336, 10 ]
