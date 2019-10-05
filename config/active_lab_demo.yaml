@@ -74,8 +74,8 @@ Bar:
 
 Home:
   location:
-    position: { x: -0.035, y: 0.327, z: 0.0 }
-    orientation: { x: 0.0, y: 0.0, z: 0.999, w: 0.037 }
+    position: { x: 0.26896936706, y: 0.156742391682, z: 0.0 }
+    orientation: { x: 0.0, y: 0.0, z: -0.752626914599, w: 0.658447209289 }
   
 WaitingArea:
   location:

@@ -14,12 +14,20 @@ from utilities.srv import RobotStatusResponse, RobotStatus
 # for debug
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
+from utilities import TheGlobalClass
+
 
 class P1Server(SciRocServer):
     def __init__(self, server_name):
         SciRocServer.__init__(self, server_name)
 
     def initialise(self):
+        TheGlobalClass.talk(self.speech_client, "Hello. My name is Tiago and I work in a coffee shop.", True)
+        rospy.sleep(1)
+        TheGlobalClass.talk(self.speech_client, "First, I will check all the tables.", True)
+        rospy.sleep(1)
+        TheGlobalClass.talk(self.speech_client, "Then, I will take an order from a table that needs serving.", True)
+        rospy.sleep(1)
         pass
 
     def countPeople(self):
