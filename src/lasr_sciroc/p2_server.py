@@ -60,7 +60,7 @@ class P2Server(SciRocServer):
 
         else:
             # if all tables have been served, counting is done
-            self._result.condition_event = ['doneServing']
+            rospy.set_param('/done_serving', True)
         # log the param server
         self.logText()
 

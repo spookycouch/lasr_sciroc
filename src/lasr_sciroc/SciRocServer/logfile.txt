@@ -4023,3 +4023,122 @@ table0:
 table1:
 {'status': 'Needs serving', 'person_count': 1, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
 ==================================================
+timestamp:
+2020-06-19 17:42:53.940096
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+table4:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'id': 4, 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'order': []}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'id': 5, 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 17:52:39.698581
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+table4:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'id': 4, 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'order': []}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'id': 5, 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 17:53:11.470351
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+table4:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'id': 4, 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'order': []}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'id': 5, 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 17:53:45.074675
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+table4:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'id': 4, 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'order': []}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'id': 5, 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 17:54:10.354187
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+table4:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-0.723, 4.347, 0], 'max_xyz': [1.845, 5.947, 10]}, 'locations': [{'location': {'position': {'y': 4.42970728834, 'x': 0.97442617942, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.923212010268, 'w': 0.384291014854}}}, {'location': {'position': {'y': 4.09324036045, 'x': 1.42003856221, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.947609625585, 'w': 0.319430739751}}}], 'id': 4, 'lookLR': [[0.6, 6.0], [-0.8, 4.5]], 'lookForPeople': [[0.5, 6.0], [-0.8, 4.5]], 'order': []}
+table5:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.27, 1.862, 0], 'max_xyz': [1.546, 4.216, 10]}, 'locations': [{'location': {'position': {'y': 2.54736987164, 'x': 0.782861725191, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.939587992242, 'w': 0.342307471193}}}, {'location': {'position': {'y': 1.76756274784, 'x': 1.44623467794, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.92433477969, 'w': 0.381582514086}}}], 'id': 5, 'lookLR': [[0.086, 3.125]], 'lookForPeople': [[-1, 3], [0.1, 4]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 17:59:58.046545
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 18:01:19.991836
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 18:01:36.303716
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+==================================================
+timestamp:
+2020-06-19 18:02:54.148067
+table2:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.723, -4.746, 0], 'max_xyz': [2.207, -2.6, 10]}, 'locations': [{'location': {'position': {'y': -3.665, 'x': 0.021, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.051, 'w': 0.999}}}], 'id': 2, 'lookLR': [[1.531, -2.74], [1.487, -4.8]], 'lookForPeople': [[1.531, -2.74], [1.487, -4.8]], 'order': []}
+table3:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.959, -4.782, 0], 'max_xyz': [-0.465, -2.636, 10]}, 'locations': [{'location': {'position': {'y': -3.666, 'x': 0.034, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 0.999, 'w': 0.051}}}], 'id': 3, 'lookLR': [[-1.193, -2.623], [-1.212, -4.608]], 'lookForPeople': [[-1.193, -2.623], [-1.212, -4.608]], 'order': []}
+table0:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [0.823, -2.533, 0], 'max_xyz': [2.335, -0.231, 10]}, 'locations': [{'location': {'position': {'y': -1.498, 'x': 0.127, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': -0.013, 'w': 1.0}}}], 'id': 0, 'lookLR': [[1.582, -0.653], [1.599, -2.489]], 'lookForPeople': [[1.582, -0.653], [1.599, -2.489]], 'order': []}
+table1:
+{'status': 'Unknown', 'person_count': 0, 'cuboid': {'frame': 'map', 'min_xyz': [-1.86, -2.579, 0], 'max_xyz': [-0.314, -0.186, 10]}, 'locations': [{'location': {'position': {'y': -1.486, 'x': 0.148, 'z': 0.0}, 'orientation': {'y': 0.0, 'x': 0.0, 'z': 1.0, 'w': 0.008}}}], 'id': 1, 'lookLR': [[-1.034, -0.403], [-1.113, -2.552]], 'lookForPeople': [[-1.034, -0.403], [-1.113, -2.552]], 'order': []}
+==================================================

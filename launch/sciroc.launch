@@ -26,19 +26,7 @@
         <param name="robot_name" value="$(arg robotname)" />
         <param name="tf_prefix" value="$(arg robotname)" />
 
-        <node pkg="pnp_ros" type="pnp_node" name="pnp" args="" output="screen">
-            <param name="plan_folder" value="$(find lasr_sciroc)/plans/" />
-            <param name="current_plan" value="$(arg planname)" />
-            <param name="use_java_connection" value="$(arg use_gui)" />
-        </node>
-
-	    <node pkg="lasr_pnp_bridge" type="lasr_pnp_bridge_node" name="lasr_pnp_bridge" args="" output="screen" />
-
-	    <node pkg="lasr_sciroc" type="lasr_sciroc_p1" name="P1Server" args="" output="screen" /> 
-        
-        <node pkg="lasr_sciroc" type="lasr_sciroc_p2" name="P2Server" args="" output="screen" /> 
-
-        <node pkg="lasr_sciroc" type="lasr_sciroc_p3" name="P3Server" args="" output="screen" /> 
+	    <node pkg="lasr_sciroc" type="main.py" name="sciroc" args="" output="screen" /> 
     </group>
 
 </launch>
