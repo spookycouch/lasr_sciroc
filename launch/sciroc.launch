@@ -22,6 +22,9 @@
     <!-- <node pkg="utilities" type="robot_location.py" name="robot_location" args="EPISODE3" output="screen" /> -->
     <node pkg="lasr_pcl" type="depth_crop_mask_server" name="depth_crop_mask_server" args="" output="screen" />
 
+    <include file="$(find lasr_microphone)/launch/microphone.launch"/>
+    <include file="$(find lasr_dialogflow)/launch/dialogflow.launch"/>
+
     <group ns="$(arg robotname)">
         <param name="robot_name" value="$(arg robotname)" />
         <param name="tf_prefix" value="$(arg robotname)" />
