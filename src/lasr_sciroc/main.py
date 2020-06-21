@@ -24,7 +24,7 @@ if __name__ == '__main__':
     # --------------- #
     
     # findUnserved() was designed to update a PNP condition event.
-    # to remove PNP i set a variable on the param server instead
+    # to remove PNP i set a variable on the param sat table with waving personerver instead
     #
     # this needs to be updated to use calum and juan's waving person detection later
     #
@@ -39,6 +39,63 @@ if __name__ == '__main__':
     
     # go to the unserved table
     p2.gotoTable('0')
+
+    # Identify the table with a waving person
+    p2.detectWavingPerson()                                     # TODO: import Juan's code
+
+    # Go to the table with waving person
+    p2.goToWavingPerson()                                       # TODO: import Jared's code
+
+    rospy.loginfo('at table with waving person')
+
+    # Take the order from the table with the waving person
+    p2.takeOrder()                                              # TODO: import Joe's code
+
+    rospy.loginfo('order taken')
+
+    # Going to bar to communicate the customer's order
+    p2.gotoLocation("Bar")
+
+    rospy.loginfo('at bar')
+
+    p2.orderConfirm()
+
+    rospy.loginfo('order communicated')
+
+    p2.checkOrder()
+
+    # the order has been checked until it's made correct -> ready to dispatch -> load the items
+    p2.waitLoad()
+
+    # Bring the items to the waving person's table
+    p2.goToWavingPerson()                                       # TODO: import Jared's code
+
+    # Waiting till the items are unloaded
+    p2.waitUnload()
+
+    # The table with waving person has been marked as served
+    rospy.loginfo('waving person table served')
+
+    # Starting to server other tables
+
+    # findUnserved() was designed to update a PNP condition event.
+    # to remove PNP i set a variable on the param sat table with waving personerver instead
+    #
+    # this needs to be updated to use calum and juan's waving person detection later
+    #
+    p2.findUnserved()
+    if rospy.has_param('/done_serving') and rospy.get_param('/done_serving'):
+        print 'done serving'
+    else:
+        print 'not done serving'
+
+    # use dialogflow to take the customer's order
+    # dialog_client.send_goal(DialogGoal('takeOrder'))
+    
+    # go to the unserved table
+    p2.gotoTable('0')
+
+
 
     # ------------- #
     # P2 SERVER END #
