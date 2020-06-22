@@ -2,33 +2,29 @@
 import rospy
 from std_msgs.msg import String
 from pal_interaction_msgs.msg import TtsGoal
+from lasr_speech.msg import informationGoal
 from datetime import datetime
 import os
 import subprocess
 
+def detectKeyword(self, action, expected):
+    result = None
+    
+    while not result == expected:
+        self.keyword_client.wait_for_server()
+        self.keyword_client.send_goal(informationGoal('speech', action))
+        self.keyword_client.wait_for_result()
+        result = self.keyword_client.get_result().data
+        print result
+
 def planWakeWord(self, data):
-        wake_word = data.data
-        if not self.running and wake_word == 'start the demo':
-            self.running = True
-            plan_publisher = rospy.Publisher('/sciroc/planToExec', String, queue_size=1)
-            plan_publisher.publish('fullPlan')
-            self.sub.unregister()
+    pass
 
 def keywordCallback(self, data):
-    if data.data == self.current_keyword:
-        self.keyword_found = True
+    pass
 
 def keywordDetected(self, keyword):
-    self.current_keyword = keyword
-    self.keyword_found = False
-    start_time = rospy.Time.now().secs
-    sub = rospy.Subscriber('/wake_word/wake_word_detected', String, self.keywordCallback)
-    while not self.keyword_found:
-        current_time = rospy.Time.now().secs
-        if current_time - start_time > 12:
-            rospy.loginfo('keyword timeout')
-            break
-        rospy.sleep(1)
+    pass
 
 def talk(self, text, wait=True):
     print('\033[1;36mTIAGO: ' + text + '\033[0m')

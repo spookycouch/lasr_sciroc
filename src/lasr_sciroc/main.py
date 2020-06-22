@@ -32,7 +32,6 @@ if __name__ == '__main__':
     # --------------- #
     # P2 SERVER START #
     # --------------- #
-    
     # go to the unserved table
     p2.gotoTable('0')
     

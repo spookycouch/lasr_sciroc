@@ -114,8 +114,7 @@ class P2Server(SciRocServer):
         print(order)  
 
         # Say the order
-        self.talk('The order of {0} is {1}'.format(current_table, self.get_order_string(order)))
-        rospy.sleep(2)
+        self.talk('could i please get {1}'.format(self.get_order_string(order)))
 
     
     def checkOrder(self):
@@ -126,7 +125,9 @@ class P2Server(SciRocServer):
         rospy.loginfo('The order fetched from the parameter server in checkOrder is ')
         print(order)  
 
-        self.talk('todo: ask me to check the items')
+        # self.talk('todo: ask me to check the items')
+        self.talk('Could you please place the order on the counter and say \"check the items\" when you are done')
+        self.detectKeyword('Check_items', 'Item_checked')
 
         # Look down to see the items on the counter
         self.playMotion('check_table')
@@ -206,7 +207,7 @@ class P2Server(SciRocServer):
                 self.talk('Order is correct.')
                 break
             rospy.sleep(4)
-        self.talk('Please place the items on my back, and say "all set" when you are done.')
+        self.talk('Please place the items on my back, and say "all set" when you are done.', wait=False)
         self.playMotion('back_to_default')
 
     def waitLoad(self):
@@ -217,17 +218,20 @@ class P2Server(SciRocServer):
         rospy.loginfo('Done turning')
 
         # Wait for keyword detection porcupine
-        self.talk('todo: keyword detection for all set')
+        # self.talk('todo: keyword detection for all set')
+        self.detectKeyword('All_set', 'Food_served')
+
     
     def waitUnload(self):
         # Turn TIAGo so customers grab the tings
         TheGlobalClass.turn_radians(PI, self.move_base_client)
 
         # Ask them very politely to take the tings off
-        self.talk('Please collect your order and say the phrase "items collected" when you are done')
+        self.talk('Please collect your order and say the phrase "thats all" when you are done')
 
         # Wait for keyword detection porcupine
-        self.talk('todo: items collected')
+        # self.talk('todo: items collected')
+        self.detectKeyword('Response', 'Food_delivered')
 
         # Set the table to be already served
         current_table = rospy.get_param('/current_table')

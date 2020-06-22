@@ -24,6 +24,7 @@
 
     <include file="$(find lasr_microphone)/launch/microphone.launch"/>
     <include file="$(find lasr_dialogflow)/launch/dialogflow.launch"/>
+    <include file="$(find lasr_speech)/launch/lasr_speech.launch"/>
 
     <group ns="$(arg robotname)">
         <param name="robot_name" value="$(arg robotname)" />
