@@ -191,7 +191,7 @@ def setCupSize(self, cup, depth_points, image_raw):
     
     # set ranges and get points of interest
     x_range = 4
-    y_range = 15
+    y_range = 20
     mid_x = int((cup.xywh[0] + cup.xywh[2]/2) - x_range/2)
     top_y = int(cup.xywh[1])
     btm_y = int(cup.xywh[1] + cup.xywh[3])
@@ -250,7 +250,7 @@ def setCupSize(self, cup, depth_points, image_raw):
 
         if cup_height > 0.20:
             pass
-        elif cup_height > 0.14:
+        elif cup_height > 0.13:
             cup.name = 'large coffee'
         elif cup_height > 0.10:
             cup.name = 'medium coffee'

@@ -7,9 +7,9 @@ play_motion:
         time_from_start: 2.0
 
     check_table:
-      joints: [torso_lift_joint, head_1_joint, head_2_joint]
+      joints: [torso_lift_joint]
       points:
-      - positions: [0.25, 0.0, -0.55]
+      - positions: [0.25]
         time_from_start: 2.0
     
     back_to_default:

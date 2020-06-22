@@ -1,0 +1,46 @@
+tables:
+  table0:
+    id: 0
+    person_count: 0
+    status: "Unknown"
+    order: []
+    locations:
+      - location:
+          position: 
+            x: 7.07058643756
+            y: -0.99587257048
+            z: 0.0
+          orientation: 
+            x: 0.0
+            y: 0.0
+            z: 0.614118837214
+            w: 0.789213566646
+
+Bar:
+  location:
+    position: 
+      x: 3.58594099942
+      y: -1.73006721206
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: -0.993619150073
+      w: 0.112787342414
+
+  cuboid:
+      frame: 'map'
+      min_xyz: [ 2.0, -2.4, 0 ]
+      max_xyz: [ 3.4, -0.8, 10 ]
+
+Home:
+  location:
+    position: 
+      x: 4.76915845225
+      y: -1.20520803393
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: -0.0807420236957
+      w: 0.996735032799

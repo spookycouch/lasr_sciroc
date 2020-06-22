@@ -4,6 +4,7 @@ from std_msgs.msg import String
 from pal_interaction_msgs.msg import TtsGoal
 from datetime import datetime
 import os
+import subprocess
 
 def planWakeWord(self, data):
         wake_word = data.data
@@ -29,14 +30,11 @@ def keywordDetected(self, keyword):
             break
         rospy.sleep(1)
 
-def talk(self, speech_in):
-    # Create the TTS goal and send it
-    print('\033[1;36mTIAGO: ' + speech_in + '\033[0m')
-    tts_goal = TtsGoal()
-    tts_goal.rawtext.lang_id = 'en_GB'
-    tts_goal.rawtext.text = speech_in
-    self.speech_client.send_goal(tts_goal)
-    self.speech_client.wait_for_result()
+def talk(self, text, wait=True):
+    print('\033[1;36mTIAGO: ' + text + '\033[0m')
+    tts_proc = subprocess.Popen(['echo "{}" | festival --tts'.format(text)], shell=True)
+    if wait:
+        tts_proc.wait()
 
 def logText(self):
     file_path = os.path.dirname(os.path.abspath(__file__)) + '/logfile.txt'

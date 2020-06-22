@@ -113,14 +113,6 @@ class P2Server(SciRocServer):
         rospy.loginfo('The order fetched from the parameter server is ')
         print(order)  
 
-        # Update the RobotStatus on the hub using the service
-        rospy.wait_for_service('/robot_status')
-        try:
-            robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
-            response = robot_status('Relaying order of ' + current_table + 'to the employee', 'EPISODE3')
-        except rospy.ServiceException, e:
-            print "Service call failed: %s"%e
-
         # Say the order
         self.talk('The order of {0} is {1}'.format(current_table, self.get_order_string(order)))
         rospy.sleep(2)
@@ -134,18 +126,7 @@ class P2Server(SciRocServer):
         rospy.loginfo('The order fetched from the parameter server in checkOrder is ')
         print(order)  
 
-        # Update the RobotStatus on the hub using the service
-        rospy.wait_for_service('/robot_status')
-        try:
-            robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
-            response = robot_status('Checking order of ' + str(current_table), 'EPISODE3')
-        except rospy.ServiceException, e:
-            print "Service call failed: %s"%e
-
-        # wait for the keyword
-        self.talk('Could you please place the order on the counter and say \"check the items\" when you are done')
-        self.keywordDetected('check the items')
-        rospy.loginfo('keyword got!')
+        self.talk('todo: ask me to check the items')
 
         # Look down to see the items on the counter
         self.playMotion('check_table')
@@ -158,7 +139,7 @@ class P2Server(SciRocServer):
             cuboid = rospy.get_param('/Bar/cuboid')
             mask_msg = self.getDepthNanMask(depth_points, cuboid['min_xyz'], cuboid['max_xyz'])
             image_masked = self.applyDepthMask(image_raw, mask_msg.mask, 175)
-            result = self.detectObject(image_masked, "costa", 0.5, 0.3)
+            result = self.detectObject(image_masked, "costa", 0.1, 0.3)
 
             order_count = defaultdict(int)
             for item in order:
@@ -236,15 +217,7 @@ class P2Server(SciRocServer):
         rospy.loginfo('Done turning')
 
         # Wait for keyword detection porcupine
-        self.keywordDetected('all set')
-
-        # Update the RobotStatus on the hub using the service
-        rospy.wait_for_service('/robot_status')
-        try:
-            robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
-            response = robot_status('Delivering order to ' + str(current_table), 'EPISODE3')
-        except rospy.ServiceException, e:
-            print "Service call failed: %s"%e
+        self.talk('todo: keyword detection for all set')
     
     def waitUnload(self):
         # Turn TIAGo so customers grab the tings
@@ -254,35 +227,10 @@ class P2Server(SciRocServer):
         self.talk('Please collect your order and say the phrase "items collected" when you are done')
 
         # Wait for keyword detection porcupine
-        self.keywordDetected('items collected')
+        self.talk('todo: items collected')
 
         # Set the table to be already served
         current_table = rospy.get_param('/current_table')
         rospy.set_param('/tables/' + current_table + '/status', 'Already served')
 
-        # MKHub bridge object
-        bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-table')
-
-        # Post the status of the table to the data hub
-        person_count = rospy.get_param('/tables/' + current_table + '/person_count')
-        payload = bridge.constructTablePayload(current_table, person_count, 'Already served')
-        print('PRINTING PAYLOAD')
-        print(payload)
-        response = bridge.post(current_table, payload)
-
-        # Get the update to check (log)
-        # got = bridge.get(current_table)
-        # print(got)
-
-        # Update order status on the hub
-        self.updateHubTableOrder('Complete')
-
         rospy.set_param('/served_table', True)
-
-        # Update the RobotStatus on the hub using the service
-        rospy.wait_for_service('/robot_status')
-        try:
-            robot_status = rospy.ServiceProxy('/robot_status', RobotStatus)
-            response = robot_status('Order of ' + str(current_table) + ' delivered', 'EPISODE3')
-        except rospy.ServiceException, e:
-            print "Service call failed: %s"%e

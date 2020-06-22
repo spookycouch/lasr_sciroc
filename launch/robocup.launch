@@ -1,0 +1,35 @@
+<launch>
+    
+    <arg name="robotname" default="sciroc" />
+    <arg name="planname" default="stop" />
+    <arg name="use_gui" default="false" />
+
+    <!-- <include file="$(find custom_worlds)/launch/tiago_navigation.launch"></include> -->
+    <!-- <include file="$(find obstacle_avoidance)/launch/obstacle_avoidance.launch"></include> -->
+
+    <!-- Load the longroom tables and motions data into the parameter server -->
+    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/longroom.yaml" /> -->
+    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/bnb.yaml" /> -->
+    <rosparam command="load" file="$(find lasr_sciroc)/config/coffeeshop_robocup.yaml" />
+    <rosparam command="load" file="$(find lasr_sciroc)/config/HAL9000.yaml" />
+    <!-- <rosparam command="load" file="$(find lasr_sciroc)/config/locations.yaml" /> -->
+    <rosparam command="load" file="$(find lasr_sciroc)/config/motions.yaml" />
+
+    <!-- Yolo object detection server and the depth mask servers-->
+    <node pkg="lasr_object_detection_yolo" type="object_detection_server.py" name="yolo_detection" args="" output="screen" />
+    <node pkg="lasr_object_detection_yolo" type="pcl2_to_image_server.py" name="" args="" output="screen" />
+    <node pkg="utilities" type="robot_status_service.py" name="robot_status" args="" output="screen" />
+    <!-- <node pkg="utilities" type="robot_location.py" name="robot_location" args="EPISODE3" output="screen" /> -->
+    <node pkg="lasr_pcl" type="depth_crop_mask_server" name="depth_crop_mask_server" args="" output="screen" />
+
+    <include file="$(find lasr_microphone)/launch/microphone.launch"/>
+    <include file="$(find lasr_dialogflow)/launch/dialogflow.launch"/>
+
+    <group ns="$(arg robotname)">
+        <param name="robot_name" value="$(arg robotname)" />
+        <param name="tf_prefix" value="$(arg robotname)" />
+
+	    <node pkg="lasr_sciroc" type="main.py" name="sciroc" args="" output="screen" /> 
+    </group>
+
+</launch>
