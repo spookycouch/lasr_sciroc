@@ -1,93 +1,88 @@
 #!/usr/bin/env python
 import rospy
+import smach
+import math
 import actionlib
-
-from SciRocServer import SciRocServer
-from p1_server import P1Server
-from p2_server import P2Server
-from p3_server import P3Server
+import sys
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+from geometry_msgs.msg import Point, Pose, Quaternion, PointStamped, Vector3, PoseWithCovarianceStamped
+from rotate import rotate
+from get_closer_to_person import get_closer_to_person
 from openpose_actions import get_waving_bbox
+from location import getLocation, lookAt
+from serve import serve
 
-from lasr_dialogflow.msg import DialogAction, DialogGoal
+class World:
+    def __init__(self):
+        self.locations = []
+
+world = World()
+class InspectRoom(smach.State):
+    def __init__(self):
+        smach.State.__init__(self, outcomes=['outcome1','outcome2'])
+    def execute(self, userdata):
+        rospy.loginfo('Executing state InspectRoom')
+        movebase_client = actionlib.SimpleActionClient('/move_base', MoveBaseAction)
+        movebase_client.wait_for_server()
+        locations = rospy.get_param('/locations')  
+        for location in locations:
+            status = rospy.get_param('/locations/' + location + '/status')
+            look = rospy.get_param('/locations/' + location + '/look')
 
 
-def detectWavingPerson():
-    print get_waving_bbox()
+            # GO TO THE VANTAGE POINT
+            if status == 'unchecked':
+                goal = MoveBaseGoal()
+                goal.target_pose.header.stamp = rospy.Time.now()
+                goal.target_pose.header.frame_id = 'map'
+                goal.target_pose.pose = Pose(position = Point(**locations[location]['position']),
+                                            orientation = Quaternion(**locations[location]['orientation']))
+                movebase_client.send_goal(goal)
+                rospy.loginfo('GOAL SENT! o: ' + location)
+                # waits for the server to finish performing the action
+                if movebase_client.wait_for_result():
+                    rospy.loginfo('Goal point achieved!')
+                    rospy.set_param('/locations/' + location + '/status', 'checked')
+                else:
+                    rospy.logwarn("Couldn't reach the goal!")
+                
 
-def goToWavingPerson():
-    p2.gotoTable('0')
+                # DETECT WAVING PERSON
+                for point in look:
+                    lookAt(point)
 
-if __name__ == '__main__':
-    # init the node so we can access stuff
-    rospy.init_node('sciroc')
-    p1 = P1Server('server1')
-    p2 = P2Server('server2')
-    p3 = P3Server('server3')
+                    bbox = get_waving_bbox()
+                    if bbox is not None:
+                        loc = getLocation(bbox)
+                        get_closer_to_person(loc)
+                        world.locations.append(loc)
+                        return 'outcome1'
 
-    dialog_client = actionlib.SimpleActionClient('/lasr_dialogflow/LasrDialogflow', DialogAction)
-    dialog_client.wait_for_server()
-    # p2.gotoLocation("Bar")
-    # p2.checkOrder()
+        return 'outcome2'
 
-    # --------------- #
-    # P2 SERVER START #
-    # --------------- #
-    # go to the unserved table
-    p2.gotoTable('0')
-    
-    # Identify the table with a waving person
-    detectWavingPerson()                                     # TODO: import Juan's code
 
-    # Go to the table with waving person
-    goToWavingPerson()                                       # TODO: import Jared's code
+class SpeakToPerson(smach.State):
+    def __init__(self):
+        smach.State.__init__(self, outcomes=['outcome1'])
+    def execute(self, userdata):
+        rospy.loginfo('Executing state SpeakToPerson')
+        serve()
+        return 'outcome1'
 
-    # use dialogflow to take the customer's order
-    rospy.loginfo('at table with waving person')
-    dialog_client.send_goal(DialogGoal('takeOrder'))
-    dialog_client.wait_for_result()
-    rospy.loginfo('order taken')
-    
-    # Going to bar to communicate the customer's order
-    p2.gotoLocation("Bar")
-    rospy.loginfo('at bar')
-
-    p2.orderConfirm()
-    rospy.loginfo('order communicated')
-
-    p2.checkOrder()
-
-    # the order has been checked until it's made correct -> ready to dispatch -> load the items
-    p2.waitLoad()
-
-    # Bring the items to the waving person's table
-    goToWavingPerson()                                       # TODO: import Jared's code
-
-    # Waiting till the items are unloaded
-    p2.waitUnload()
-
-    # The table with waving person has been marked as served
-    rospy.loginfo('waving person table served')
-
-    # Starting to server other tables
-
-    # findUnserved() was designed to update a PNP condition event.
-    # to remove PNP i set a variable on the param sat table with waving personerver instead
-    #
-    # this needs to be updated to use calum and juan's waving person detection later
-    #
-    p2.findUnserved()
-    if rospy.has_param('/done_serving') and rospy.get_param('/done_serving'):
-        print 'done serving'
-    else:
-        print 'not done serving'
-
-    # go to the unserved table
-    p2.gotoTable('0')
+def main():
+    rospy.init_node('cleanup_state_machine')
+    #State machine
+    sm = smach.StateMachine(outcomes=['outcome1', 'end'])
+    with sm:
+        smach.StateMachine.add('InspectRoom', InspectRoom(), transitions={'outcome1': 'SpeakToPerson', 'outcome2' : 'end'})
+        smach.StateMachine.add('SpeakToPerson', SpeakToPerson(), transitions={'outcome1':'InspectRoom'})
+    outcome = sm.execute()
 
 
 
-    # ------------- #
-    # P2 SERVER END #
-    # ------------- #
-
-    rospy.loginfo('main.py ended')
+if __name__=='__main__':
+    try:
+        main()
+    #wait for keyboard interrupt
+    except rospy.ROSInterruptException:
+        rospy.loginfo('State Machine terminated.')

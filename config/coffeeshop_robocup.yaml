@@ -43,3 +43,34 @@ Home:
       y: 0.0
       z: -0.0807420236957
       w: 0.996735032799
+
+
+locations:
+  location1:
+    status: 'unchecked'
+    look:
+        - [9.5, -2.5]
+    position: 
+      x: 8.39089227381
+      y: 0.150523811911
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: -0.69412309471
+      w: 0.719856325519
+
+  location2:
+    status: 'unchecked'
+    look:
+        - [9.5, 1.5]
+        - [7, 1.5]
+    position: 
+      x: 8.4355954804
+      y: -1.20909836331
+      z: 0.0
+    orientation: 
+      x: 0.0
+      y: 0.0
+      z: 0.773157867032
+      w: 0.634213617519

@@ -13,7 +13,6 @@ from move_base_msgs.msg import MoveBaseGoal
 from geometry_msgs.msg import Pose, PoseWithCovarianceStamped, Quaternion
 from collections import defaultdict
 from math import pi as PI
-from utilities import MKHubBridge
 from utilities.srv import RobotStatus, RobotStatusResponse
 from utilities import TheGlobalClass
 
@@ -65,23 +64,7 @@ class P2Server(SciRocServer):
         self.logText()
 
     def updateHubTableOrder(self, status):
-        current_table = rospy.get_param('/current_table')
-
-        # Fetch the order from the parameter server set by dialogflow
-        order = rospy.get_param('/tables/' + current_table + '/order')
-
-        # MKHub bridge object
-        bridge = MKHubBridge('https://api.mksmart.org/sciroc-competition', 'leedsasr', 'sciroc-episode3-order')
-
-        # PUT the order of the table to the data hub
-        payload = bridge.constructOrderPayload(current_table, order, status)
-        print('PRINTING ORDER PAYLOAD')
-        print(payload)
-        response = bridge.put(current_table, payload)
-
-        # Get the update to check (log)
-        # got = bridge.get(current_table)
-        # print(got)
+        pass
 
     def get_order_string(self, items_array):
         items_dict = defaultdict(int)
@@ -114,7 +97,7 @@ class P2Server(SciRocServer):
         print(order)  
 
         # Say the order
-        self.talk('could i please get {1}'.format(self.get_order_string(order)))
+        self.talk('could i please get {}'.format(self.get_order_string(order)))
 
     
     def checkOrder(self):
@@ -135,6 +118,7 @@ class P2Server(SciRocServer):
         for x in range(5):
             self.talk('Checking the order.')
             # Run the object detection client on the items
+            depth_points, image_raw = self.getPcl2AndImage()
             depth_points, image_raw = self.getPcl2AndImage()
             
             cuboid = rospy.get_param('/Bar/cuboid')

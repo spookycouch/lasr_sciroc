@@ -76,10 +76,10 @@ def get_waving_bbox():
             handsup = np.argwhere(angles).size
             print angles, handsup
 
-            # draw a bounding box for the face
+            # draw a bounding box for body
             if handsup:
-                x1, x2 = person[15][0], person[16][0]
-                y1, y2 = person[0][1], person[1][1]
+                x1, x2 = int(person[2][0]), int(person[5][0])
+                y1, y2 = int(person[2][1]), int(person[2][1] + x2 - x1)
                 cv2.rectangle(image, (x1, y1), (x2, y2), (0,255,0), 2)
 
 
