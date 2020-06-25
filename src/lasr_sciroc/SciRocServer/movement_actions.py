@@ -105,8 +105,8 @@ def playMotion(self, motion_name):
 
 def lookAt(self, point):
     # Create tf transformer for z point transformation to keep TIAGo's head on the same level
-    tfBuffer = tf2_ros.Buffer()
-    tf = tf2_ros.TransformListener(tfBuffer)
+    # tfBuffer = tf2_ros.Buffer()
+    # tf = tf2_ros.TransformListener(tfBuffer)
 
     # Wait for the server to come up
     rospy.loginfo('Waiting for the point head server to come up')
@@ -120,6 +120,7 @@ def lookAt(self, point):
     ph_goal.min_duration = rospy.Duration(0.5)
     ph_goal.target.point.x = point[0]
     ph_goal.target.point.y = point[1]
+    ph_goal.target.point.z = 1.2
 
     ph_goal.pointing_frame = 'head_2_link'
     ph_goal.pointing_axis.x = 1
@@ -129,25 +130,25 @@ def lookAt(self, point):
     ps = PointStamped()
     ps.header.stamp = rospy.Time(0)
     ps.header.frame_id = 'head_2_link'
-    transform_ok = False
-    while not transform_ok and not rospy.is_shutdown():
-        try:
-            transform = tfBuffer.lookup_transform('base_link', 'head_2_link', rospy.Time(0))
-            get_z_ps = do_transform_point(ps, transform)
-            transform_ok = True
-        # This usually happens only on startup
-        except tf2_ros.ExtrapolationException as e:
-            rospy.sleep(1.0/4)
-            ps.header.stamp = rospy.Time(0)
-            rospy.logwarn("Exception on transforming point... trying again \n(" +
-                                str(e) + ") at time " + str(ps.header.stamp))
-        except tf2_ros.LookupException:
-            pass
-        except tf2_ros.ConnectivityException:
-            pass
+    # transform_ok = False
+    # while not transform_ok and not rospy.is_shutdown():
+    #     try:
+    #         transform = tfBuffer.lookup_transform('base_link', 'head_2_link', rospy.Time(0))
+    #         get_z_ps = do_transform_point(ps, transform)
+    #         transform_ok = True
+    #     # This usually happens only on startup
+    #     except tf2_ros.ExtrapolationException as e:
+    #         rospy.sleep(1.0/4)
+    #         ps.header.stamp = rospy.Time(0)
+    #         rospy.logwarn("Exception on transforming point... trying again \n(" +
+    #                             str(e) + ") at time " + str(ps.header.stamp))
+    #     except tf2_ros.LookupException:
+    #         pass
+    #     except tf2_ros.ConnectivityException:
+    #         pass
 
-    ph_goal.target.point.z = get_z_ps.point.z
-    print(get_z_ps.point.z)
+    # ph_goal.target.point.z = get_z_ps.point.z
+    # print(get_z_ps.point.z)
 
     # Send the goal
     rospy.loginfo("Sending the goal...")

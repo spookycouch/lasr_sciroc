@@ -28,6 +28,7 @@ def serve():
     rospy.loginfo('order taken')
     
     # Going to bar to communicate the customer's order
+    p2.playMotion('back_to_default')
     p2.gotoLocation("Bar")
     rospy.loginfo('at bar')
 

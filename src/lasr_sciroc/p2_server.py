@@ -106,18 +106,20 @@ class P2Server(SciRocServer):
         # Fetch the order from the parameter server
         order = rospy.get_param('/tables/' + current_table + '/order')
         rospy.loginfo('The order fetched from the parameter server in checkOrder is ')
-        print(order)  
-
-        # self.talk('todo: ask me to check the items')
-        self.talk('Could you please place the order on the counter and say \"check the items\" when you are done')
-        self.detectKeyword('Check_items', 'Item_checked')
+        print(order)
 
         # Look down to see the items on the counter
         self.playMotion('check_table')
 
+        # self.talk('todo: ask me to check the items')
+        self.talk('please place the order on the counter and say \"check the items\" when you are done')
+        self.detectKeyword('Check_items', 'Item_checked')
+
+
         for x in range(5):
             self.talk('Checking the order.')
             # Run the object detection client on the items
+            # do this twice because gazebo sim
             depth_points, image_raw = self.getPcl2AndImage()
             depth_points, image_raw = self.getPcl2AndImage()
             
@@ -147,6 +149,8 @@ class P2Server(SciRocServer):
             savedir = rospack.get_path('lasr_sciroc') + '/images/'
             now = datetime.now()
             cv2.imwrite(savedir + now.strftime("%Y-%m-%d-%H:%M:%S") + '.png', frame)
+            cv2.imshow('robocup', frame)
+            cv2.waitKey(1)
 
             for count in object_count:
                 print('I see ' + str(object_count[count]) + ' of ' + str(count))
@@ -191,7 +195,6 @@ class P2Server(SciRocServer):
                 self.talk('Order is correct.')
                 break
             rospy.sleep(4)
-        self.talk('Please place the items on my back, and say "all set" when you are done.', wait=False)
         self.playMotion('back_to_default')
 
     def waitLoad(self):
@@ -203,7 +206,9 @@ class P2Server(SciRocServer):
 
         # Wait for keyword detection porcupine
         # self.talk('todo: keyword detection for all set')
+        self.talk('Please place the items on my back, and say "all set" when you are done.')
         self.detectKeyword('All_set', 'Food_served')
+        self.talk('thanks for your help')
 
     
     def waitUnload(self):
@@ -216,6 +221,7 @@ class P2Server(SciRocServer):
         # Wait for keyword detection porcupine
         # self.talk('todo: items collected')
         self.detectKeyword('Response', 'Food_delivered')
+        self.talk('thank you so much for your patronage')
 
         # Set the table to be already served
         current_table = rospy.get_param('/current_table')

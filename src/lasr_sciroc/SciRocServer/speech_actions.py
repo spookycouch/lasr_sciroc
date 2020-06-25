@@ -11,6 +11,7 @@ def detectKeyword(self, action, expected):
     result = None
     
     while not result == expected:
+        rospy.sleep(1)
         self.keyword_client.wait_for_server()
         self.keyword_client.send_goal(informationGoal('speech', action))
         self.keyword_client.wait_for_result()

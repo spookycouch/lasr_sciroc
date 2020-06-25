@@ -36,6 +36,8 @@ def get_waving_bbox():
     try:
         # grabbed, frame = cap.read()
         # frame = cv2.imread('juan_wave.jpg')
+        # do this twice because gazebo sim
+        img_msg = rospy.wait_for_message('/xtion/rgb/image_raw',Image)
         img_msg = rospy.wait_for_message('/xtion/rgb/image_raw',Image)
         frame = CvBridge().imgmsg_to_cv2(img_msg, "bgr8")
 
@@ -90,8 +92,8 @@ def get_waving_bbox():
         print e
     
     # show image
-    cv2.imshow('test', image)
-    cv2.waitKey(0)
+    cv2.imshow('robocup', image)
+    cv2.waitKey(1)
 
     opWrapper.stop()
     return box
