@@ -7,6 +7,9 @@ from tf2_ros import TransformException
 import tf
 import actionlib
 from math import sqrt, atan2
+from utilities import TheGlobalClass
+
+
 def get_closer_to_person(guest_location):
     target_distance = 1.0
 
@@ -36,6 +39,22 @@ def get_closer_to_person(guest_location):
             target_y = robot_point.y
         
         target_point = Point(target_x, target_y, 0)
+
+        # see if the target point works, try four other candidates if not
+        possible_points = []
+        possible_points.append(target_point)
+        possible_points.append(Point(person_point.x + 0, person_point.y - 1, 0))
+        possible_points.append(Point(person_point.x + 0, person_point.y + 1, 0))
+        possible_points.append(Point(person_point.x - 1, person_point.y + 0, 0))
+        possible_points.append(Point(person_point.x + 1, person_point.y + 0, 0))
+
+        for point in possible_points:
+            possible, possible_pose, end_tol = TheGlobalClass.make_plan(point, current_pose = amcl_msg.pose.pose)
+            print 'plan for:', target_point.x, target_point.y, possible
+            if possible:
+                target_point = possible_pose.position
+                break
+
         
         # since point is along same line, use current pos to get new rotation
         current_angle = atan2(dist_y, dist_x)
