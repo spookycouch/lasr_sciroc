@@ -33,7 +33,7 @@
 	    <node pkg="lasr_sciroc" type="main.py" name="sciroc" args="" output="screen" /> 
     </group>
 
-    <!-- <group ns="object_0">
+    <group ns="object_0">
         <include file="$(find lasr_teleop_object)/launch/spawn_sitting_person.launch">
             <arg name="spawn_name" value="spawn_object_0" />
             <arg name="object_no" value="0" />
@@ -43,6 +43,6 @@
             <arg name="R" value="1.5" />
             <arg name="Y" value="2.06" />
         </include>
-    </group> -->
+    </group>
 
 </launch>
