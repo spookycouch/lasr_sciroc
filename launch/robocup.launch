@@ -38,7 +38,7 @@
             <arg name="spawn_name" value="spawn_object_0" />
             <arg name="object_no" value="0" />
             <arg name="model_no" value="3" />
-            <arg name="x" value="-1.90" />
+            <arg name="x" value="-2.64" />
             <arg name="y" value="-4.28" />
             <arg name="R" value="1.50" />
             <arg name="Y" value="2.00" />

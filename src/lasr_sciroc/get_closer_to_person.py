@@ -44,15 +44,15 @@ def get_closer_to_person(guest_location):
         possible_points = []
         possible_points.append(target_point)
         # N,S,E,W
-        possible_points.append(Point(person_point.x + 0, person_point.y - 1, 0))
-        possible_points.append(Point(person_point.x + 0, person_point.y + 1, 0))
-        possible_points.append(Point(person_point.x - 1, person_point.y + 0, 0))
-        possible_points.append(Point(person_point.x + 1, person_point.y + 0, 0))
+        possible_points.append(Point(person_point.x + 0.0, person_point.y - 1.2, 0.0))
+        possible_points.append(Point(person_point.x + 0.0, person_point.y + 1.2, 0.0))
+        possible_points.append(Point(person_point.x - 1.2, person_point.y + 0.0, 0.0))
+        possible_points.append(Point(person_point.x + 1.2, person_point.y + 0.0, 0.0))
         # NE,NW,SE,SW
-        possible_points.append(Point(person_point.x + 1, person_point.y + 1, 0))
-        possible_points.append(Point(person_point.x - 1, person_point.y - 1, 0))
-        possible_points.append(Point(person_point.x - 1, person_point.y + 1, 0))
-        possible_points.append(Point(person_point.x + 1, person_point.y - 1, 0))
+        possible_points.append(Point(person_point.x + 1.2, person_point.y + 1.2, 0.0))
+        possible_points.append(Point(person_point.x - 1.2, person_point.y - 1.2, 0.0))
+        possible_points.append(Point(person_point.x - 1.2, person_point.y + 1.2, 0.0))
+        possible_points.append(Point(person_point.x + 1.2, person_point.y - 1.2, 0.0))
 
         for point in possible_points:
             possible, possible_pose, end_tol = TheGlobalClass.make_plan(point, current_pose = amcl_msg.pose.pose)
