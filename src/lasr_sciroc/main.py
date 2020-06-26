@@ -106,6 +106,7 @@ class InspectRoom(smach.State):
             else:
                 rospy.logwarn("Couldn't reach the goal!")
             
+            talk('I wonder if anyone is waving here', wait=False)
 
             # DETECT WAVING PERSON
             for point in look:
@@ -113,6 +114,7 @@ class InspectRoom(smach.State):
 
                 bbox = get_waving_bbox()
                 if bbox is not None:
+                    talk('looks like a customer wants my attention', wait=False)
                     loc = getLocation(bbox, trform)
                     playMotion('back_to_default')
                     get_closer_to_person(loc)
